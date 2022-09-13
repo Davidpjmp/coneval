@@ -415,8 +415,8 @@ sum&gt; sum(1:5, NA, na.rm = TRUE)
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gc</span>()           <span class="co"># Garbage collection, reporta memoria en uso</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          used (Mb) gc trigger (Mb) limit (Mb) max used (Mb)
-Ncells  602005 32.2    1312390 70.1         NA  1312390 70.1
-Vcells 1113679  8.5    8388608 64.0      16384  1840068 14.1</code></pre>
+Ncells  597405 32.0    1299185 69.4         NA  1299185 69.4
+Vcells 1106171  8.5    8388608 64.0      16384  1839304 14.1</code></pre>
 </div>
 </div>
 <p>Para borrar todos nuestros objetos, usamos el siguiente comando, que equivale a usar la escobita de la venta de environment</p>
@@ -431,17 +431,18 @@ Vcells 1113679  8.5    8388608 64.0      16384  1840068 14.1</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()           <span class="co"># Directorio actual</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "/Users/anaescoto/Dropbox/2022/Nueva carpeta/coneval"</code></pre>
+<pre><code>[1] "/Users/anaescoto/Dropbox/2022/Curso_r_cnvl/coneval"</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co">#setwd("C:/Users/anaes/Dropbox/2021/CursoR-posgrado")# Cambio de directorio</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>()      <span class="co"># Lista de archivos en ese directorio</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] "_quarto.yml"   "coneval.Rproj" "datos"         "docs"         
- [5] "Icon\r"        "index.qmd"     "LICENSE"       "P1.qmd"       
- [9] "P1.rmarkdown"  "P2.qmd"        "P3.qmd"        "P4.qmd"       
-[13] "P5.qmd"        "P6.qmd"        "P7.qmd"        "P8.qmd"       
-[17] "P9.qmd"       </code></pre>
+<pre><code> [1] "Icon\r"              "LICENSE"             "Mi_Exportación.xlsx"
+ [4] "P1.qmd"              "P1.rmarkdown"        "P2.qmd"             
+ [7] "P3.qmd"              "P4.qmd"              "P5.qmd"             
+[10] "README.md"           "_quarto.yml"         "coneval.Rproj"      
+[13] "datos"               "docs"                "index.html"         
+[16] "index.qmd"           "intro1.png"          "site_libs"          </code></pre>
 </div>
 </div>
 <p>Checar que esto también se puede hacer desde el menú:</p>
