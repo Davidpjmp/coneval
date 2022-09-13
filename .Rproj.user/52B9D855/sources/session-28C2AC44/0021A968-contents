@@ -1,0 +1,347 @@
+# Introducción a la inferencia
+
+## Paquetes
+
+```{r}
+if (!require("pacman")) install.packages("pacman")#instala pacman si se requiere
+pacman::p_load(tidyverse,
+               readxl,
+               writexl, 
+               haven,
+               sjlabelled, 
+               janitor,
+               ggpubr,
+               magrittr,
+               GGally,
+               wesanderson,
+               gt,
+               gtsummary,
+               srvyr, 
+               infer,
+               DescTools, 
+               broom
+)
+```
+
+## Cargando los datos
+
+Desde STATA
+
+```{r}
+ehpm_2019 <- read_dta("datos/ehpm_2019.dta", encoding="latin1") %>% 
+  janitor::clean_names() # checa esto
+
+```
+
+## Hipótesis e intervalos de confianza
+
+### t-test
+
+Este comando nos sirve para calcular diferentes tipos de test, que tienen como base la distribución t
+
+#### Univariado para estimación
+
+```{r}
+t.test(ehpm_2019$money) # pero no tenemos los filtro
+```
+
+Un truco para poder utilizar funciones de base con formato *tidy*
+
+```{r}
+ehpm_2019 %>% 
+  filter(actpr2012==10) %>% #Filtro de ocupados
+  filter(money>0) %>% #Filtros de quienes reportaron ingresos
+  with(
+    t.test(money)
+  )
+```
+
+Vamos a quedarnos a con esta población objetivo:
+
+#### Univariado para hipótesis específica
+
+$$ H_o:\mu=40 $$ $$ H_{a1}: \mu < 40 $$ $$ H_{a2}: \mu \neq 40 $$ $$ H_{a3}: \mu > 40 $$ Si hacemos explícita la $H_0$
+
+```{r}
+ehpm_2019 %>% 
+  filter(actpr2012==10) %>% #Filtro de ocupados
+  filter(money>0) %>% #Filtros de quienes reportaron ingresos
+  with(
+    t.test(ehpm_2019$money, mu=40)
+    )
+```
+
+Para hacer explícitas las hipótesis alternativas
+
+```{r}
+ehpm_2019 %>% 
+  filter(actpr2012==10) %>% #Filtro de ocupados
+  filter(money>0) %>% #Filtros de quienes reportaron ingresos
+  with(
+  t.test(ehpm_2019$money, mu=40, alternative = "two.sided") #default y de dos colas
+    )
+```
+
+```{r}
+ehpm_2019 %>% 
+  filter(actpr2012==10) %>% #Filtro de ocupados
+  filter(money>0) %>% #Filtros de quienes reportaron ingresos
+  with(
+  t.test(ehpm_2019$money, mu=40, alternative = "greater") # cola derecha
+    )
+```
+
+```{r}
+ehpm_2019 %>% 
+  filter(actpr2012==10) %>% #Filtro de ocupados
+  filter(money>0) %>% #Filtros de quienes reportaron ingresos
+  with(
+  t.test(ehpm_2019$money, mu=40, alternative = "less") # cola izquierda
+    )
+```
+
+### Enchulando un poquito
+
+Los resultados tienen la info, pero la podemos almacenar en un objeto. Con los cálculos de modelos es muy útil guardarlos para compararlos.
+
+```{r}
+t.test0<-ehpm_2019 %>% 
+  filter(actpr2012==10) %>% #Filtro de ocupados
+  filter(money>0) %>% #Filtros de quienes reportaron ingresos
+  with(
+    t.test(ehpm_2019$money, mu=40)
+    )
+```
+
+Veamos si lo imprimimos
+
+```{r}
+t.test0
+```
+
+```{r}
+broom::tidy(t.test0)
+```
+
+La función "tidy()" hace que el resultado se vuelva un "tibble", una tabla muy compatible con el tidyverse. Esto puede ser útil cuando queremos ir comparando estimaciones.
+
+Anteriormente vimos con base cómo hacer inferencia. El paquete "infer" tiene también elementos para inferencia, pero en formato más compatible con tidyverse.
+
+```{r}
+ehpm_2019 %>% 
+  filter(actpr2012==10) %>% #Filtro de ocupados
+  filter(money>0) %>% #Filtros de quienes reportaron ingresos
+  infer::t_test(response = money, mu = 40)
+
+```
+
+Como vemos nos da el mismo resultado anterior, pero nos da directamente el resultado en formato tidy.
+
+Si solo queremos el estimador de "t"
+
+```{r}
+ehpm_2019 %>% 
+t_stat(response = money, mu = 40)
+
+```
+
+Más de este paquete <https://infer.netlify.app/>
+
+## Proporción
+
+Vamos a revisar la proporción de hombres y mujeres en términos de participación laboral.
+
+El comando de base es menos flexible:
+
+```{r}
+prop<-table(ehpm_2019[ehpm_2019$actpr2012<30,]$actpr2012)
+prop.test(prop)
+```
+
+Los filtros se complican un poco...
+
+```{r}
+ehpm_2019 %>% 
+  filter(actpr2012<30) %>% 
+  mutate(actpr2012=as_label(actpr2012)) %>% #oo
+  tabyl(actpr2012)
+```
+
+Vamos a aprovechar para re-etiquetar la variable actpr2012
+
+```{r}
+etiqueta_pea<-c("P_Ocupada", "P_desempleada") # un vector con las etiquetas
+```
+
+```{r}
+ehpm_2019 %>% 
+  filter(actpr2012<30) %>% 
+  sjlabelled::set_labels(actpr2012, labels=etiqueta_pea) %>% 
+  mutate(actpr2012=as_label(actpr2012)) %>% 
+  tabyl(actpr2012)
+
+```
+
+En formato tidy
+
+```{r}
+
+ehpm_2019 %>% 
+  filter(actpr2012<30) %>% 
+  with(
+    table(actpr2012)
+    ) %>% 
+  prop.test()
+
+```
+
+En base necesita que se alimente de un objeto tipo table, el cual es menos manejable. Por eso utilizaremos más el paquete *infer*
+
+```{r}
+ehpm_2019 %>% 
+  filter(actpr2012<30) %>% 
+  sjlabelled::set_labels(actpr2012, labels=etiqueta_pea) %>% 
+  mutate(actpr2012=as_label(actpr2012)) %>%   
+  infer::prop_test(actpr2012 ~ NULL  ,
+             p=0.7, 
+            alternative="less")
+
+
+# Para que nos dé Z
+ehpm_2019 %>% 
+  filter(actpr2012<30) %>% 
+  sjlabelled::set_labels(actpr2012, labels=etiqueta_pea) %>% 
+  mutate(actpr2012=as_label(actpr2012)) %>%  
+  infer::prop_test(actpr2012 ~ NULL  ,
+            p=0.7, 
+            alternative="less",
+            success = "P_desempleada", # necesitamos establecer el éxito
+            z=TRUE)
+
+```
+
+## Estimaciones bivariadas
+
+### Diferencias de medias por grupos
+
+¿Podemos decir, con significancia estadística que los valores medios de una variable son diferentes entre los grupos?
+
+```{r}
+ehpm_2019 %>% 
+    filter(ehpm_2019$actpr2012==10) %>% # nos quedamos con los trabajadores
+    filter(money>0) %>% #Filtros de quienes reportaron ingresos
+    group_by(as_label(r104)) %>%
+    summarise(avg_money = mean(money, na.rm=T))
+
+ehpm_2019 %>% 
+    filter(ehpm_2019$actpr2012==10) %>% # nos quedamos con los trabajadores
+    filter(money>0) %>% #Filtros de quienes reportaron ingresos 
+    with(
+      t.test(money~r104)
+      )
+```
+
+Con "infer" sería:
+
+```{r}
+ehpm_2019 %>% 
+  mutate(r104=as_label(r104)) %>% 
+  infer::t_test(money ~ r104, order = c("hombre", "mujer") )
+```
+
+### Diferencias de proporciones.
+
+En la versión tidy de infer será más fácil hacer la versión de dos proporciones.
+
+```{r}
+
+ehpm_2019 %>% 
+  filter(actpr2012<30) %>% 
+  set_labels(actpr2012, labels=etiqueta_pea) %>% 
+  mutate(actpr2012=as_label(actpr2012)) %>% 
+  mutate(r104=as_label(r104)) %>% 
+  infer::prop_test(actpr2012 ~ r104 ,
+                   alternative="greater",
+                   success = "P_desempleada", # necesitamos establecer el éxito
+                   order = c("hombre", "mujer"),
+                   z=TRUE)
+
+```
+
+## Estimación de varianzas y sus pruebas de hipótesis
+
+Para poder hacer inferencia sobre la varianza utilizamos el comando varTest() del paquete "DescTools"
+
+```{r}
+ehpm_2019 %>% 
+    filter(actpr2012==10) %>% 
+      with(
+        DescTools::VarTest(money)
+        )
+
+```
+
+Podemos también decir algo sobre el valor objetivo de nuestra hipótesis
+
+```{r}
+ehpm_2019 %>% 
+    filter(actpr2012==10) %>% 
+      with(
+        VarTest(money, sigma.squared = 100)
+        )
+
+```
+
+$$ H_o:\sigma=100 $$ $$ H_{a1}: \sigma < 100 $$ $$ H_{a2}: \sigma \neq 100 $$ $$ H_{a3}: \sigma > 100 $$
+
+Guardar como objeto nuestros resultados, siempres muy conveniente para pedir después o para realizar operaciones con ellos
+
+```{r}
+test2<-ehpm_2019 %>% 
+    filter(actpr2012==10) %>% 
+      with(VarTest(money))
+
+test2$conf.int
+sqrt(test2$conf.int) ## sacamos la raíz cuadrada para tener las
+#desviaciones estándar y sea más fácil de interpretar
+```
+
+Con tidy de "broom"
+
+```{r}
+tidy(test2)
+```
+
+## Estimación de diferencias de varianzas y sus pruebas de hipótesis
+
+Para comparar varianza, usamos su "ratio", esto nos da un estadístico de prueba F, para comparar dos muestras de poblaciones normales.
+
+Si lo que queremos es comparar la varianza entre dos grupos, usamos el signo \~
+
+```{r}
+ehpm_2019 %>% 
+    filter(actpr2012==10) %>% 
+      with(var.test(money ~ as_label(r104), ratio=1))
+```
+
+Por ejemplo, para el caso de la desigualdad, las hipótesis serían de esta forma
+
+$$H_o:\frac{\sigma_1^2}{\sigma_2^2}=1$$ $$H_a:\frac{\sigma_1^2}{\sigma_2^2}\neq1$$
+
+## Prueba chi-cuadrado chi-sq. Una aplicación más común
+
+Cuando tenemos dos variables cualitativas o nominales podemos hacer esta la prueba chi-cuadrado, o prueba de independencia. Esta tiene una lógica un poco diferente a las pruebas que hacemos, porque proviene de comparar la distribución de los datos dado que no hay independencia entre las variables y los datos que tenemos.
+
+La hipótesis nula postula una distribución de probabilidad totalmente especificada como el modelo matemático de la población que ha generado la muestra, por lo que si la rechazamos hemos encontrado evidencia estadística sobre la dependencia de las dos variables.
+
+$$H_o:\text{Las variables son independientes}$$ $$H_a:\text{Las variables no son independientes}$$
+
+```{r}
+
+ehpm_2019 %>% 
+  filter(!is.na(actpr2012)) %>% 
+  mutate(actpr2012=as_label(actpr2012)) %>% 
+  mutate(r104=as_label(r104))%>% 
+  tabyl(actpr2012, r104) %>% 
+  janitor::chisq.test() #ojo
+```

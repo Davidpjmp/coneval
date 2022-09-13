@@ -1,0 +1,368 @@
+# Regresión lineal
+
+## Paquetes
+
+```{r}
+if (!require("pacman")) install.packages("pacman")#instala pacman si se requiere
+pacman::p_load(tidyverse,
+               readxl,
+               writexl, 
+               haven,
+               sjlabelled, 
+               janitor,
+               infer, 
+               ggpubr,
+               magrittr,
+               gt,
+               GGally,
+               broom,
+               DescTools,
+               wesanderson,
+               gtsummary,
+               srvyr,
+               car,
+               sjPlot,
+               jtools,
+               sandwich, huxtable,estimatr)
+```
+
+## Cargando los datos
+
+Desde STATA
+
+```{r}
+ehpm_2019 <- read_dta("datos/ehpm_2019.dta", encoding="latin1") %>% 
+  janitor::clean_names() # checa esto
+
+```
+
+Hoy sí filtraremos toda nuestra base para quedarnos sólo con algunas variables y casos
+
+```{r}
+ehpm_2019 %<>%
+  filter(money>0) %>% 
+  filter(actpr2012==10) %>% 
+  filter(r106>15)
+```
+
+## Prueba de hipótesis para la correlación
+
+Una prueba de hipotésis sobe la correlación
+
+```{r}
+cor_test<-ehpm_2019 %>% 
+    with(
+      cor.test(money, 
+               aproba1, 
+               use = "pairwise")) # prueba de hipótesis.
+
+#dos modos de visualizar el resultado
+cor_test 
+tidy(cor_test)
+```
+
+## Modelo simple
+
+$$y=\beta_o+\beta_1x +\epsilon$$ Donde los parámetros $\beta_o$ y $\beta_1$ describen la pendiente y el intercepto de la población, respectivamente.
+
+No está muy bien comportada, pero ligeramente es mejor con logaritmo
+
+```{r}
+ehpm_2019 %<>% 
+  mutate(log_money=log(money))
+```
+
+Una vez transformada nuestra variable, corremos el modelo
+
+```{r}
+modelo <- ehpm_2019 %>% 
+  with(lm(log_money~aproba1))
+
+  summary(modelo) # resultado forma1
+```
+
+Con "tidy()"
+
+```{r}
+tidy(modelo) # Pruebas de hipótesis de los coeficientes
+```
+
+Para obtener los intervalos de confianza, podemos hacerlo a partir del siguiente comando:
+
+```{r}
+confint(modelo)
+```
+
+Para el ajuste global del modelo, podemos utilzar el comando "glance()" sobre el objeto de nuestro modelo, ello nos dará la información correspondiente:
+
+```{r}
+glance(modelo) # resultado ajuste global
+
+```
+
+Otra manera de ver este ajuste es con el comando "anova()":
+
+```{r}
+anova(modelo)
+```
+
+## Diagnósticos
+
+```{r}
+plot(modelo)
+
+```
+
+### 1. Outliers y Normalidad
+
+```{r}
+# Assessing Outliers
+car::outlierTest(modelo) # Bonferonni p-value for most extreme obs
+
+```
+
+```{r}
+ggpubr::ggqqplot(ehpm_2019$log_money)
+```
+
+### 2. Homocedasticidad
+
+```{r}
+# non-constant error variance test
+car::ncvTest(modelo)
+# plot studentized residuals vs. fitted values 
+car::spreadLevelPlot(modelo)
+```
+
+## Regresión Lineal múltiple
+
+### Agregando una variable categórica
+
+¿Es igual la relación entre hombres y mujeres con los ingresos y la escolaridad?
+
+```{r}
+ehpm_2019 %>% 
+  ggplot() +
+    aes(x=aproba1, y=log(money), alpha=I(0.5), color=as_label(r104)) + 
+  geom_jitter()+
+  geom_smooth(method = lm)
+```
+
+Cuando nosotros tenemos una variable categórica para la condición de sexo.
+
+```{r}
+modelo1<-ehpm_2019 %>% 
+  mutate(r104=as_label(r104)) %>% 
+  with(lm(log_money~ aproba1 + r104))
+
+summary(modelo1)
+```
+
+Este modelo tiene coeficientes que deben leerse "condicionados". Es decir, en este caso tenemos que el coeficiente asociado a la edad, mantiene constante el valor de sexo y viceversa.
+
+¿Cómo saber is ha mejorado nuestro modelo? Podemos comparar el ajuste con la anova, es decir, una prueba F
+
+```{r}
+pruebaf0<-anova(modelo, modelo1)
+pruebaf0
+```
+
+Como puedes ver, el resultado muestra un Df de 1 (lo que indica que el modelo más complejo tiene un parámetro adicional) y un valor p muy pequeñ. Esto significa que agregar el sexo al modelo lleva a un ajuste significativamente mejor sobre el modelo original.
+
+Para cambiar la categoría de referencia podemos utilizar el comando "relevel"
+
+```{r}
+modelo1<-ehpm_2019 %>% 
+  mutate(r104=as_label(r104)) %>% 
+  mutate(r104=relevel(r104, ref="mujer")) %>% 
+  with(
+    lm(log_money ~aproba1 + r104)
+  )
+
+summary(modelo1)
+```
+
+Podemos seguir añadiendo variables sólo "sumando" en la función
+
+```{r}
+modelo2<- ehpm_2019 %>% 
+  mutate(r104=as_label(r104)) %>%
+  with(
+    lm(log_money ~ aproba1 + r104 + r106)
+    )
+summary(modelo2)
+```
+
+Y podemos ver si introducir esta variable afectó al ajuste global del modelo
+
+```{r}
+pruebaf1<-anova(modelo1, modelo2)
+pruebaf1
+```
+
+Hoy que tenemos más variables podemos hablar de revisar dos supuestos más.
+
+### Otros supuestos
+
+Además de los supuestos de la regresión simple, podemos revisar estos otros. De nuevo, usaremos la librería "car",
+
+1.  Linealidad en los parámetros (será más díficil entre más variables tengamos)
+
+2.  La normalidad también, porque debe ser multivariada
+
+3.  Multicolinealidad La prueba más común es la de Factor Influyente de la Varianza (VIF) por sus siglas en inglés. La lógica es que la multicolinealidad tendrá efectos en nuestro R2, inflándolo. De ahí que observamos de qué variable(s) proviene este problema relacionado con la multicolinealidad.
+
+Si el valor es mayor a 5, tenemos un problema muy grave.
+
+```{r}
+car::vif(modelo2)
+```
+
+### Heterocedasticidad
+
+El problema de la heterocedasticidad es que los errores estándar de subestiman, por lo que si estos están en el cociente de nuestro estadístico de prueba t, esto implicaría que nuestras pruebas podrían estar arrojando valores significativos cuando no lo son.
+
+Una forma muy sencilla es pedir los errores robustos, esto se puede desarrollar con el paquete "estimatr" <https://declaredesign.org/r/estimatr/articles/getting-started.html>
+
+```{r}
+modelo2rob1 <- estimatr::lm_robust(log_money ~ aproba1 + as_label(r104) + r106, data = ehpm_2019)
+
+summary(modelo2rob1)
+tidy(modelo2rob1)
+```
+
+## Jtools
+
+Un solo modelo:
+
+```{r mytextable}
+jtools::summ(modelo)
+
+```
+
+Si queremos errores robusto, estilo *STATA*:
+
+```{r}
+summ(modelo2,  robust = "HC1")
+
+```
+
+Si queremos estandarizar nuestras escalas:
+
+```{r}
+summ(modelo2,  scale=T)
+
+```
+
+También se pueden comparar modelos:
+
+```{r}
+export_summs(modelo, modelo1, modelo2)
+
+```
+
+También el paquete "sjPlot" tiene el comando "plot_model()"
+
+```{r}
+sjPlot::plot_model(modelo1)
+sjPlot::plot_models(modelo, modelo1, modelo2)
+
+```
+
+## Post-estimación
+
+### Las predicciones
+
+Unos de los usos más comunes de los modelos estadísticos es la predicción
+
+```{r}
+sjPlot::plot_model(modelo2, type="pred", terms = "aproba1")
+```
+
+También podemos incluir la predecciones para los distintos valores de las variables
+
+```{r}
+plot_model(modelo2, type="pred", terms = c("aproba1","r104")) + theme_blank()
+```
+
+El orden de los términos importa:
+
+```{r}
+plot_model(modelo2, type="pred", terms = c("r104","aproba1")) + theme_blank()
+```
+
+### Efectos marginales
+
+Con los efectos marginales, por otro lado medimos el efecto promedio, dejando el resto de variables constantes.
+
+```{r}
+plot_model(modelo2, type="eff", terms = "aproba1")
+plot_model(modelo2, type="eff", terms = "r104")
+
+```
+
+¿Es el mismo gráfico que con "pred"? Veamos la ayuda
+
+¿Y si queremos ver esta informaicón graficada?
+
+```{r}
+eff<-plot_model(modelo2, type="eff", terms = "aproba1")
+eff$data
+
+```
+
+```{r}
+eff<-plot_model(modelo2, type="pred", terms = "aproba1")
+eff$data
+```
+
+## Extensiones del modelo de regresión
+
+### Introducción a las interacciones
+
+Muchas veces las variables explicativas van a tener relación entre sí. Por ejemplo ¿Las remuneraciones tendrán que ver con el sexo y afectan no sólo en intercepto si no también la pendiente? Para ello podemos introducir una interacción
+
+```{r}
+modelo_int1<-lm(log_money ~ aproba1 * r104 , data = ehpm_2019, na.action=na.exclude)
+summary(modelo_int1)
+```
+
+Esta interacción lo que asume es que las pendientes pueden moverse (aunque en este caso específico no lo hacen tanto porque no nos salió significativa)
+
+```{r}
+plot_model(modelo_int1, type="int", terms = c("r104", "aproba1"))
+
+```
+
+### Efectos no lineales
+
+#### Explicitando el logaritmo
+
+```{r}
+modelo_log<-ehpm_2019 %>% 
+  with(
+    lm(log(money) ~ log(r106) + r104))
+
+summary(modelo_log)
+```
+
+```{r}
+plot_model(modelo_log, type="pred", terms ="r106")
+
+```
+
+#### Efecto cuadrático (ojo con la sintaxis)
+
+```{r}
+modelo_quadr<-lm(log_money ~ aproba1 + I(aproba1^2) + r104, 
+                 data=ehpm_2019)
+summary(modelo_quadr)
+
+```
+
+Quizás con un gráfico de lo predicho tenemos más claro lo que hace ese término
+
+```{r}
+plot_model(modelo_quadr, type="pred", terms = c("aproba1"))
+
+```
