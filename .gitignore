@@ -1,0 +1,8 @@
+/.quarto/
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.sav
+*.dta
+
