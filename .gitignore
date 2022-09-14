@@ -1,3 +1,4 @@
+
 /.quarto/
 .Rproj.user
 .Rhistory
@@ -6,3 +7,10 @@
 *.sav
 *.dta
 
+.quarto/_freeze/P1/execute-results/html.json
+.quarto/idx/index.qmd.json
+.quarto/xref/3fa55b29
+.quarto/xref/8fdb35aa
+.quarto/xref/bc814f34
+.quarto/xref/e32937f2
+.quarto/xref/INDEX
