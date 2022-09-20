@@ -8,6 +8,7 @@ book:
   date: "09/19/2022"
   chapters:
     - index.qmd
+    - instala.qmd
     - P1.qmd
     - P2.qmd
     - P3.qmd

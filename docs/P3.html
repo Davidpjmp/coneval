@@ -189,7 +189,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#variables-nominales" id="toc-variables-nominales" class="nav-link active" data-scroll-target="#variables-nominales"><span class="toc-section-number">3.1</span>  Variables nominales</a></li>
+  <li><a href="#variables-nominales" id="toc-variables-nominales" class="nav-link active" data-scroll-target="#variables-nominales"><span class="toc-section-number">3.1</span>  Variables nominales</a>
+  <ul class="collapse">
+  <li><a href="#recordemos-nuestro-etiquetado" id="toc-recordemos-nuestro-etiquetado" class="nav-link" data-scroll-target="#recordemos-nuestro-etiquetado"><span class="toc-section-number">3.1.1</span>  Recordemos nuestro etiquetado</a></li>
+  </ul></li>
   <li><a href="#variables-ordinales" id="toc-variables-ordinales" class="nav-link" data-scroll-target="#variables-ordinales"><span class="toc-section-number">3.2</span>  Variables ordinales</a></li>
   <li><a href="#bivariado-cualitativo" id="toc-bivariado-cualitativo" class="nav-link" data-scroll-target="#bivariado-cualitativo"><span class="toc-section-number">3.3</span>  Bivariado cualitativo</a>
   <ul class="collapse">
@@ -233,7 +236,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>E importamos la base</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_dta</span>(<span class="st">"datos/concentrado2020.dta"</span>, <span class="at">encoding=</span><span class="st">"latin1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_dta</span>(<span class="st">"datos/concentrado2020.dta"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="variables-nominales" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="variables-nominales"><span class="header-section-number">3.1</span> Variables nominales</h2>
@@ -261,128 +264,162 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 63230 25776 </code></pre>
 </div>
 </div>
+<section id="recordemos-nuestro-etiquetado" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="recordemos-nuestro-etiquetado"><span class="header-section-number">3.1.1</span> Recordemos nuestro etiquetado</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>etiqueta_sex<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"Hombre"</span>, <span class="st">"Mujer"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>concentrado2020<span class="ot">&lt;-</span>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_numeric</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># para quitar el "string"</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  sjlabelled<span class="sc">::</span><span class="fu">set_labels</span>(sexo_jefe, <span class="at">labels=</span>etiqueta_sex) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>concentrado2020<span class="ot">&lt;-</span>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_hog=</span><span class="fu">as_numeric</span>(clase_hog)) <span class="sc">%&gt;%</span> <span class="co"># para quitar el "string"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  sjlabelled<span class="sc">::</span><span class="fu">set_labels</span>(clase_hog, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"unipersonal"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"nuclear"</span>, </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"ampliado"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"compuesto"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                                             <span class="st">"corresidente"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Con “tabyl()”” de “janitor””</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe))  <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">tabyl</span>(sexo_jefe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe))  <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">tabyl</span>(sexo_jefe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> sexo_jefe     n   percent
-         1 63230 0.7104015
-         2 25776 0.2895985</code></pre>
+    Hombre 63230 0.7104015
+     Mujer 25776 0.2895985</code></pre>
 </div>
 </div>
 <p>Para ver que esto es una distribución de frecuencias sería muy útil ver la proporción total, ello se realiza agregando un elemento más en nuestro código con una “tubería”:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe))  <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">tabyl</span>(sexo_jefe) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe))  <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">tabyl</span>(sexo_jefe) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> sexo_jefe     n   percent
-         1 63230 0.7104015
-         2 25776 0.2895985
+    Hombre 63230 0.7104015
+     Mujer 25776 0.2895985
      Total 89006 1.0000000</code></pre>
 </div>
 </div>
 <p>Hoy revisamos algunos tipos de variables</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(concentrado2020<span class="sc">$</span>sexo_jefe) <span class="co"># variable sin etiqueta</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "character"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">as_label</span>(concentrado2020<span class="sc">$</span>sexo_jefe)) <span class="co"># variable con etiqueta</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "character"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">as_label</span>(concentrado2020<span class="sc">$</span>ing_cor)) <span class="co"># variable ordinal</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(concentrado2020<span class="sc">$</span>sexo_jefe) <span class="co"># variable sin etiqueta</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "numeric"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">as_label</span>(concentrado2020<span class="sc">$</span>money)) <span class="co"># variable de intervalo/razón</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Unknown or uninitialised column: `money`.</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">as_label</span>(concentrado2020<span class="sc">$</span>sexo_jefe)) <span class="co"># variable con etiqueta</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "NULL"</code></pre>
+<pre><code>[1] "factor"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">as_label</span>(concentrado2020<span class="sc">$</span>educa_jefe)) <span class="co"># variable ordinal</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">as_label</span>(concentrado2020<span class="sc">$</span>ing_cor)) <span class="co"># variable de intervalo/razón</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
 </div>
 </div>
 <p>En general, tendremos variables de factor que podrían ser consideradas como cualitativas y numéricas. Aunque en realidad, R tiene muchas formas de almacenamiento. Como mostramos con el comando “glimpse()” en capítulo anterior, podemos revisar una variable en específico:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(concentrado2020<span class="sc">$</span>sexo_jefe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">glimpse</span>(concentrado2020<span class="sc">$</span>sexo_jefe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> chr [1:89006] "2" "1" "1" "1" "1" "1" "1" "1" "1" "1" "1" "2" "1" "2" "2" ...
- - attr(*, "label")= chr "Sexo del jefe del hogar"
- - attr(*, "format.stata")= chr "%1s"</code></pre>
+<pre><code> num [1:89006] 2 1 1 1 1 1 1 1 1 1 ...
+ - attr(*, "labels")= Named num [1:2] 1 2
+  ..- attr(*, "names")= chr [1:2] "Hombre" "Mujer"
+ - attr(*, "label")= chr "Sexo del jefe del hogar"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># cambia los valores de la variable a sus etiquetas</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">tabyl</span>(sexo_jefe) <span class="sc">%&gt;%</span> <span class="co"># para hacer la tabla</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span> <span class="co"># añade totales</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                <span class="fu">adorn_pct_formatting</span>()  <span class="co"># nos da porcentaje en lugar de proporción</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># cambia los valores de la variable a sus etiquetas</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">tabyl</span>(sexo_jefe) <span class="sc">%&gt;%</span> <span class="co"># para hacer la tabla</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span> <span class="co"># añade totales</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                <span class="fu">adorn_pct_formatting</span>()  <span class="co"># nos da porcentaje en lugar de proporción</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> sexo_jefe     n percent
-         1 63230   71.0%
-         2 25776   29.0%
+    Hombre 63230   71.0%
+     Mujer 25776   29.0%
      Total 89006  100.0%</code></pre>
 </div>
 </div>
 <p>La tubería o “pipe” %&gt;% nos permite ir agregando elementos de manera sencilla nuestros comandos. En este caso decimos que dentro del objeto haga el cambio, luego la tabla, que le ponga porcentajes y finalmente que nos dé los totales. El total del 100% no aparece, por un elemento propio del programa.</p>
+</section>
 </section>
 <section id="variables-ordinales" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="variables-ordinales"><span class="header-section-number">3.2</span> Variables ordinales</h2>
 <p>Son variables que dan cuenta de cualidades o condiciones a través de categorías que guardan un orden entre sí.</p>
 <p>Vamos a darle una “ojeada” a esta variable</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(concentrado2020<span class="sc">$</span>educa_jefe</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>        )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(concentrado2020<span class="sc">$</span>educa_jefe</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>        )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> chr [1:89006] "09" "08" "10" "08" "10" "06" "03" "08" "03" "06" "03" "03" ...
  - attr(*, "label")= chr "Educación formal del jefe del hogar"
  - attr(*, "format.stata")= chr "%2s"</code></pre>
 </div>
 </div>
+<p>Etiquetemos también nuestra variable ordinal</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="ot">&lt;-</span>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">educa_jefe=</span><span class="fu">as.numeric</span>(educa_jefe)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_labels</span>(educa_jefe,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Sin instrucción"</span>, </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Preescolar"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Primaria incompleta"</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Primaria completa"</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Secundaria incompleta"</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Secundaria completa"</span>,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Preparatoria incompleta"</span>,</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Preparatoria completa"</span>,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Profesional incompleta"</span>,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Profesional completa"</span>,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Posgrado"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Hoy hacemos la tabla, con las etiquetas:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">educa_jefe=</span><span class="fu">as_label</span>(educa_jefe)) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(educa_jefe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">educa_jefe=</span><span class="fu">as_label</span>(educa_jefe)) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(educa_jefe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> educa_jefe     n     percent
-         01  6160 0.069208817
-         02    20 0.000224704
-         03 14577 0.163775476
-         04 15136 0.170055951
-         05  2974 0.033413478
-         06 23865 0.268127991
-         07  3029 0.034031414
-         08 10550 0.118531335
-         09  2535 0.028481226
-         10  8474 0.095207065
-         11  1686 0.018942543</code></pre>
+<pre><code>              educa_jefe     n     percent
+         Sin instrucción  6160 0.069208817
+              Preescolar    20 0.000224704
+     Primaria incompleta 14577 0.163775476
+       Primaria completa 15136 0.170055951
+   Secundaria incompleta  2974 0.033413478
+     Secundaria completa 23865 0.268127991
+ Preparatoria incompleta  3029 0.034031414
+   Preparatoria completa 10550 0.118531335
+  Profesional incompleta  2535 0.028481226
+    Profesional completa  8474 0.095207065
+                Posgrado  1686 0.018942543</code></pre>
 </div>
 </div>
 <p>Para que no nos salgan las categorías sin datos podemos poner una opción dentro del comando “tabyl()”</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">educa_jefe=</span><span class="fu">as_label</span>(educa_jefe)) <span class="sc">%&gt;%</span> </span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(educa_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># esta opción elimina los valores con 0</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>()  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">educa_jefe=</span><span class="fu">as_label</span>(educa_jefe)) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(educa_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># esta opción elimina los valores con 0</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>()  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> educa_jefe     n     percent
-         01  6160 0.069208817
-         02    20 0.000224704
-         03 14577 0.163775476
-         04 15136 0.170055951
-         05  2974 0.033413478
-         06 23865 0.268127991
-         07  3029 0.034031414
-         08 10550 0.118531335
-         09  2535 0.028481226
-         10  8474 0.095207065
-         11  1686 0.018942543
-      Total 89006 1.000000000</code></pre>
+<pre><code>              educa_jefe     n     percent
+         Sin instrucción  6160 0.069208817
+              Preescolar    20 0.000224704
+     Primaria incompleta 14577 0.163775476
+       Primaria completa 15136 0.170055951
+   Secundaria incompleta  2974 0.033413478
+     Secundaria completa 23865 0.268127991
+ Preparatoria incompleta  3029 0.034031414
+   Preparatoria completa 10550 0.118531335
+  Profesional incompleta  2535 0.028481226
+    Profesional completa  8474 0.095207065
+                Posgrado  1686 0.018942543
+                   Total 89006 1.000000000</code></pre>
 </div>
 </div>
 </section>
@@ -393,25 +430,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Las tablas de doble entrada tiene su nombre porque en las columnas entran los valores de una variable categórica, y en las filas de una segunda. Basicamente es como hacer un conteo de todas las combinaciones posibles entre los valores de una variable con la otra.</p>
 <p>Por ejemplo, si quisiéramos combinar las dos variables que ya estudiamos lo podemos hacer, con una tabla de doble entrada:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_hog=</span><span class="fu">as_label</span>(clase_hog)) <span class="sc">%&gt;%</span> </span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># para que las lea como factor</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>                <span class="fu">tabyl</span>(clase_hog, sexo_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># incluimos aquí </span></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">adorn_totals</span>()  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_hog=</span><span class="fu">as_label</span>(clase_hog)) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># para que las lea como factor</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                <span class="fu">tabyl</span>(clase_hog, sexo_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># incluimos aquí </span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">adorn_totals</span>()  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> clase_hog     1     2
-         1  6010  4832
-         2 43151 12188
-         3 13410  8409
-         4   477   240
-         5   182   107
-     Total 63230 25776</code></pre>
+<pre><code>    clase_hog Hombre Mujer
+  unipersonal   6010  4832
+      nuclear  43151 12188
+     ampliado  13410  8409
+    compuesto    477   240
+ corresidente    182   107
+        Total  63230 25776</code></pre>
 </div>
 </div>
 <p>Observamos que en cada celda confluyen los casos que comparten las mismas características:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span>   </span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(clase_hog<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> sexo_jefe<span class="sc">==</span><span class="dv">1</span>) <span class="co"># nos da la segunda celda de la izquierda</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span>   </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(clase_hog<span class="sc">==</span><span class="dv">1</span> <span class="sc">&amp;</span> sexo_jefe<span class="sc">==</span><span class="dv">1</span>) <span class="co"># nos da la segunda celda de la izquierda</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 2
   `clase_hog == 1 &amp; sexo_jefe == 1`     n
@@ -425,94 +462,94 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 data-number="3.3.2" class="anchored" data-anchor-id="totales-y-porcentajes"><span class="header-section-number">3.3.2</span> Totales y porcentajes</h3>
 <p>De esta manera se colocan todos los datos. Si observa al poner la función “adorn_totals()” lo agregó como una nueva fila de totales, pero también podemos pedirle que agregue una columna de totales.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_hog=</span><span class="fu">as_label</span>(clase_hog)) <span class="sc">%&gt;%</span> </span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># para que las lea como factor</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(clase_hog, sexo_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># incluimos aquí dos variables</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="st">"col"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> clase_hog     1     2 Total
-         1  6010  4832 10842
-         2 43151 12188 55339
-         3 13410  8409 21819
-         4   477   240   717
-         5   182   107   289</code></pre>
-</div>
-</div>
-<p>O bien agregar los dos, introduciendo en el argumento “c(”col”, “row”)” un vector de caracteres de las dos opciones requeridas:</p>
-<div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_hog=</span><span class="fu">as_label</span>(clase_hog)) <span class="sc">%&gt;%</span> </span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># para que las lea como factor</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(clase_hog, sexo_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># incluimos aquí dos variable</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="fu">c</span>(<span class="st">"col"</span>, <span class="st">"row"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(clase_hog, sexo_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># incluimos aquí dos variables</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="st">"col"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> clase_hog     1     2 Total
-         1  6010  4832 10842
-         2 43151 12188 55339
-         3 13410  8409 21819
-         4   477   240   717
-         5   182   107   289
-     Total 63230 25776 89006</code></pre>
+<pre><code>    clase_hog Hombre Mujer Total
+  unipersonal   6010  4832 10842
+      nuclear  43151 12188 55339
+     ampliado  13410  8409 21819
+    compuesto    477   240   717
+ corresidente    182   107   289</code></pre>
 </div>
 </div>
-<p>Del mismo modo, podemos calcular los porcentajes. Pero los podemos calcular de tres formas. Uno es que lo calculemos para los totales calculados para las filas, para las columnas o para el gran total poblacional.</p>
-<p>Para columnas tenemos el siguiente código y los siguientes resultados:</p>
+<p>O bien agregar los dos, introduciendo en el argumento “c(”col”, “row”)” un vector de caracteres de las dos opciones requeridas:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_hog=</span><span class="fu">as_label</span>(clase_hog)) <span class="sc">%&gt;%</span> </span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># para que las lea como factor</span></span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(clase_hog, sexo_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># incluimos aquí dos variable</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="fu">c</span>(<span class="st">"col"</span>, <span class="st">"row"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>) <span class="sc">%&gt;%</span> <span class="co"># Divide los valores entre el total de la columna</span></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>() <span class="co"># lo vuelve porcentaje</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="fu">c</span>(<span class="st">"col"</span>, <span class="st">"row"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> clase_hog      1      2  Total
-         1   9.5%  18.7%  12.2%
-         2  68.2%  47.3%  62.2%
-         3  21.2%  32.6%  24.5%
-         4   0.8%   0.9%   0.8%
-         5   0.3%   0.4%   0.3%
-     Total 100.0% 100.0% 100.0%</code></pre>
+<pre><code>    clase_hog Hombre Mujer Total
+  unipersonal   6010  4832 10842
+      nuclear  43151 12188 55339
+     ampliado  13410  8409 21819
+    compuesto    477   240   717
+ corresidente    182   107   289
+        Total  63230 25776 89006</code></pre>
 </div>
 </div>
-<p>Cuando se hagan cuadros de distribuciones (que todas sus partes suman 100), los porcentajes pueden ser una gran ayuda para la interpretación, sobre todos cuando se comparar poblaciones de categorías de diferente tamaño. Por lo general, queremos que los cuadros nos den información de donde están los totales y su 100%, de esta manera el lector se puede guiar de porcentaje con respecto a qué está leyendo. En este caso, vemos que el 100% es común en la última fila.</p>
-<p>Veamos la diferencia de cómo podemos leer la misma celda, pero hoy, hemos calculado los porcentajes a nivel de fila:</p>
+<p>Del mismo modo, podemos calcular los porcentajes. Pero los podemos calcular de tres formas. Uno es que lo calculemos para los totales calculados para las filas, para las columnas o para el gran total poblacional.</p>
+<p>Para columnas tenemos el siguiente código y los siguientes resultados:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_hog=</span><span class="fu">as_label</span>(clase_hog)) <span class="sc">%&gt;%</span> </span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># para que las lea como factor</span></span>
 <span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(clase_hog, sexo_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># incluimos aquí dos variable</span></span>
 <span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="fu">c</span>(<span class="st">"col"</span>, <span class="st">"row"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"row"</span>) <span class="sc">%&gt;%</span> <span class="co"># Divide los valores entre el total de la fila</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>) <span class="sc">%&gt;%</span> <span class="co"># Divide los valores entre el total de la columna</span></span>
 <span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>() <span class="co"># lo vuelve porcentaje</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> clase_hog     1     2  Total
-         1 55.4% 44.6% 100.0%
-         2 78.0% 22.0% 100.0%
-         3 61.5% 38.5% 100.0%
-         4 66.5% 33.5% 100.0%
-         5 63.0% 37.0% 100.0%
-     Total 71.0% 29.0% 100.0%</code></pre>
+<pre><code>    clase_hog Hombre  Mujer  Total
+  unipersonal   9.5%  18.7%  12.2%
+      nuclear  68.2%  47.3%  62.2%
+     ampliado  21.2%  32.6%  24.5%
+    compuesto   0.8%   0.9%   0.8%
+ corresidente   0.3%   0.4%   0.3%
+        Total 100.0% 100.0% 100.0%</code></pre>
 </div>
 </div>
-<p>Finalmente, podemos calcular los porcentajes con referencia a la población total en análisis. Es decir la celda en la esquina inferior derecha de nuestra tabla original.</p>
+<p>Cuando se hagan cuadros de distribuciones (que todas sus partes suman 100), los porcentajes pueden ser una gran ayuda para la interpretación, sobre todos cuando se comparar poblaciones de categorías de diferente tamaño. Por lo general, queremos que los cuadros nos den información de donde están los totales y su 100%, de esta manera el lector se puede guiar de porcentaje con respecto a qué está leyendo. En este caso, vemos que el 100% es común en la última fila.</p>
+<p>Veamos la diferencia de cómo podemos leer la misma celda, pero hoy, hemos calculado los porcentajes a nivel de fila:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_hog=</span><span class="fu">as_label</span>(clase_hog)) <span class="sc">%&gt;%</span> </span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># para que las lea como factor</span></span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(clase_hog, sexo_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># incluimos aquí dos variable</span></span>
 <span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="fu">c</span>(<span class="st">"col"</span>, <span class="st">"row"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"all"</span>) <span class="sc">%&gt;%</span> <span class="co"># Divide los valores entre el total de la población</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"row"</span>) <span class="sc">%&gt;%</span> <span class="co"># Divide los valores entre el total de la fila</span></span>
 <span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>() <span class="co"># lo vuelve porcentaje</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> clase_hog     1     2  Total
-         1  6.8%  5.4%  12.2%
-         2 48.5% 13.7%  62.2%
-         3 15.1%  9.4%  24.5%
-         4  0.5%  0.3%   0.8%
-         5  0.2%  0.1%   0.3%
-     Total 71.0% 29.0% 100.0%</code></pre>
+<pre><code>    clase_hog Hombre Mujer  Total
+  unipersonal  55.4% 44.6% 100.0%
+      nuclear  78.0% 22.0% 100.0%
+     ampliado  61.5% 38.5% 100.0%
+    compuesto  66.5% 33.5% 100.0%
+ corresidente  63.0% 37.0% 100.0%
+        Total  71.0% 29.0% 100.0%</code></pre>
+</div>
+</div>
+<p>Finalmente, podemos calcular los porcentajes con referencia a la población total en análisis. Es decir la celda en la esquina inferior derecha de nuestra tabla original.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">clase_hog=</span><span class="fu">as_label</span>(clase_hog)) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> <span class="co"># para que las lea como factor</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(clase_hog, sexo_jefe, <span class="at">show_missing_levels=</span>F ) <span class="sc">%&gt;%</span> <span class="co"># incluimos aquí dos variable</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="fu">c</span>(<span class="st">"col"</span>, <span class="st">"row"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"all"</span>) <span class="sc">%&gt;%</span> <span class="co"># Divide los valores entre el total de la población</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>() <span class="co"># lo vuelve porcentaje</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    clase_hog Hombre Mujer  Total
+  unipersonal   6.8%  5.4%  12.2%
+      nuclear  48.5% 13.7%  62.2%
+     ampliado  15.1%  9.4%  24.5%
+    compuesto   0.5%  0.3%   0.8%
+ corresidente   0.2%  0.1%   0.3%
+        Total  71.0% 29.0% 100.0%</code></pre>
 </div>
 </div>
 </section>
@@ -524,7 +561,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="medidas-numéricas-básicas"><span class="header-section-number">3.4.1</span> Medidas numéricas básicas</h3>
 <p>5 números</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(concentrado2020<span class="sc">$</span>ing_cor) <span class="do">## ingresos</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(concentrado2020<span class="sc">$</span>ing_cor) <span class="do">## ingresos</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
        0    21392    35172    47838    57640 10702107 </code></pre>
@@ -532,8 +569,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>Con pipes se pueden crear “indicadores” de nuestras variables es un tibble</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">nombre_indicador=</span><span class="fu">mean</span>(ing_cor, <span class="at">na.rm=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">nombre_indicador=</span><span class="fu">mean</span>(ing_cor, <span class="at">na.rm=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 1
   nombre_indicador
@@ -545,46 +582,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="histograma-básico" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="histograma-básico"><span class="header-section-number">3.4.2</span> Histograma básico</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(concentrado2020<span class="sc">$</span>ing_cor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(concentrado2020<span class="sc">$</span>ing_cor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="P3_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<p><img src="P3_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Le podemos modificar el título del eje de las x y de las y</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(concentrado2020<span class="sc">$</span>ing_cor, </span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Histograma de los ingresos corrientes"</span>, </span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"pesos mexicanos"</span>, <span class="at">ylab=</span><span class="st">"Frecuencia"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(concentrado2020<span class="sc">$</span>ing_cor, </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Histograma de los ingresos corrientes"</span>, </span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"pesos mexicanos"</span>, <span class="at">ylab=</span><span class="st">"Frecuencia"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="P3_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+<p><img src="P3_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>¡A ponerle colorcitos! Aquí hay una lista <a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" class="uri">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(concentrado2020<span class="sc">$</span>ing_cor, </span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Histograma de los ingresos corrientes"</span>, </span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"pesos mexicanos"</span>, <span class="at">ylab=</span><span class="st">"Frecuencia"</span>,</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"deeppink1"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(concentrado2020<span class="sc">$</span>ing_cor, </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Histograma de los ingresos corrientes"</span>, </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"pesos mexicanos"</span>, <span class="at">ylab=</span><span class="st">"Frecuencia"</span>,</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="st">"deeppink1"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="P3_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+<p><img src="P3_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Con pipes:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">with</span>(<span class="fu">hist</span>(ing_cor)) <span class="co"># con with, para que entienda</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">with</span>(<span class="fu">hist</span>(ing_cor)) <span class="co"># con with, para que entienda</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="P3_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+<p><img src="P3_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Cuando usamos pipes, se debe de recordar que no es necesario escribir el nombre del data.frame en el filtro porque es lo primero que colocamos en nuestro “pipe”.</p>
 <p>Checa que cualquier aditamiento debe ir en el pipe donde está el comando de hist(). Ten cuidado con los paréntesis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ing_cor)) <span class="sc">%&gt;%</span> <span class="co"># la ventaja de esta forma es que podemos hacer más operaciones</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">with</span>(<span class="fu">hist</span>(ing_cor, <span class="at">main=</span> <span class="st">"histograma"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ing_cor)) <span class="sc">%&gt;%</span> <span class="co"># la ventaja de esta forma es que podemos hacer más operaciones</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">with</span>(<span class="fu">hist</span>(ing_cor, <span class="at">main=</span> <span class="st">"histograma"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="P3_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+<p><img src="P3_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
