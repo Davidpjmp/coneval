@@ -10,7 +10,7 @@ pacman::p_load(tidyverse, haven, sjlabelled, foreign, janitor) #carga los paquet
 E importamos la base
 
 ```{r}
-concentrado2020 <- haven::read_dta("datos/concentrado2020.dta", encoding="latin1")
+concentrado2020 <- haven::read_dta("datos/concentrado2020.dta") 
 ```
 
 ## Variables nominales
@@ -29,6 +29,30 @@ concentrado2020 %>%
   with(
     table(sexo_jefe)
     )
+```
+
+### Recordemos nuestro etiquetado
+
+```{r}
+etiqueta_sex<-c("Hombre", "Mujer")
+
+concentrado2020<-concentrado2020 %>% 
+  mutate(sexo_jefe=as_numeric(sexo_jefe)) %>% # para quitar el "string"
+  sjlabelled::set_labels(sexo_jefe, labels=etiqueta_sex) 
+
+```
+
+```{r}
+
+
+concentrado2020<-concentrado2020 %>% 
+  mutate(clase_hog=as_numeric(clase_hog)) %>% # para quitar el "string"
+  sjlabelled::set_labels(clase_hog, labels=c("unipersonal",
+                                             "nuclear", 
+                                             "ampliado",
+                                             "compuesto",
+                                             "corresidente")) 
+
 ```
 
 Con "tabyl()"" de "janitor""
@@ -54,8 +78,8 @@ Hoy revisamos algunos tipos de variables
 class(concentrado2020$sexo_jefe) # variable sin etiqueta
 class(as_label(concentrado2020$sexo_jefe)) # variable con etiqueta
 
-class(as_label(concentrado2020$ing_cor)) # variable ordinal
-class(as_label(concentrado2020$money)) # variable de intervalo/razón
+class(as_label(concentrado2020$educa_jefe)) # variable ordinal
+class(as_label(concentrado2020$ing_cor)) # variable de intervalo/razón
 ```
 
 En general, tendremos variables de factor que podrían ser consideradas como cualitativas y numéricas. Aunque en realidad, R tiene muchas formas de almacenamiento. Como mostramos con el comando "glimpse()" en capítulo anterior, podemos revisar una variable en específico:
@@ -85,7 +109,27 @@ glimpse(concentrado2020$educa_jefe
         )
 ```
 
-Hoy hacemos la tabla, con las etiquetas:
+Etiquetemos también nuestra variable ordinal
+
+```{r}
+concentrado2020 <-concentrado2020 %>% 
+  mutate(educa_jefe=as.numeric(educa_jefe)) %>% 
+  set_labels(educa_jefe,
+             labels=c("Sin instrucción", 
+                      "Preescolar",
+                      "Primaria incompleta",
+                      "Primaria completa",
+                      "Secundaria incompleta",
+                      "Secundaria completa",
+                      "Preparatoria incompleta",
+                      "Preparatoria completa",
+                      "Profesional incompleta",
+                      "Profesional completa",
+                      "Posgrado"))
+```
+
+
+Hoy hacemos la tabla, con las etiquetas y vemos que se ve más bonita:
 
 ```{r}
 concentrado2020 %>%

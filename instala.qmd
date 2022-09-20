@@ -1,0 +1,17 @@
+# Instalación de R y Rstudio {.unnumbered}
+
+## Introducción a R
+
+<https://youtu.be/YkN5urybh2A> Video en YouTube 
+
+## Instalación en OS
+
+<https://youtu.be/icWV8jzYOtA> Viedo en YouTube
+
+## Instalación en PC
+
+<https://youtu.be/TNSQikMfgJI> Video en YouTube
+
+
+## Ojo
+Pronto RStudio se volverá **"posit"**

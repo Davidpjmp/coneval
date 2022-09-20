@@ -1,61 +1,61 @@
 # Introducción al curso {.unnumbered}
 
 ## Objetivo general
-El objetivo del curso es que las personas adscritas a la CGMEFFI desarrollen habilidades en el uso del software especializado “R” para fortalecer el análisis y potenciar el alcance de la información derivada del monitoreo de la política de desarrollo social. 
+
+El objetivo del curso es que las personas adscritas a la CGMEFFI desarrollen habilidades en el uso del software especializado "R" para fortalecer el análisis y potenciar el alcance de la información derivada del monitoreo de la política de desarrollo social.
 
 ## Temas
 
-**1.	Manejo y procesamiento de datos**
+**1. Manejo y procesamiento de datos**
 
-1.1	Tipos y estructuras de datos
+1.1 Tipos y estructuras de datos
 
-1.2	Operaciones básicas
+1.2 Operaciones básicas
 
-1.3	Manejo de datos
+1.3 Manejo de datos
 
-1.4	Ciclos, secuencias y condicionales
+1.4 Ciclos, secuencias y condicionales
 
-1.5	Funciones
+1.5 Funciones
 
-**2.	Visualización de datos **
+**2. Visualización de datos**
 
-2.1	Generación de gráficas con ggplot
+2.1 Generación de gráficas con ggplot
 
-2.2	Edición de gráficas con ggplot
+2.2 Edición de gráficas con ggplot
 
-2.3	Visualización espacial
+2.3 Visualización espacial
 
-2.4	Creación de tableros
+2.4 Creación de tableros
 
-**3.	Análisis de texto**
+**3. Análisis de texto**
 
-3.1	Estructura y carga de datos
+3.1 Estructura y carga de datos
 
-3.2	Análisis de palabras
+3.2 Análisis de palabras
 
-3.3	Relación de texto
+3.3 Relación de texto
 
 ## Metodología
 
 La metodología del curso consistirá en lo siguiente:
 
-*1.	La exposición de la facilitadora*. Durante la primera parte de la sesión, se expondrán los comandos necesarios para llevar a cabo cada tema. Se dará una introducción sobre la temática y se buscará dar ejemplos concretos para facilitar el aprendizaje. Se espera que el personal exponga sus dudas o comentarios a lo largo de la explicación.
+*1. La exposición de la facilitadora*. Durante la primera parte de la sesión, se expondrán los comandos necesarios para llevar a cabo cada tema. Se dará una introducción sobre la temática y se buscará dar ejemplos concretos para facilitar el aprendizaje. Se espera que el personal exponga sus dudas o comentarios a lo largo de la explicación.
 
-*2.	Realización de ejercicios prácticos*. Al final de cada sesión, corresponderá a las personas asistentes del curso realizar individualmente o en parejas un ejercicio relacionado con lo visto en la primera parte de la clase. 
+*2. Realización de ejercicios prácticos*. Al final de cada sesión, corresponderá a las personas asistentes del curso realizar individualmente o en parejas un ejercicio relacionado con lo visto en la primera parte de la clase.
 
-*3.	Consulta autónoma de material*. Tanto la exposición como los ejercicios serán acompañado de material de consulta realizado ad hoc para el curso y el contenido, de tal manera que el estudiantado pueda volver a los códigos y las explicaciones posteriormente.
+*3. Consulta autónoma de material*. Tanto la exposición como los ejercicios serán acompañado de material de consulta realizado ad hoc para el curso y el contenido, de tal manera que el estudiantado pueda volver a los códigos y las explicaciones posteriormente.
 
 ## Facilitadoras
 
 ### Ana Ruth Escoto Castillo
+
 Doctora en Estudios de Población. Centro de Estudios Demográficos y Urbanos, El Colegio de México.
 
-Semblanza
-Profesora de tiempo completo en la Facultad de Ciencias Políticas y Sociales. Investigadora nivel I en elSistema Nacional de Investigadores. Maestra en Población y Desarrollo por la Facultad Latinoamericana de Ciencias Sociales (FLACSO) – Sede México. Posee experiencia en recolección de información estadística, diseño y control de procesos de recolección y su procesamiento. Ha aplicado diversos métodos y herramientas multivariadas, homologación de información y comparabilidad de fuentes en sus investigaciones, así como usa de diversos softwares estadísticos, y ha impartido clases de estadítica aplicada a nivel de licenciatura y posgrado. Es co-coordinadora del Capítulo de CDMX de la iniciativa RLadies.
-
+Semblanza Profesora de tiempo completo en la Facultad de Ciencias Políticas y Sociales. Investigadora nivel I en elSistema Nacional de Investigadores. Maestra en Población y Desarrollo por la Facultad Latinoamericana de Ciencias Sociales (FLACSO) -- Sede México. Posee experiencia en recolección de información estadística, diseño y control de procesos de recolección y su procesamiento. Ha aplicado diversos métodos y herramientas multivariadas, homologación de información y comparabilidad de fuentes en sus investigaciones, así como usa de diversos softwares estadísticos, y ha impartido clases de estadítica aplicada a nivel de licenciatura y posgrado. Es co-coordinadora del Capítulo de CDMX de la iniciativa RLadies.
 
 ### Mónica Lara Escalante
-Doctora en Ciencia Política. Centro de Investigación y Docencia Económicas (CIDE) México. 
 
-Semblanza
-Gerente de Información y Políticas Públicas en Sertech MX, asistente de docencia en FLACSO México y profesora de asignatura de Estadística en la UNAM. Maestra en Gobierno y Asuntos Públicos por la Facultad Latinoamericana de Ciencias Sociales (FLACSO) – Sede México. También se ha desempeñado como Analista de Datos Senior en ThinkData MX; como profesora de asignatura y adjunta de diversos cursos de métodos cuantitativos para el análisis de políticas públicas en la Universidad Autónoma de San Luis Potosí, FLACSO México, Centro de Investigación y Docencia Económicas (CIDE) y Universidad Nacional Autónoma de México (UNAM). Sus líneas de investigación son los estudios legislativos, análisis de políticas públicas a nivel local, instituciones y partidos políticos en América Latina. 
+Doctora en Ciencia Política. Centro de Investigación y Docencia Económicas (CIDE) México.
+
+Semblanza Gerente de Información y Políticas Públicas en Sertech MX, asistente de docencia en FLACSO México y profesora de asignatura de Estadística en la UNAM. Maestra en Gobierno y Asuntos Públicos por la Facultad Latinoamericana de Ciencias Sociales (FLACSO) -- Sede México. También se ha desempeñado como Analista de Datos Senior en ThinkData MX; como profesora de asignatura y adjunta de diversos cursos de métodos cuantitativos para el análisis de políticas públicas en la Universidad Autónoma de San Luis Potosí, FLACSO México, Centro de Investigación y Docencia Económicas (CIDE) y Universidad Nacional Autónoma de México (UNAM). Sus líneas de investigación son los estudios legislativos, análisis de políticas públicas a nivel local, instituciones y partidos políticos en América Latina.

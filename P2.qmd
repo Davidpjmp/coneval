@@ -39,7 +39,7 @@ Si bien también se puede realizar desde el paquete foreign. Pero este no import
 Recuerda que no hay que instalarlo (viene adentro de tidyverse). Se instalasólo la primera vez. Una vez instalado un paquete, lo llamamos con el comando "library"
 
 ```{r}
-concentrado2020 <- haven::read_dta("datos/concentrado2020.dta", encoding="latin1")
+concentrado2020 <- haven::read_dta("datos/concentrado2020.dta")
 ```
 
 !Importante, a R no le gustan los objetos con nombres que empiezan en números
@@ -73,7 +73,7 @@ Vamos a revisar la base, brevemente la base
 class(concentrado2020) # tipo de objeto
 names(concentrado2020) # lista las variables
 head(concentrado2020) # muestra las primeras 6 líneas
-table(concentrado2020$r401) # un tabulado simple
+table(concentrado2020$clase_hog) # un tabulado simple
 ```
 
 ## Revisión con dplyr
@@ -92,9 +92,9 @@ concentrado2020 %>%
     glimpse
 ```
 
-## Etiquetas importadas y cómo usarlas
+## Etiquetas y cómo usarlas
 
-Podemos ver que los objetos "data.frame"(*spoiler*, ya hablaremos de ellos), tiene una clase que se llama "haven_labelled"
+Podemos ver que los objetos "data.frame"(*spoiler*, ya hablaremos de ellos)
 
 ```{r}
 
@@ -102,7 +102,32 @@ class(concentrado2020$sexo_jefe)
 
 ```
 
-¿Esto que significa? Que en el programa original hay alguna etiqueta que podemos usar.
+### Ejemplo de etiquetado
+
+Para que se vea mejor nuestro tabulado, sería bueno que nuestras variables tuvieran etiqueta. Para ello utilizaremos el paquete "sjlabelled"
+
+```{r}
+etiqueta_sex<-c("Hombre", "Mujer")
+
+concentrado2020<-concentrado2020 %>% 
+  mutate(sexo_jefe=as_numeric(sexo_jefe)) %>% # para quitar el "string"
+  sjlabelled::set_labels(sexo_jefe, labels=etiqueta_sex) 
+
+```
+
+Etiquetemos también la variable "clase_hog". Podemos checar cómo está estructurada esta base acá <https://www.inegi.org.mx/rnm/index.php/catalog/685/data-dictionary>
+
+```{r}
+
+concentrado2020<-concentrado2020 %>% 
+  mutate(clase_hog=as_numeric(clase_hog)) %>% # para quitar el "string"
+  sjlabelled::set_labels(clase_hog, labels=c("unipersonal",
+                                             "nuclear", 
+                                             "ampliado",
+                                             "compuesto",
+                                             "corresidente")) 
+
+```
 
 ```{r}
 table(concentrado2020$sexo_jefe)
@@ -114,7 +139,7 @@ table(sjlabelled::as_label(concentrado2020$sexo_jefe))
 
 ```{r}
 dplyr::glimpse(concentrado2020)
-dplyr::glimpse(concentrado2020[,1:10]) # en corchete del lado derecho podemos ojear columnas 
+dplyr::glimpse(concentrado2020[,20:30]) # en corchete del lado derecho podemos ojear columnas 
 
 ```
 
@@ -122,9 +147,10 @@ Podemos hacer un tipo "labelbook", usando una función que viene de la librería
 
 ```{r}
 #print(get_labels(concentrado2020)) #todas
-print(get_labels(concentrado2020[, 1:10])) #de las primeras 10 variables
-print(get_labels(concentrado2020$clase_hog)) #
+print(get_labels(concentrado2020[, 20:30])) #de las segundas 10 variables
 ```
+
+No tienen :(
 
 En singular nos da las etiquetas de las variables, no de los valores:
 
@@ -143,7 +169,7 @@ Para revisar el contenido de un data frame podemos usar, como lo hicimos anterio
 ```{r}
 x<-concentrado2020$ing_cor
 x<-concentrado2020[["ing_cor"]]  # ¡Ojo con las comillas! 
-x<-concentrado2020[,126]
+x<-concentrado2020[,23]
 x<-concentrado2020[,"ing_cor"]
 
 ```
