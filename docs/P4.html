@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.163">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R para el monitoreo de la política de desarrollo social - 4&nbsp; Factores de expansión y algunas otras medidas</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./P3.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Factores de expansión y algunas otras medidas</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R para el monitoreo de la política de desarrollo social</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Introducción al curso</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./instala.html" class="sidebar-item-text sidebar-link">Instalación de R y Rstudio</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Primer acercamiento al uso del programa</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Manejo de datos: importación, selección y revisión</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis descriptivo básico</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P4.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Factores de expansión y algunas otras medidas</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#paquetes" id="toc-paquetes" class="nav-link active" data-scroll-target="#paquetes"><span class="toc-section-number">4.1</span>  Paquetes</a></li>
+  <li><a href="#cargando-los-datos" id="toc-cargando-los-datos" class="nav-link" data-scroll-target="#cargando-los-datos"><span class="toc-section-number">4.2</span>  Cargando los datos</a></li>
+  <li><a href="#la-función-tally" id="toc-la-función-tally" class="nav-link" data-scroll-target="#la-función-tally"><span class="toc-section-number">4.3</span>  La función tally</a></li>
+  <li><a href="#otras-formas" id="toc-otras-formas" class="nav-link" data-scroll-target="#otras-formas"><span class="toc-section-number">4.4</span>  Otras formas</a></li>
+  <li><a href="#diseño-complejo" id="toc-diseño-complejo" class="nav-link" data-scroll-target="#diseño-complejo"><span class="toc-section-number">4.5</span>  Diseño complejo</a></li>
+  <li><a href="#creación-de-quintiles-y-otros-grupos" id="toc-creación-de-quintiles-y-otros-grupos" class="nav-link" data-scroll-target="#creación-de-quintiles-y-otros-grupos"><span class="toc-section-number">4.6</span>  Creación de quintiles y otros grupos</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Factores de expansión y algunas otras medidas</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="paquetes" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="paquetes"><span class="header-section-number">4.1</span> Paquetes</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>)<span class="co">#instala pacman si se requiere</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: pacman</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>               readxl,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>               writexl, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>               haven,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>               sjlabelled, </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>               janitor,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>               ggpubr,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>               magrittr,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>               GGally,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>               wesanderson,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>               gt,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>               gtsummary,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>               srvyr,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>               dineq</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="cargando-los-datos" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="cargando-los-datos"><span class="header-section-number">4.2</span> Cargando los datos</h2>
+<p>Desde STATA y haremos unos cambios…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"datos/concentrado2020.dta"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(sexo_jefe, clase_hog, educa_jefe), as.numeric)) <span class="sc">%&gt;%</span> <span class="co"># ojo aquí</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_labels</span>(sexo_jefe, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Hombre"</span>, <span class="st">"Mujer"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_labels</span>(clase_hog, <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"unipersonal"</span>,<span class="st">"nuclear"</span>, <span class="st">"ampliado"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="st">"compuesto"</span>,<span class="st">"corresidente"</span>))   <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">set_labels</span>(educa_jefe,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Sin instrucción"</span>, </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Preescolar"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Primaria incompleta"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Primaria completa"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Secundaria incompleta"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Secundaria completa"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Preparatoria incompleta"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Preparatoria completa"</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Profesional incompleta"</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Profesional completa"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Posgrado"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="la-función-tally" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="la-función-tally"><span class="header-section-number">4.3</span> La función tally</h2>
+<p>El comando “tabyl()” del paquete “janitor” es muy útil pero no es compatible con los factores del expansión. En realidad, tabyl() nos ahorra un poco el hecho de tener que agrupar nuestra base en categorías y luego hacer un conteo para cada una de ellas. “tally()” es un comando que nos hace ese conteo y “group_by” nos agrupa las observaciones de nuestra base de datos para hacer cualquier operación.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">group_by</span>(<span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tally</span>(factor) <span class="sc">%&gt;%</span> <span class="co">#nombre del factor</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>()  <span class="co"># Agrega total</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> as_label(sexo_jefe)        n
+              Hombre 25072652
+               Mujer 10677007
+               Total 35749659</code></pre>
+</div>
+</div>
+<p>Podemos usar funciones de tabyl</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">group_by</span>(<span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tally</span>(factor) <span class="sc">%&gt;%</span> <span class="co">#nombre del factor</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span> <span class="co"># Agrega total</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"all"</span>)  <span class="sc">%&gt;%</span> </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> as_label(sexo_jefe)      n
+              Hombre  70.1%
+               Mujer  29.9%
+               Total 100.0%</code></pre>
+</div>
+</div>
+</section>
+<section id="otras-formas" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="otras-formas"><span class="header-section-number">4.4</span> Otras formas</h2>
+<p>La función “count()” también permite dar pesos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sexo_jefe, clase_hog,  <span class="at">wt =</span> factor) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+   sexo_jefe clase_hog        n
+       &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+ 1         1         1  2288234
+ 2         1         2 17103678
+ 3         1         3  5408464
+ 4         1         4   179580
+ 5         1         5    92696
+ 6         2         1  1944813
+ 7         2         2  4989763
+ 8         2         3  3591323
+ 9         2         4    98773
+10         2         5    52335</code></pre>
+</div>
+</div>
+<p>Es compatible con etiquetas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(<span class="fu">as_label</span>(sexo_jefe), <span class="fu">as_label</span>(clase_hog),  <span class="at">wt =</span> factor) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+   `as_label(sexo_jefe)` `as_label(clase_hog)`        n
+   &lt;fct&gt;                 &lt;fct&gt;                    &lt;dbl&gt;
+ 1 Hombre                unipersonal            2288234
+ 2 Hombre                nuclear               17103678
+ 3 Hombre                ampliado               5408464
+ 4 Hombre                compuesto               179580
+ 5 Hombre                corresidente             92696
+ 6 Mujer                 unipersonal            1944813
+ 7 Mujer                 nuclear                4989763
+ 8 Mujer                 ampliado               3591323
+ 9 Mujer                 compuesto                98773
+10 Mujer                 corresidente             52335</code></pre>
+</div>
+</div>
+<p>Podemos mover un poquito con pivot_wider para que se vea más a lo que acostumbramos a una tabla de frecuencias</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(sexo_jefe, clase_hog), as_label) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sexo_jefe, clase_hog,  <span class="at">wt =</span> factor) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sexo_jefe, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  clase_hog      Hombre   Mujer
+  &lt;fct&gt;           &lt;dbl&gt;   &lt;dbl&gt;
+1 unipersonal   2288234 1944813
+2 nuclear      17103678 4989763
+3 ampliado      5408464 3591323
+4 compuesto      179580   98773
+5 corresidente    92696   52335</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(sexo_jefe, clase_hog), as_label) <span class="sc">%&gt;%</span> <span class="co"># otra forma de mutate y as_label</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(sexo_jefe, clase_hog,  <span class="at">wt =</span> factor) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> sexo_jefe, </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> n) <span class="sc">%&gt;%</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>() <span class="sc">%&gt;%</span> <span class="co"># Agrega total</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_percentages</span>(<span class="st">"col"</span>)  <span class="sc">%&gt;%</span> </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_pct_formatting</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    clase_hog Hombre  Mujer
+  unipersonal   9.1%  18.2%
+      nuclear  68.2%  46.7%
+     ampliado  21.6%  33.6%
+    compuesto   0.7%   0.9%
+ corresidente   0.4%   0.5%
+        Total 100.0% 100.0%</code></pre>
+</div>
+</div>
+</section>
+<section id="diseño-complejo" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="diseño-complejo"><span class="header-section-number">4.5</span> Diseño complejo</h2>
+<p>Hay muchos diseños muestrales, asumiremos el diseño simple, pero hay que revisar la documentación de la base</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Muestreo aleatorio</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ags_srvy <span class="ot">&lt;-</span> concentrado2020 <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(<span class="at">weights =</span> factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Si revisamos las encuestas tiene un diseño complejo, hay estratos y unidades primarias de muestreo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Muestreo estratificado</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>ags_srvy <span class="ot">&lt;-</span> concentrado2020 <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">upm =</span> upm,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">strata =</span> est_dis,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> factor,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">nest =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Como vemos esto es un archivo bien grande, por lo que mejor vamos a seleccionar un par de variables:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># simple random sample</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>ags_srvy <span class="ot">&lt;-</span> concentrado2020 <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(upm, est_dis, factor, clase_hog,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>         sexo_jefe, edad_jefe, educa_jefe,ing_cor, factor) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_survey_design</span>(</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">upm=</span>upm,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">strata =</span> est_dis,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">weights =</span> factor,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">nest =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Para una media ponderada</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ags_srvy <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ing_cor<span class="sc">&gt;</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="co"># sólo con ingresos</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">media_ponderada =</span> <span class="fu">survey_mean</span>(ing_cor, <span class="at">na.rm=</span>T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  media_ponderada media_ponderada_se
+            &lt;dbl&gt;              &lt;dbl&gt;
+1          50315.               341.</code></pre>
+</div>
+</div>
+<p>Si queremos los intervalos de confianza (<em>spoiler</em>):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ags_srvy <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">media_ponderada =</span> <span class="fu">survey_mean</span>(ing_cor,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">vartype =</span> <span class="st">"ci"</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  media_ponderada media_ponderada_low media_ponderada_upp
+            &lt;dbl&gt;               &lt;dbl&gt;               &lt;dbl&gt;
+1          50309.              49640.              50979.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ags_srvy <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">mediana_ponderada =</span> <span class="fu">survey_median</span>(ing_cor,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">vartype =</span> <span class="st">"ci"</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  mediana_ponderada mediana_ponderada_low mediana_ponderada_upp
+              &lt;dbl&gt;                 &lt;dbl&gt;                 &lt;dbl&gt;
+1            36624.                36365.                36882.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ags_srvy <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sexo_jefe=</span><span class="fu">as_label</span>(sexo_jefe)) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(sexo_jefe) <span class="sc">%&gt;%</span> <span class="co">#variables cuali</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">proportion =</span> <span class="fu">survey_mean</span>(), <span class="co"># proporción</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">total =</span> <span class="fu">survey_total</span>() ) <span class="co"># totales</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  sexo_jefe proportion proportion_se    total total_se
+  &lt;fct&gt;          &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+1 Hombre         0.701       0.00217 25072652   80320.
+2 Mujer          0.299       0.00217 10677007   77840.</code></pre>
+</div>
+</div>
+</section>
+<section id="creación-de-quintiles-y-otros-grupos" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="creación-de-quintiles-y-otros-grupos"><span class="header-section-number">4.6</span> Creación de quintiles y otros grupos</h2>
+<p>Uno de los elementos más comunes es crear grupos. Por ejemplo, la función cut, nos ayuda a crear variables con ciertos cortes. Por ejemplo, para recodificar por grupos etarios</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&lt;&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo=</span><span class="fu">cut</span>(edad_jefe,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">100</span>)))</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>       </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(grupo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    grupo     n      percent valid_percent
+   (0,25]  3327 0.0373795025    0.03738328
+  (25,50] 42558 0.4781475406    0.47819589
+  (50,75] 36085 0.4054221064    0.40546311
+ (75,100]  7027 0.0789497337    0.07895772
+     &lt;NA&gt;     9 0.0001011168            NA</code></pre>
+</div>
+</div>
+<p>Algunas opciones se pueden modificar dentro de la función cut</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&lt;&gt;%</span> </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grupo=</span><span class="fu">cut</span>(edad_jefe,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">breaks=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">100</span>),</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">include.lowest=</span>T,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">right=</span> F))</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>       </span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(grupo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    grupo     n      percent valid_percent
+   [0,25)  2502 0.0281104645    0.02811331
+  [25,50) 41068 0.4614070962    0.46145376
+  [50,75) 37488 0.4211850886    0.42122768
+ [75,100]  7939 0.0891962340    0.08920525
+     &lt;NA&gt;     9 0.0001011168            NA</code></pre>
+</div>
+</div>
+<p>Esto nos puede ayudar para hacer variables de rangos de cualquier tipo.</p>
+<p>Otro tipo de variables muy importante son los quintiles y demás.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&lt;&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">quintil0=</span><span class="fu">ntile</span>(ing_cor, <span class="at">n=</span><span class="dv">5</span>))</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(quintil0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> quintil0     n   percent
+        1 17802 0.2000090
+        2 17801 0.1999978
+        3 17801 0.1999978
+        4 17801 0.1999978
+        5 17801 0.1999978</code></pre>
+</div>
+</div>
+<p>Pero quizás nos interesa más los quintiles que toman en cuenta el factor de expansión</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&lt;&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">quintil1=</span>dineq<span class="sc">::</span><span class="fu">ntiles.wtd</span>(ing_cor, <span class="at">n=</span><span class="dv">5</span>, <span class="at">weights=</span>factor))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(quintil1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> quintil1     n   percent
+        1 19133 0.2149630
+        2 18253 0.2050761
+        3 17803 0.2000202
+        4 17609 0.1978406
+        5 16208 0.1821001</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(quintil1, <span class="at">wt=</span>factor) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p=</span>n<span class="sc">/</span><span class="fu">sum</span>(n)<span class="sc">*</span><span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> quintil1        n         p
+        1  7150004  20.00020
+        2  7150151  20.00061
+        3  7149344  19.99836
+        4  7150470  20.00151
+        5  7149690  19.99932
+    Total 35749659 100.00000</code></pre>
+</div>
+</div>
+<p>Podemos también ver la diferencia en los máximos y minimos de ambas variables</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(quintil0) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">min=</span><span class="fu">min</span>(ing_cor),</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">max=</span><span class="fu">max</span>(ing_cor))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  quintil0    min       max
+     &lt;int&gt;  &lt;dbl&gt;     &lt;dbl&gt;
+1        1     0     18934.
+2        2 18935.    29188.
+3        3 29188.    42257.
+4        4 42257.    65267.
+5        5 65268. 10702107.</code></pre>
+</div>
+</div>
+<p>Veamos con la ponderación:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(quintil1) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">min=</span><span class="fu">min</span>(ing_cor),</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">max=</span><span class="fu">max</span>(ing_cor))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 3
+  quintil1    min       max
+     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;
+1        1     0     19666.
+2        2 19668.    30326.
+3        3 30326.    44017.
+4        4 44017.    68533.
+5        5 68534. 10702107.</code></pre>
+</div>
+</div>
+<p>La flexibilidad de dplyr nos permite además hacer quintiles fácilmente adentro de grupos. Por ejemplo si quisiéramos hacer quintiles estatales… Claro para eso debemos tener la variable.</p>
+<p>La variable “ubica_geo”, nos da esa información pero junta</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ubica_geo) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 1
+  ubica_geo
+  &lt;chr&gt;    
+1 01001    
+2 01001    
+3 01001    
+4 01001    
+5 01001    
+6 01001    </code></pre>
+</div>
+</div>
+<p>Vamos a crear dos variables, uan que nos diga la entidad y la otra el municipio</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&lt;&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ent=</span>stringr<span class="sc">::</span><span class="fu">str_sub</span>(ubica_geo, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">end =</span> <span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mun=</span>stringr<span class="sc">::</span><span class="fu">str_sub</span>(ubica_geo, <span class="at">start =</span> <span class="dv">3</span>, <span class="at">end =</span> <span class="dv">5</span>))</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> <span class="fu">tabyl</span>(ent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> ent    n    percent
+  01 2669 0.02998674
+  02 4142 0.04653619
+  03 2717 0.03052603
+  04 2174 0.02442532
+  05 3922 0.04406445
+  06 3282 0.03687392
+  07 2123 0.02385232
+  08 4572 0.05136732
+  09 2570 0.02887446
+  10 2746 0.03085185
+  11 3083 0.03463811
+  12 2490 0.02797564
+  13 2213 0.02486349
+  14 2779 0.03122261
+  15 3568 0.04008719
+  16 2047 0.02299845
+  17 2564 0.02880705
+  18 2103 0.02362762
+  19 3502 0.03934566
+  20 2596 0.02916657
+  21 2141 0.02405456
+  22 3769 0.04234546
+  23 2196 0.02467249
+  24 2521 0.02832393
+  25 3429 0.03852549
+  26 2420 0.02718918
+  27 2088 0.02345909
+  28 2311 0.02596454
+  29 2159 0.02425679
+  30 2717 0.03052603
+  31 2889 0.03245849
+  32 2504 0.02813293</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> <span class="fu">tabyl</span>(mun)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> mun    n      percent
+ 001 4929 5.537829e-02
+ 002 4164 4.678336e-02
+ 003 3196 3.590769e-02
+ 004 3636 4.085118e-02
+ 005 3578 4.019954e-02
+ 006 3230 3.628969e-02
+ 007 3069 3.448082e-02
+ 008 2271 2.551513e-02
+ 009 1779 1.998742e-02
+ 010 2050 2.303216e-02
+ 011 1819 2.043682e-02
+ 012 1738 1.952677e-02
+ 013 1317 1.479676e-02
+ 014 2189 2.459385e-02
+ 015  855 9.606094e-03
+ 016 1022 1.148237e-02
+ 017 2582 2.900928e-02
+ 018 1436 1.613374e-02
+ 019 1277 1.434735e-02
+ 020 1733 1.947060e-02
+ 021  963 1.081950e-02
+ 022  601 6.752354e-03
+ 023  355 3.988495e-03
+ 024  569 6.392827e-03
+ 025  716 8.044402e-03
+ 026  606 6.808530e-03
+ 027  925 1.039256e-02
+ 028 1017 1.142620e-02
+ 029  882 9.909444e-03
+ 030 1851 2.079635e-02
+ 031  853 9.583624e-03
+ 032  889 9.988091e-03
+ 033 1339 1.504393e-02
+ 034  407 4.572725e-03
+ 035 1637 1.839202e-02
+ 036  467 5.246837e-03
+ 037 1695 1.904366e-02
+ 038  789 8.864571e-03
+ 039 1434 1.611127e-02
+ 040  309 3.471676e-03
+ 041  756 8.493809e-03
+ 042  402 4.516549e-03
+ 043  445 4.999663e-03
+ 044  337 3.786262e-03
+ 045  269 3.022268e-03
+ 046  524 5.887244e-03
+ 047  259 2.909916e-03
+ 048  634 7.123115e-03
+ 049  234 2.629036e-03
+ 050 1125 1.263960e-02
+ 051  427 4.797429e-03
+ 052  340 3.819967e-03
+ 053  593 6.662472e-03
+ 054  266 2.988563e-03
+ 055  557 6.258005e-03
+ 056  437 4.909781e-03
+ 057  320 3.595263e-03
+ 058  289 3.246972e-03
+ 059  240 2.696447e-03
+ 060  143 1.606633e-03
+ 061  206 2.314451e-03
+ 062  252 2.831270e-03
+ 063  232 2.606566e-03
+ 064  167 1.876278e-03
+ 065  203 2.280745e-03
+ 066  146 1.640339e-03
+ 067  381 4.280610e-03
+ 068   91 1.022403e-03
+ 069  246 2.763859e-03
+ 070   83 9.325214e-04
+ 071  157 1.763926e-03
+ 072   60 6.741119e-04
+ 073  251 2.820035e-03
+ 074  147 1.651574e-03
+ 075   38 4.269375e-04
+ 076  306 3.437970e-03
+ 077  159 1.786396e-03
+ 078  127 1.426870e-03
+ 079  277 3.112150e-03
+ 080   21 2.359392e-04
+ 081   70 7.864638e-04
+ 082  157 1.763926e-03
+ 083  157 1.763926e-03
+ 084   89 9.999326e-04
+ 085  181 2.033571e-03
+ 086   92 1.033638e-03
+ 087  257 2.887446e-03
+ 088   77 8.651102e-04
+ 089  237 2.662742e-03
+ 090   41 4.606431e-04
+ 091  119 1.336989e-03
+ 092   78 8.763454e-04
+ 093   81 9.100510e-04
+ 094   63 7.078175e-04
+ 095   23 2.584095e-04
+ 096  176 1.977395e-03
+ 097  356 3.999730e-03
+ 098  263 2.954857e-03
+ 099  140 1.572928e-03
+ 100   94 1.056109e-03
+ 101  537 6.033301e-03
+ 102  359 4.033436e-03
+ 104  222 2.494214e-03
+ 105  222 2.494214e-03
+ 106  308 3.460441e-03
+ 107  125 1.404400e-03
+ 108  364 4.089612e-03
+ 109  114 1.280813e-03
+ 110   64 7.190526e-04
+ 111   95 1.067344e-03
+ 112   92 1.033638e-03
+ 113   83 9.325214e-04
+ 114  639 7.179291e-03
+ 115  123 1.381929e-03
+ 116   16 1.797632e-04
+ 117   23 2.584095e-04
+ 118   65 7.302878e-04
+ 119   34 3.819967e-04
+ 120  381 4.280610e-03
+ 121  120 1.348224e-03
+ 122   49 5.505247e-04
+ 123   76 8.538750e-04
+ 124  110 1.235872e-03
+ 125   29 3.258207e-04
+ 127   21 2.359392e-04
+ 128   59 6.628767e-04
+ 129   24 2.696447e-04
+ 130   34 3.819967e-04
+ 131   70 7.864638e-04
+ 132   80 8.988158e-04
+ 133   32 3.595263e-04
+ 134   20 2.247040e-04
+ 135    8 8.988158e-05
+ 136   24 2.696447e-04
+ 138   22 2.471743e-04
+ 140   36 4.044671e-04
+ 141  109 1.224637e-03
+ 142   20 2.247040e-04
+ 143   25 2.808799e-04
+ 144   64 7.190526e-04
+ 145   42 4.718783e-04
+ 149   18 2.022336e-04
+ 153   24 2.696447e-04
+ 154   42 4.718783e-04
+ 156   96 1.078579e-03
+ 157    7 7.864638e-05
+ 160   66 7.415230e-04
+ 163   44 4.943487e-04
+ 164   35 3.932319e-04
+ 167   23 2.584095e-04
+ 169   24 2.696447e-04
+ 170   63 7.078175e-04
+ 171   33 3.707615e-04
+ 173   58 6.516415e-04
+ 174   43 4.831135e-04
+ 175   72 8.089342e-04
+ 176   24 2.696447e-04
+ 177   22 2.471743e-04
+ 179   23 2.584095e-04
+ 181   17 1.909984e-04
+ 183   38 4.269375e-04
+ 184  159 1.786396e-03
+ 186   20 2.247040e-04
+ 187   20 2.247040e-04
+ 188   19 2.134688e-04
+ 189   73 8.201694e-04
+ 191   16 1.797632e-04
+ 193  161 1.808867e-03
+ 194   22 2.471743e-04
+ 197   21 2.359392e-04
+ 199   21 2.359392e-04
+ 200   24 2.696447e-04
+ 201   83 9.325214e-04
+ 202   43 4.831135e-04
+ 204   21 2.359392e-04
+ 205   23 2.584095e-04
+ 206   42 4.718783e-04
+ 208   43 4.831135e-04
+ 212   14 1.572928e-04
+ 227    5 5.617599e-05
+ 234   20 2.247040e-04
+ 261   23 2.584095e-04
+ 266   20 2.247040e-04
+ 271   16 1.797632e-04
+ 277   39 4.381727e-04
+ 278   47 5.280543e-04
+ 293   16 1.797632e-04
+ 295   22 2.471743e-04
+ 302   22 2.471743e-04
+ 309   20 2.247040e-04
+ 315   19 2.134688e-04
+ 318   42 4.718783e-04
+ 324  143 1.606633e-03
+ 334   66 7.415230e-04
+ 348   24 2.696447e-04
+ 349   21 2.359392e-04
+ 350   11 1.235872e-04
+ 364   23 2.584095e-04
+ 365   15 1.685280e-04
+ 372   18 2.022336e-04
+ 385   70 7.864638e-04
+ 390   20 2.247040e-04
+ 394   20 2.247040e-04
+ 397   16 1.797632e-04
+ 399   11 1.235872e-04
+ 401   21 2.359392e-04
+ 403    5 5.617599e-05
+ 406   33 3.707615e-04
+ 413   42 4.718783e-04
+ 418   48 5.392895e-04
+ 439   41 4.606431e-04
+ 441   24 2.696447e-04
+ 447   22 2.471743e-04
+ 460   21 2.359392e-04
+ 466   20 2.247040e-04
+ 467   25 2.808799e-04
+ 469   37 4.157023e-04
+ 482   22 2.471743e-04
+ 483   22 2.471743e-04
+ 491   21 2.359392e-04
+ 504   22 2.471743e-04
+ 515   21 2.359392e-04
+ 539   19 2.134688e-04
+ 546   21 2.359392e-04
+ 551   43 4.831135e-04
+ 553    9 1.011168e-04
+ 559   43 4.831135e-04
+ 570   46 5.168191e-04</code></pre>
+</div>
+</div>
+<p>Hoy sí podemos hacer nuestras variables dentro de cada entidad federativa</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&lt;&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ent) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">quintil2=</span>dineq<span class="sc">::</span><span class="fu">ntiles.wtd</span>(ing_cor, <span class="at">n=</span><span class="dv">5</span>, <span class="at">weights=</span>factor)) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>¿Discreparán muchos los hogares en sus distribuciones a nivel nacional y por entidad?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>concentrado2020 <span class="sc">%&gt;%</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(quintil1,quintil2) <span class="sc">%&gt;%</span> </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">adorn_totals</span>(<span class="fu">c</span>(<span class="st">"row"</span>, <span class="st">"col"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> quintil1     1     2     3     4     5 Total
+        1 15878  3088   167     0     0 19133
+        2  4413 10071  3503   266     0 18253
+        3     0  5583  8917  3221    82 17803
+        4     0     0  5089 10301  2219 17609
+        5     0     0     0  2969 13239 16208
+    Total 20291 18742 17676 16757 15540 89006</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./P3.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis descriptivo básico</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

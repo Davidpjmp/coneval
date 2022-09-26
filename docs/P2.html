@@ -181,6 +181,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="./P3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis descriptivo básico</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P4.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Factores de expansión y algunas otras medidas</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -205,7 +210,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#selección-de-casos-y-de-variables" id="toc-selección-de-casos-y-de-variables" class="nav-link" data-scroll-target="#selección-de-casos-y-de-variables"><span class="toc-section-number">2.5.3</span>  Selección de casos y de variables</a></li>
   </ul></li>
   <li><a href="#subsetting" id="toc-subsetting" class="nav-link" data-scroll-target="#subsetting"><span class="toc-section-number">2.6</span>  “Subsetting”</a></li>
-  <li><a href="#leer-desde-archivos-de-texto-y-desde-una-url" id="toc-leer-desde-archivos-de-texto-y-desde-una-url" class="nav-link" data-scroll-target="#leer-desde-archivos-de-texto-y-desde-una-url"><span class="toc-section-number">2.7</span>  Leer desde archivos de texto y desde una url</a></li>
   </ul>
 </nav>
     </div>
@@ -699,21 +703,6 @@ NULL</code></pre>
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>subset4<span class="ot">&lt;-</span>concentrado2020 <span class="sc">%&gt;%</span> </span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(ing_cor<span class="sc">&gt;</span><span class="dv">5000</span> <span class="sc">&amp;</span> sexo_jefe<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(sexo_jefe, edad_jefe, ing_cor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="leer-desde-archivos-de-texto-y-desde-una-url" class="level2" data-number="2.7">
-<h2 data-number="2.7" class="anchored" data-anchor-id="leer-desde-archivos-de-texto-y-desde-una-url"><span class="header-section-number">2.7</span> Leer desde archivos de texto y desde una url</h2>
-<p>Desde el portal <a href="https://datos.gob.mx/" class="uri">https://datos.gob.mx/</a> tenemos acceso a directo a varias fuentes de información, al ser datos abiertos, los archivos de texto son muy comunes.</p>
-<p>Leeremos parte de esa información, específicamente la de CONAPO <a href="https://datos.gob.mx/busca/dataset/proyecciones-de-la-poblacion-de-mexico-y-de-las-entidades-federativas-2016-2050" class="uri">https://datos.gob.mx/busca/dataset/proyecciones-de-la-poblacion-de-mexico-y-de-las-entidades-federativas-2016-2050</a></p>
-<p>En estas bases hay acentos y otros carecteres especiales del español, por lo que agregaremos una opción de “encoding”, de lo contrario da error.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>mig_inter_quin_proyecciones <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"http://www.conapo.gob.mx/work/models/CONAPO/Datos_Abiertos/Proyecciones2018/mig_inter_quin_proyecciones.csv"</span>, <span class="at">encoding=</span><span class="st">"latin1"</span>)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co">#View(mig_inter_quin_proyecciones)</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mig_inter_quin_proyecciones)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "RENGLON"     "AÑO"         "ENTIDAD"     "CVE_GEO"     "EDAD"       
-[6] "SEXO"        "EMIGRANTES"  "INMIGRANTES"</code></pre>
-</div>
 </div>
 
 
