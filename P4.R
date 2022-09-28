@@ -1,0 +1,321 @@
+###############################################################################-
+# Práctica 4
+# Factores de expansión
+# Autor:Ana Escoto
+# Fecha: 10-09-2022
+############################################################################# -
+
+if (!require("pacman")) install.packages("pacman")#instala pacman si se requiere
+pacman::p_load(tidyverse,
+               readxl,
+               writexl, 
+               haven,
+               sjlabelled, 
+               janitor,
+               magrittr,
+               GGally,
+               wesanderson,
+               gt,
+               srvyr,
+               dineq
+)
+
+# Cargando los datos ----
+# Desde STATA y haremos unos cambios…
+
+concentrado2020 <- read_dta("datos/concentrado2020.dta") %>% 
+  mutate(across(c(sexo_jefe, clase_hog, educa_jefe), as.numeric)) %>% # ojo aquí
+  set_labels(sexo_jefe, labels=c("Hombre", "Mujer")) %>% 
+  set_labels(clase_hog, labels=c("unipersonal","nuclear", "ampliado",
+                                 "compuesto","corresidente"))   %>% 
+  set_labels(educa_jefe,
+             labels=c("Sin instrucción", 
+                      "Preescolar",
+                      "Primaria incompleta",
+                      "Primaria completa",
+                      "Secundaria incompleta",
+                      "Secundaria completa",
+                      "Preparatoria incompleta",
+                      "Preparatoria completa",
+                      "Profesional incompleta",
+                      "Profesional completa",
+                      "Posgrado"))
+
+# La función tally ----
+# El comando “tabyl()” del paquete “janitor” es muy útil pero no es compatible con los factores del expansión.
+# En realidad, tabyl() nos ahorra un poco el hecho de tener que agrupar nuestra base en categorías y 
+#luego hacer un conteo para cada una de ellas. “tally()” es un comando que nos hace ese conteo y “group_by” nos agrupa las observaciones de nuestra base de datos para hacer cualquier operación.
+
+concentrado2020 %>% 
+  group_by(as_label(sexo_jefe)) %>% 
+  tally(factor) %>% #nombre del factor
+  adorn_totals()  # Agrega total
+
+
+# Podemos usar funciones de janitor
+
+concentrado2020 %>% 
+  group_by(as_label(sexo_jefe)) %>% 
+  tally(factor) %>% #nombre del factor
+  adorn_totals() %>% # Agrega total
+  adorn_percentages("all")  %>% 
+  adorn_pct_formatting()
+
+# Otras formas  ----
+
+#La función “count()” también permite dar pesos
+
+concentrado2020 %>% 
+  count(sexo_jefe, clase_hog,  wt = factor) 
+
+#Es compatible con etiquetas
+
+concentrado2020 %>% 
+  count(as_label(sexo_jefe), as_label(clase_hog),  wt = factor) 
+
+#Podemos mover un poquito con pivot_wider para que se vea más a lo que acostumbramos a 
+#una tabla de frecuencias
+
+concentrado2020 %>% 
+  mutate_at(vars(sexo_jefe, clase_hog), as_label) %>% 
+  count(sexo_jefe, clase_hog,  wt = factor) %>% 
+  tidyr::pivot_wider(names_from = sexo_jefe, 
+                     values_from = n)
+
+concentrado2020 %>% 
+  mutate_at(vars(sexo_jefe, clase_hog), as_label) %>% # otra forma de mutate y as_label
+  count(sexo_jefe, clase_hog,  wt = factor) %>% 
+  pivot_wider(names_from = sexo_jefe, 
+              values_from = n) %>%
+  adorn_totals() %>% # Agrega total
+  adorn_percentages("col")  %>% 
+  adorn_pct_formatting()
+
+
+
+# Diseño complejo ----
+
+# Hay muchos diseños muestrales, asumiremos el diseño simple, pero hay que revisar la documentación de la base
+
+# Muestreo aleatorio
+ags_srvy <- concentrado2020 %>%
+  as_survey_design(weights = factor)
+
+# Si revisamos las encuestas tiene un diseño complejo, hay estratos y unidades primarias de muestreo
+
+
+# Muestreo estratificado
+ags_srvy <- concentrado2020 %>%
+  as_survey_design(
+    upm = upm,
+    strata = est_dis,
+    weights = factor,
+    nest = TRUE)
+
+# Como vemos esto es un archivo bien grande, por lo que mejor vamos a seleccionar un par de variables:
+  
+
+ags_srvy <- concentrado2020 %>%
+  select(upm, est_dis, factor, clase_hog,
+         sexo_jefe, edad_jefe, educa_jefe,ing_cor, factor) %>% 
+  as_survey_design(
+    upm=upm,
+    strata = est_dis,
+    weights = factor,
+    nest = TRUE)
+
+
+
+# Para una media ponderada
+
+ags_srvy %>%
+  filter(ing_cor>0) %>% # sólo con ingresos
+  summarise(
+    media_ponderada = survey_mean(ing_cor, na.rm=T))
+
+# Si queremos los intervalos de confianza:
+  
+ags_srvy %>%
+  summarize(
+    media_ponderada = survey_mean(ing_cor,
+                                  vartype = "ci") )
+
+ags_srvy %>%
+  summarize(
+    mediana_ponderada = survey_median(ing_cor,
+                                      vartype = "ci") )
+
+
+ags_srvy %>%
+  mutate(sexo_jefe=as_label(sexo_jefe)) %>% 
+  group_by(sexo_jefe) %>% #variables cuali
+  summarize(proportion = survey_mean(), # proporción
+            total = survey_total() ) # totales
+
+
+# Creación de quintiles y otros grupos ----
+
+## cut() ----
+# Uno de los elementos más comunes es crear grupos. Por ejemplo, la función cut,
+# nos ayuda a crear variables con ciertos cortes. Por ejemplo, para recodificar por grupos etarios
+
+concentrado2020 %<>% 
+  mutate(grupo=cut(edad_jefe,
+                   breaks=c(0, 25, 50, 75, 100)))
+
+
+concentrado2020 %>% 
+  tabyl(grupo)
+
+# Algunas opciones se pueden modificar dentro de la función cut
+
+concentrado2020 %<>% 
+  mutate(grupo=cut(edad_jefe,
+                   breaks=c(0, 25, 50, 75, 100),
+                   include.lowest=T,
+                   right= F))
+
+
+concentrado2020 %>% 
+  tabyl(grupo)
+
+# Esto nos puede ayudar para hacer variables de rangos de cualquier tipo.
+
+## Quintiles ----
+# Otro tipo de variables muy importante son los quintiles y demás.
+
+
+concentrado2020 %<>%
+  mutate(quintil0=ntile(ing_cor, n=5))
+
+concentrado2020 %>% 
+  tabyl(quintil0)
+
+# Pero quizás nos interesa más los quintiles que toman en cuenta el factor de expansión
+
+concentrado2020 %<>%
+  mutate(quintil1=dineq::ntiles.wtd(ing_cor, n=5, weights=factor))
+
+concentrado2020 %>% 
+  tabyl(quintil1)
+
+concentrado2020 %>% 
+  count(quintil1, wt=factor) %>% 
+  mutate(p=n/sum(n)*100) %>%
+  adorn_totals()
+
+
+# Podemos también ver la diferencia en los máximos y minimos de ambas variables
+
+concentrado2020 %>% 
+  group_by(quintil0) %>% 
+  summarise(min=min(ing_cor),
+            max=max(ing_cor))
+
+# Veamos con la ponderación:
+  
+concentrado2020 %>% 
+  group_by(quintil1) %>% 
+  summarise(min=min(ing_cor),
+            max=max(ing_cor))
+
+
+## str_sub() ----
+
+# La flexibilidad de dplyr nos permite además hacer quintiles fácilmente adentro de grupos. Por ejemplo si quisiéramos hacer quintiles estatales... Claro para eso debemos tener la variable.
+# 
+# La variable "ubica_geo", nos da esa información pero junta
+
+concentrado2020 %>% 
+  select(ubica_geo) %>% 
+  head
+
+# Vamos a crear dos variables, uan que nos diga la entidad y la otra el municipio
+
+concentrado2020 %<>%
+  mutate(ent=stringr::str_sub(ubica_geo, start = 1, end = 2)) %>% 
+  mutate(mun=stringr::str_sub(ubica_geo, start = 3, end = 5))
+
+concentrado2020 %>% tabyl(ent)
+concentrado2020 %>% tabyl(mun)
+
+# Hoy sí podemos hacer nuestras variables dentro de cada entidad federativa
+
+concentrado2020 %<>%
+  group_by(ent) %>% 
+  mutate(quintil2=dineq::ntiles.wtd(ing_cor, n=5, weights=factor)) %>% 
+  ungroup()
+
+
+# ¿Discreparán muchos los hogares en sus distribuciones a nivel nacional y por entidad?
+
+concentrado2020 %>% 
+  tabyl(quintil1,quintil2) %>% 
+  adorn_totals(c("row", "col"))
+
+
+# Y si queremos este tabulado más bonito
+
+concentrado2020 %>%
+  tabyl(quintil1,quintil2) %>%
+  adorn_totals(c("row", "col")) %>%
+  gt()
+
+concentrado2020 %>%
+  tabyl(quintil1,quintil2) %>%
+  adorn_totals(c("row", "col")) %>%
+  gt()  %>% 
+  tab_header(
+    title = md("Distribución de los hogares en **México**"),
+    subtitle = md("Según quintiles y *quintiles*")) %>% 
+  tab_footnote(
+    footnote = paste(get_label(concentrado2020$ing_cor))
+  )
+
+
+## Recodificación de variables ----
+
+# Por ejemplo, si quisiéramos hacer una variable que separara a los hogares
+# de acuerdo al grupo etario del jefe
+
+### if_else()
+
+concentrado2020 %<>% 
+  mutate(joven=dplyr::if_else(edad_jefe<30, 1, 0))
+
+concentrado2020 %>% tabyl(edad_jefe,joven)
+
+### case_when()
+
+# Esto nos ayuda para recodificación múltiple
+
+
+concentrado2020 %<>% 
+  mutate(grupo_edad2=dplyr::case_when(edad_jefe<30 ~ 1,
+                                      edad_jefe>29 & edad_jefe<45 ~ 2,
+                                      edad_jefe>44 & edad_jefe<65 ~ 3,
+                                      edad_jefe>64 ~ 4))
+
+#TRUE~ 4
+
+concentrado2020 %>% tabyl(edad_jefe,grupo_edad2)
+
+## rename() ----
+
+# Para cambiar los nombres de las variables podemos cambiarlos nombres
+
+concentrado2020 %<>%
+  dplyr::rename(nuevo_nombre=grupo_edad2)
+
+
+# Esto en base sería similar a 
+
+names(concentrado2020)[134]<-"grupo_edad2"
+
+names(concentrado2020)
+
+# Practica
+# Genere una variable de Deciles de ingresos dentro de cada tamaño de localidad tam_loc
+# Etiquete los valores con números romanos
+# Encuentre el coeficiente de variación para las estimaciones dentro de esa variable,
+# sexo del jefe y tambaño de localidad
