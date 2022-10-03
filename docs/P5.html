@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.163">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R para el monitoreo de la política de desarrollo social - 5&nbsp; Fusionado de conjuntos de datos</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./P4.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fusionado de conjuntos de datos</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R para el monitoreo de la política de desarrollo social</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Introducción al curso</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./instala.html" class="sidebar-item-text sidebar-link">Instalación de R y Rstudio</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Primer acercamiento al uso del programa</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Manejo de datos: importación, selección y revisión</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis descriptivo básico</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P4.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Factores de expansión y algunas otras medidas</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P5.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fusionado de conjuntos de datos</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#importación-bases-enigh-2020" id="toc-importación-bases-enigh-2020" class="nav-link active" data-scroll-target="#importación-bases-enigh-2020"><span class="toc-section-number">5.1</span>  Importación bases ENIGH 2020</a></li>
+  <li><a href="#juntando-bases" id="toc-juntando-bases" class="nav-link" data-scroll-target="#juntando-bases"><span class="toc-section-number">5.2</span>  Juntando bases</a></li>
+  <li><a href="#merge-con-id-compuesto" id="toc-merge-con-id-compuesto" class="nav-link" data-scroll-target="#merge-con-id-compuesto"><span class="toc-section-number">5.3</span>  Merge con id compuesto</a></li>
+  <li><a href="#bases-de-distinto-tamaño" id="toc-bases-de-distinto-tamaño" class="nav-link" data-scroll-target="#bases-de-distinto-tamaño"><span class="toc-section-number">5.4</span>  Bases de distinto tamaño</a></li>
+  <li><a href="#cuatro-formas-de-hacer-un-fusionado" id="toc-cuatro-formas-de-hacer-un-fusionado" class="nav-link" data-scroll-target="#cuatro-formas-de-hacer-un-fusionado"><span class="toc-section-number">5.5</span>  Cuatro formas de hacer un fusionado</a>
+  <ul class="collapse">
+  <li><a href="#casos-en-ambas-bases" id="toc-casos-en-ambas-bases" class="nav-link" data-scroll-target="#casos-en-ambas-bases"><span class="toc-section-number">5.5.1</span>  Casos en ambas bases</a></li>
+  <li><a href="#todos-los-casos" id="toc-todos-los-casos" class="nav-link" data-scroll-target="#todos-los-casos"><span class="toc-section-number">5.5.2</span>  Todos los casos</a></li>
+  <li><a href="#casos-en-la-base-1" id="toc-casos-en-la-base-1" class="nav-link" data-scroll-target="#casos-en-la-base-1"><span class="toc-section-number">5.5.3</span>  Casos en la base 1</a></li>
+  <li><a href="#casos-de-la-base-2" id="toc-casos-de-la-base-2" class="nav-link" data-scroll-target="#casos-de-la-base-2"><span class="toc-section-number">5.5.4</span>  Casos de la base 2</a></li>
+  </ul></li>
+  <li><a href="#las-cuatro-formas-en-dplyr" id="toc-las-cuatro-formas-en-dplyr" class="nav-link" data-scroll-target="#las-cuatro-formas-en-dplyr"><span class="toc-section-number">5.6</span>  Las cuatro formas en <code>dplyr</code></a></li>
+  <li><a href="#práctica" id="toc-práctica" class="nav-link" data-scroll-target="#práctica"><span class="toc-section-number">5.7</span>  Práctica</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fusionado de conjuntos de datos</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="importación-bases-enigh-2020" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="importación-bases-enigh-2020"><span class="header-section-number">5.1</span> Importación bases ENIGH 2020</h2>
+<p>Vamos a trabajar con esta base que tiene elementos separados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>) <span class="co"># instala pacman si se requiere</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: pacman</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(skimr,tidyverse, magrittr, <span class="co"># sobretodo para dplyr</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>              haven, readxl, <span class="co">#importación</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>              janitor, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>              sjlabelled) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Hoy cargamos la versión seccionada de la base</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>viviendas <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_dta</span>(<span class="st">"datos/viviendas2020.dta"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>hogares <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_dta</span>(<span class="st">"datos/hogares2020.dta"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>poblacion<span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_dta</span>(<span class="st">"datos/poblacion2020.dta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="juntando-bases" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="juntando-bases"><span class="header-section-number">5.2</span> Juntando bases</h2>
+<p>Muchas bases de datos están organizadas en varias tablas. La ventaja de la programación por objetos de R, nos permite tener las bases cargadas en nuestro ambiente y llamarlas y juntarlas cuando sea necesario.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(viviendas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 87754    64</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(viviendas[,<span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "folioviv"   "tipo_viv"   "mat_pared"  "mat_techos" "mat_pisos" 
+ [6] "antiguedad" "antigua_ne" "cocina"     "cocina_dor" "cuart_dorm"
+[11] "num_cuarto" "disp_agua"  "dotac_agua" "excusado"   "uso_compar"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(hogares)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 89006   137</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hogares[,<span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "folioviv"   "foliohog"   "huespedes"  "huesp_come" "num_trab_d"
+ [6] "trab_come"  "acc_alim1"  "acc_alim2"  "acc_alim3"  "acc_alim4" 
+[11] "acc_alim5"  "acc_alim6"  "acc_alim7"  "acc_alim8"  "acc_alim9" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(poblacion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 315743    184</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(poblacion[,<span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "folioviv"   "foliohog"   "numren"     "parentesco" "sexo"      
+ [6] "edad"       "madre_hog"  "madre_id"   "padre_hog"  "padre_id"  
+[11] "disc_camin" "disc_ver"   "disc_brazo" "disc_apren" "disc_oir"  </code></pre>
+</div>
+</div>
+<p>Para juntar bases usamos el comando “merge”</p>
+<p>En “by” ponemos el id, correspondiente a la variable o variables que forman el id, entrecomillado. Cuando estamos mezclando bases del mismo nivel de análisis el id es igual en ambas bases. Cuando estamos incoporando información de bases de distinto nivel debemos escoger</p>
+<p>En general ponemos el id de la base de mayor nivel. En este caso, sabemos que a una vivienda corresponde más de un hogar. Tal como revisamos nuestra documentación, sabemos que el id de la tabla “viviendas” es “folioviv”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>merge_data<span class="ot">&lt;-</span> <span class="fu">merge</span>(viviendas, hogares, <span class="at">by=</span><span class="st">"folioviv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Revisemos la base creada</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(merge_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "folioviv"    "tipo_viv"    "mat_pared"   "mat_techos"  "mat_pisos"  
+  [6] "antiguedad"  "antigua_ne"  "cocina"      "cocina_dor"  "cuart_dorm" 
+ [11] "num_cuarto"  "disp_agua"   "dotac_agua"  "excusado"    "uso_compar" 
+ [16] "sanit_agua"  "biodigest"   "bano_comp"   "bano_excus"  "bano_regad" 
+ [21] "drenaje"     "disp_elect"  "focos_inca"  "focos_ahor"  "combustible"
+ [26] "estufa_chi"  "eli_basura"  "tenencia"    "renta"       "estim_pago" 
+ [31] "pago_viv"    "pago_mesp"   "tipo_adqui"  "viv_usada"   "tipo_finan" 
+ [36] "num_dueno1"  "hog_dueno1"  "num_dueno2"  "hog_dueno2"  "escrituras" 
+ [41] "lavadero"    "fregadero"   "regadera"    "tinaco_azo"  "cisterna"   
+ [46] "pileta"      "calent_sol"  "calent_gas"  "medidor_luz" "bomba_agua" 
+ [51] "tanque_gas"  "aire_acond"  "calefacc"    "tot_resid"   "tot_hom"    
+ [56] "tot_muj"     "tot_hog"     "ubica_geo"   "tam_loc"     "est_socio"  
+ [61] "est_dis"     "upm"         "factor"      "procaptar"   "foliohog"   
+ [66] "huespedes"   "huesp_come"  "num_trab_d"  "trab_come"   "acc_alim1"  
+ [71] "acc_alim2"   "acc_alim3"   "acc_alim4"   "acc_alim5"   "acc_alim6"  
+ [76] "acc_alim7"   "acc_alim8"   "acc_alim9"   "acc_alim10"  "acc_alim11" 
+ [81] "acc_alim12"  "acc_alim13"  "acc_alim14"  "acc_alim15"  "acc_alim16" 
+ [86] "alim17_1"    "alim17_2"    "alim17_3"    "alim17_4"    "alim17_5"   
+ [91] "alim17_6"    "alim17_7"    "alim17_8"    "alim17_9"    "alim17_10"  
+ [96] "alim17_11"   "alim17_12"   "acc_alim18"  "telefono"    "celular"    
+[101] "tv_paga"     "conex_inte"  "num_auto"    "anio_auto"   "num_van"    
+[106] "anio_van"    "num_pickup"  "anio_pickup" "num_moto"    "anio_moto"  
+[111] "num_bici"    "anio_bici"   "num_trici"   "anio_trici"  "num_carret" 
+[116] "anio_carret" "num_canoa"   "anio_canoa"  "num_otro"    "anio_otro"  
+[121] "num_ester"   "anio_ester"  "num_grab"    "anio_grab"   "num_radio"  
+[126] "anio_radio"  "num_tva"     "anio_tva"    "num_tvd"     "anio_tvd"   
+[131] "num_dvd"     "anio_dvd"    "num_video"   "anio_video"  "num_licua"  
+[136] "anio_licua"  "num_tosta"   "anio_tosta"  "num_micro"   "anio_micro" 
+[141] "num_refri"   "anio_refri"  "num_estuf"   "anio_estuf"  "num_lavad"  
+[146] "anio_lavad"  "num_planc"   "anio_planc"  "num_maqui"   "anio_maqui" 
+[151] "num_venti"   "anio_venti"  "num_aspir"   "anio_aspir"  "num_compu"  
+[156] "anio_compu"  "num_impre"   "anio_impre"  "num_juego"   "anio_juego" 
+[161] "esc_radio"   "er_aparato"  "er_celular"  "er_compu"    "er_aplicac" 
+[166] "er_tv"       "er_otro"     "recib_tvd"   "tsalud1_h"   "tsalud1_m"  
+[171] "habito_1"    "habito_2"    "habito_3"    "habito_4"    "habito_5"   
+[176] "habito_6"    "consumo"     "nr_viv"      "tarjeta"     "pagotarjet" 
+[181] "regalotar"   "regalodado"  "autocons"    "regalos"     "remunera"   
+[186] "transferen"  "parto_g"     "embarazo_g"  "negcua"      "est_alim"   
+[191] "est_trans"   "bene_licon"  "cond_licon"  "lts_licon"   "otros_lts"  
+[196] "diconsa"     "frec_dicon"  "cond_dicon"  "pago_dicon"  "otro_pago"  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 89006   200</code></pre>
+</div>
+</div>
+<p>Algunos elementos</p>
+<ol type="1">
+<li><p>El orden de las variables corresponde al orden que pusimos las bases en las opciones.</p></li>
+<li><p>También vemos que las variables que se repetían en ambas bases se repiten en la nueva base, seguida de un un punto y una “x”, para lo que proviene de la primera base y con una “y”, lo que proviene de la segunda. R dejará las variables intactas y son coincidentes, en nuestro caso, porque las variables son iguales. R hace esto para precaver que por error tengamos alguna variable con un nombre igual y no sea la misma</p></li>
+</ol>
+</section>
+<section id="merge-con-id-compuesto" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="merge-con-id-compuesto"><span class="header-section-number">5.3</span> Merge con id compuesto</h2>
+<p>Los identificadores pueden estar compuestos de más de una variable:</p>
+<ul>
+<li>Viviendas {viviendas} es “folioviv”</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>viviendas <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">get_dupes</span>(folioviv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No duplicate combinations found of: folioviv</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 65
+# … with 65 variables: folioviv &lt;chr&gt;, dupe_count &lt;int&gt;, tipo_viv &lt;chr&gt;,
+#   mat_pared &lt;chr&gt;, mat_techos &lt;chr&gt;, mat_pisos &lt;chr&gt;, antiguedad &lt;dbl&gt;,
+#   antigua_ne &lt;chr&gt;, cocina &lt;chr&gt;, cocina_dor &lt;chr&gt;, cuart_dorm &lt;dbl&gt;,
+#   num_cuarto &lt;dbl&gt;, disp_agua &lt;chr&gt;, dotac_agua &lt;chr&gt;, excusado &lt;chr&gt;,
+#   uso_compar &lt;chr&gt;, sanit_agua &lt;chr&gt;, biodigest &lt;chr&gt;, bano_comp &lt;dbl&gt;,
+#   bano_excus &lt;dbl&gt;, bano_regad &lt;dbl&gt;, drenaje &lt;chr&gt;, disp_elect &lt;chr&gt;,
+#   focos_inca &lt;dbl&gt;, focos_ahor &lt;dbl&gt;, combustible &lt;chr&gt;, estufa_chi &lt;chr&gt;, …</code></pre>
+</div>
+</div>
+<ul>
+<li>Hogares {hogares} es “folioviv”, “foliohog”</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>hogares <span class="sc">%&gt;%</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">get_dupes</span>(<span class="fu">c</span>(folioviv, foliohog))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No duplicate combinations found of: folioviv, foliohog</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 138
+# … with 138 variables: folioviv &lt;chr&gt;, foliohog &lt;chr&gt;, dupe_count &lt;int&gt;,
+#   huespedes &lt;dbl&gt;, huesp_come &lt;dbl&gt;, num_trab_d &lt;dbl&gt;, trab_come &lt;dbl&gt;,
+#   acc_alim1 &lt;chr&gt;, acc_alim2 &lt;chr&gt;, acc_alim3 &lt;chr&gt;, acc_alim4 &lt;chr&gt;,
+#   acc_alim5 &lt;chr&gt;, acc_alim6 &lt;chr&gt;, acc_alim7 &lt;chr&gt;, acc_alim8 &lt;chr&gt;,
+#   acc_alim9 &lt;chr&gt;, acc_alim10 &lt;chr&gt;, acc_alim11 &lt;chr&gt;, acc_alim12 &lt;chr&gt;,
+#   acc_alim13 &lt;chr&gt;, acc_alim14 &lt;chr&gt;, acc_alim15 &lt;chr&gt;, acc_alim16 &lt;chr&gt;,
+#   alim17_1 &lt;dbl&gt;, alim17_2 &lt;dbl&gt;, alim17_3 &lt;dbl&gt;, alim17_4 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<ul>
+<li>Poblacion {individuos} es “folioviv”, “foliohog”, “numren”</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>poblacion <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">get_dupes</span>(<span class="fu">c</span>(folioviv, foliohog, numren))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No duplicate combinations found of: folioviv, foliohog, numren</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 185
+# … with 185 variables: folioviv &lt;chr&gt;, foliohog &lt;chr&gt;, numren &lt;chr&gt;,
+#   dupe_count &lt;int&gt;, parentesco &lt;chr&gt;, sexo &lt;chr&gt;, edad &lt;dbl&gt;,
+#   madre_hog &lt;chr&gt;, madre_id &lt;chr&gt;, padre_hog &lt;chr&gt;, padre_id &lt;chr&gt;,
+#   disc_camin &lt;chr&gt;, disc_ver &lt;chr&gt;, disc_brazo &lt;chr&gt;, disc_apren &lt;chr&gt;,
+#   disc_oir &lt;chr&gt;, disc_vest &lt;chr&gt;, disc_habla &lt;chr&gt;, disc_acti &lt;chr&gt;,
+#   cau_camin &lt;chr&gt;, cau_ver &lt;chr&gt;, cau_brazo &lt;chr&gt;, cau_apren &lt;chr&gt;,
+#   cau_oir &lt;chr&gt;, cau_vest &lt;chr&gt;, cau_habla &lt;chr&gt;, cau_acti &lt;chr&gt;, …</code></pre>
+</div>
+</div>
+<p>Esto significa que tenemos un id compuesto. No es una sola variable. Para esto modificamos ligeramente cómo ponemos el “by”, pero siempre eligiendo el id de la base de mayor nivel. (Tené cuidado con los paréntesis)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>merge_data2<span class="ot">&lt;-</span> <span class="fu">merge</span>(hogares, poblacion, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>))</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 315743    319</code></pre>
+</div>
+</div>
+<p>Revisemos la base</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>merge_data2 <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tail</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         folioviv foliohog huespedes huesp_come num_trab_d trab_come acc_alim1
+315738 3260770717        1         0         NA          0        NA         2
+315739 3260770717        1         0         NA          0        NA         2
+315740 3260770717        1         0         NA          0        NA         2
+315741 3260770718        1         0         NA          0        NA         2
+315742 3260770718        1         0         NA          0        NA         2
+315743 3260770718        1         0         NA          0        NA         2
+       acc_alim2 acc_alim3 acc_alim4 acc_alim5 acc_alim6 acc_alim7 acc_alim8
+315738         2         2         2         2         2                    
+315739         2         2         2         2         2                    
+315740         2         2         2         2         2                    
+315741         2         2         2         2         2                    
+315742         2         2         2         2         2                    
+315743         2         2         2         2         2                    
+       acc_alim9 acc_alim10 acc_alim11 acc_alim12 acc_alim13 acc_alim14
+315738                                                                 
+315739                                                                 
+315740                                                                 
+315741                                                                 
+315742                                                                 
+315743                                                                 
+       acc_alim15 acc_alim16 alim17_1 alim17_2 alim17_3 alim17_4 alim17_5
+315738                              7        2        2        3        2
+315739                              7        2        2        3        2
+315740                              7        2        2        3        2
+315741                              7        2        3        4        2
+315742                              7        2        3        4        2
+315743                              7        2        3        4        2
+       alim17_6 alim17_7 alim17_8 alim17_9 alim17_10 alim17_11 alim17_12
+315738        7        0        7        2         7         2         2
+315739        7        0        7        2         7         2         2
+315740        7        0        7        2         7         2         2
+315741        4        0        7        3         7         3         7
+315742        4        0        7        3         7         3         7
+315743        4        0        7        3         7         3         7
+       acc_alim18 telefono celular tv_paga conex_inte num_auto anio_auto
+315738          1        2       1       2          1        0          
+315739          1        2       1       2          1        0          
+315740          1        2       1       2          1        0          
+315741          1        2       1       2          1        1        19
+315742          1        2       1       2          1        1        19
+315743          1        2       1       2          1        1        19
+       num_van anio_van num_pickup anio_pickup num_moto anio_moto num_bici
+315738       0                   1          97        0                  0
+315739       0                   1          97        0                  0
+315740       0                   1          97        0                  0
+315741       0                   0                    0                  0
+315742       0                   0                    0                  0
+315743       0                   0                    0                  0
+       anio_bici num_trici anio_trici num_carret anio_carret num_canoa
+315738                   0                     0                     0
+315739                   0                     0                     0
+315740                   0                     0                     0
+315741                   0                     0                     0
+315742                   0                     0                     0
+315743                   0                     0                     0
+       anio_canoa num_otro anio_otro num_ester anio_ester num_grab anio_grab
+315738                   0                   1         00        0          
+315739                   0                   1         00        0          
+315740                   0                   1         00        0          
+315741                   0                   0                   0          
+315742                   0                   0                   0          
+315743                   0                   0                   0          
+       num_radio anio_radio num_tva anio_tva num_tvd anio_tvd num_dvd anio_dvd
+315738         0                  0                1       10       1       16
+315739         0                  0                1       10       1       16
+315740         0                  0                1       10       1       16
+315741         0                  1       05       1       16       0         
+315742         0                  1       05       1       16       0         
+315743         0                  1       05       1       16       0         
+       num_video anio_video num_licua anio_licua num_tosta anio_tosta num_micro
+315738         0                    1         17         0                    1
+315739         0                    1         17         0                    1
+315740         0                    1         17         0                    1
+315741         0                    1         17         0                    0
+315742         0                    1         17         0                    0
+315743         0                    1         17         0                    0
+       anio_micro num_refri anio_refri num_estuf anio_estuf num_lavad
+315738         00         1         19         1         05         1
+315739         00         1         19         1         05         1
+315740         00         1         19         1         05         1
+315741                    1         06         1         10         1
+315742                    1         06         1         10         1
+315743                    1         06         1         10         1
+       anio_lavad num_planc anio_planc num_maqui anio_maqui num_venti
+315738         00         1         15         0                    0
+315739         00         1         15         0                    0
+315740         00         1         15         0                    0
+315741         10         1         05         0                    0
+315742         10         1         05         0                    0
+315743         10         1         05         0                    0
+       anio_venti num_aspir anio_aspir num_compu anio_compu num_impre
+315738                    0                    0                    0
+315739                    0                    0                    0
+315740                    0                    0                    0
+315741                    0                    0                    0
+315742                    0                    0                    0
+315743                    0                    0                    0
+       anio_impre num_juego anio_juego esc_radio er_aparato er_celular er_compu
+315738                    0                    1          1                    
+315739                    0                    1          1                    
+315740                    0                    1          1                    
+315741                    0                    2                               
+315742                    0                    2                               
+315743                    0                    2                               
+       er_aplicac er_tv er_otro recib_tvd tsalud1_h tsalud1_m habito_1 habito_2
+315738                                            2         0                  
+315739                                            2         0                  
+315740                                            2         0                  
+315741                                            1         0                  
+315742                                            1         0                  
+315743                                            1         0                  
+       habito_3 habito_4 habito_5 habito_6 consumo nr_viv tarjeta pagotarjet
+315738        3                                  1              2          2
+315739        3                                  1              2          2
+315740        3                                  1              2          2
+315741        3                 5                2              2          2
+315742        3                 5                2              2          2
+315743        3                 5                2              2          2
+       regalotar regalodado autocons regalos remunera transferen parto_g
+315738         2          2        2       1        2          2       2
+315739         2          2        2       1        2          2       2
+315740         2          2        2       1        2          2       2
+315741         2          2        2       1        2          1       2
+315742         2          2        2       1        2          1       2
+315743         2          2        2       1        2          1       2
+       embarazo_g negcua est_alim est_trans bene_licon cond_licon lts_licon
+315738          2      2     4000         0          2                     
+315739          2      2     4000         0          2                     
+315740          2      2     4000         0          2                     
+315741          2      2     3000         0          1          2         2
+315742          2      2     3000         0          1          2         2
+315743          2      2     3000         0          1          2         2
+       otros_lts diconsa frec_dicon cond_dicon pago_dicon otro_pago numren
+315738        NA       1          2          2          3        NA     05
+315739        NA       1          2          2          3        NA     06
+315740        NA       1          2          2          3        NA     07
+315741        NA       1          2          2          3        NA     01
+315742        NA       1          2          2          3        NA     02
+315743        NA       1          2          2          3        NA     03
+       parentesco sexo edad madre_hog madre_id padre_hog padre_id disc_camin
+315738        301    2   14         1       02         1       01          4
+315739        301    1   12         1       02         1       01          4
+315740        301    2    5         1       02         1       01          4
+315741        101    2   64         2                  2                   4
+315742        301    1   33         1       01         2                   4
+315743        301    1   31         1       01         2                   4
+       disc_ver disc_brazo disc_apren disc_oir disc_vest disc_habla disc_acti
+315738        4          4          4        4         4          4         4
+315739        4          4          4        4         4          4         4
+315740        4          4          4        4         4          4         4
+315741        4          3          4        4         4          4         3
+315742        4          4          4        4         4          4         4
+315743        4          4          4        4         4          4         4
+       cau_camin cau_ver cau_brazo cau_apren cau_oir cau_vest cau_habla
+315738                                                                 
+315739                                                                 
+315740                                                                 
+315741                           2                                     
+315742                                                                 
+315743                                                                 
+       cau_acti hablaind lenguaind hablaesp comprenind etnia alfabetism
+315738                 2                             2     2          1
+315739                 2                             2     2          1
+315740                 2                             2     2          2
+315741        1        2                             2     2          1
+315742                 2                             2     2          1
+315743                 2                             2     2          1
+       asis_esc nivel grado tipoesc tiene_b otorg_b forma_b tiene_c otorg_c
+315738        1    07     3       1       2                                
+315739        1    07     1       1       2                                
+315740        1    01     3       1       2                                
+315741        2                                                            
+315742        2                                                            
+315743        2                                                            
+       forma_c nivelaprob gradoaprob antec_esc residencia edo_conyug pareja_hog
+315738                  3          2                   32          6           
+315739                  2          6                   32          6           
+315740                  1          2                   32                      
+315741                  3          3                   32          5           
+315742                  3          3                   32          3           
+315743                  7          5         3         32          6           
+       conyuge_id segsoc ss_aa ss_mm redsoc_1 redsoc_2 redsoc_3 redsoc_4
+315738                 2    NA    NA        3        3        3        3
+315739                 2    NA    NA        3        3        2        3
+315740                      NA    NA                                    
+315741                 2    NA    NA        2        3        2        2
+315742                 1     2     0        2        2        2        2
+315743                 1     3     0        2        2        2        2
+       redsoc_5 redsoc_6 hor_1 min_1 usotiempo1 hor_2 min_2 usotiempo2 hor_3
+315738        3        3    NA    NA          9    30     0               NA
+315739        2        3    NA    NA          9    15     0                1
+315740                      NA    NA               NA    NA               NA
+315741        3             NA    NA          9    NA    NA          9     3
+315742        2             81     0               NA    NA          9    NA
+315743        2             35     0               NA    NA          9    NA
+       min_3 usotiempo3 hor_4 min_4 usotiempo4 hor_5 min_5 usotiempo5 hor_6
+315738    NA          9     3     0               NA    NA          9     3
+315739     0                2     0               NA    NA          9     2
+315740    NA               NA    NA               NA    NA               NA
+315741     0               NA    NA          9    NA    NA          9    56
+315742    NA          9    NA    NA          9    NA    NA          9    NA
+315743    NA          9    NA    NA          9    NA    NA          9    12
+       min_6 usotiempo6 hor_7 min_7 usotiempo7 hor_8 min_8 usotiempo8
+315738     0               NA    NA          9     7    00           
+315739     0                1     0               14    00           
+315740    NA               NA    NA               NA                 
+315741     0               NA    NA          9    14    00           
+315742    NA          9    NA    NA          9    17    00           
+315743     0               NA    NA          9    21    00           
+       pop_insabi atemed inst_1 inst_2 inst_3 inst_4 inst_5 inst_6 inscr_1
+315738          1      2                                                  
+315739          1      2                                                  
+315740          1      2                                                  
+315741          2      1             2                                    
+315742          2      2                                                  
+315743          2      2                                                  
+       inscr_2 inscr_3 inscr_4 inscr_5 inscr_6 inscr_7 inscr_8 prob_anio
+315738                                                              2019
+315739                                                              2019
+315740                                                              2020
+315741                                               7              2020
+315742                                                              2018
+315743                                                              2016
+       prob_mes prob_sal aten_sal servmed_1 servmed_2 servmed_3 servmed_4
+315738       08        1        1        01                              
+315739       12        1        1        01                              
+315740       04        1        1        01                              
+315741       08        1        1        01                              
+315742       08        2                                                 
+315743       01        1        1        01                              
+       servmed_5 servmed_6 servmed_7 servmed_8 servmed_9 servmed_10 servmed_11
+315738                                                                        
+315739                                                                        
+315740                                                                        
+315741                                                                        
+315742                                                                        
+315743                                                                        
+       servmed_12 hh_lug mm_lug hh_esp mm_esp pagoaten_1 pagoaten_2 pagoaten_3
+315738                 0     15      0     30                                 
+315739                 0     15      0     30                                 
+315740                 0     15      0     30                                 
+315741                 0     20      0     10                                 
+315742                NA     NA     NA     NA                                 
+315743                 0     50      0     30          1                      
+       pagoaten_4 pagoaten_5 pagoaten_6 pagoaten_7 noatenc_1 noatenc_2
+315738                                           7                    
+315739                                           7                    
+315740                                           7                    
+315741                                           7                    
+315742                                                                
+315743                                                                
+       noatenc_3 noatenc_4 noatenc_5 noatenc_6 noatenc_7 noatenc_8 noatenc_9
+315738                                                                      
+315739                                                                      
+315740                                                                      
+315741                                                                      
+315742                                                                      
+315743                                                                      
+       noatenc_10 noatenc_11 noatenc_12 noatenc_13 noatenc_14 noatenc_15
+315738                                                                  
+315739                                                                  
+315740                                                                  
+315741                                                                  
+315742                                                                  
+315743                                                                  
+       noatenc_16 norecib_1 norecib_2 norecib_3 norecib_4 norecib_5 norecib_6
+315738                                                                       
+315739                                                                       
+315740                                                                       
+315741                                                                       
+315742         16                                                            
+315743                                                                       
+       norecib_7 norecib_8 norecib_9 norecib_10 norecib_11 norecib_12 razon_1
+315738                                                                       
+315739                                                                       
+315740                                                                       
+315741                                                                       
+315742                                                                       
+315743                                                                       
+       razon_2 razon_3 razon_4 razon_5 razon_6 razon_7 razon_8 razon_9 razon_10
+315738                                                                         
+315739                                                                         
+315740                                                                         
+315741                                                                         
+315742                                                                         
+315743                                                                         
+       razon_11 diabetes pres_alta peso segvol_1 segvol_2 segvol_3 segvol_4
+315738                 1         1    1                                    
+315739                 2         1    1                                    
+315740                                1                                    
+315741                 1         1    1                                    
+315742                 2         2    2                                    
+315743                 2         2    2                                    
+       segvol_5 segvol_6 segvol_7 hijos_viv hijos_mue hijos_sob trabajo_mp
+315738                 6                  0        NA        NA          2
+315739                 6                 NA        NA        NA          2
+315740                                   NA        NA        NA           
+315741                 6                 10         2         8          2
+315742                 6                 NA        NA        NA          1
+315743                 6                 NA        NA        NA          1
+       motivo_aus act_pnea1 act_pnea2 num_trabaj c_futuro ct_futuro
+315738                    4                                        
+315739                    4                                        
+315740                                                             
+315741                    3                                        
+315742                                         1                   
+315743                                         1                   </code></pre>
+</div>
+</div>
+</section>
+<section id="bases-de-distinto-tamaño" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="bases-de-distinto-tamaño"><span class="header-section-number">5.4</span> Bases de distinto tamaño</h2>
+<p>Hasta ahorita hemos hecho merge que son de unidades de distinto nivel y son incluyentes. A veces tenemos bases de datos que son de distinto tamaño y del mismo nivel. A veces las dos aportan casos y a veces aportan variables, y a veces, las dos aportan las dos cosas.</p>
+<p>Vamos a revisar qué pasaría si quisiéramos incorporar la información los ingresos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(merge_data, merge_data2) <span class="co"># botamos otros ejemplos</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>ingresos<span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_dta</span>(<span class="st">"datos/ingresos2020.dta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Esta base tiene otro ID</p>
+<ul>
+<li>Ingresos {clave de ingreso} es “folioviv”, “foliohog”, “numren”, clave</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>ingresos <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">get_dupes</span>(<span class="fu">c</span>(folioviv, foliohog, numren, clave))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No duplicate combinations found of: folioviv, foliohog, numren, clave</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 18
+# … with 18 variables: folioviv &lt;chr&gt;, foliohog &lt;chr&gt;, numren &lt;chr&gt;,
+#   clave &lt;chr&gt;, dupe_count &lt;int&gt;, mes_1 &lt;chr&gt;, mes_2 &lt;chr&gt;, mes_3 &lt;chr&gt;,
+#   mes_4 &lt;chr&gt;, mes_5 &lt;chr&gt;, mes_6 &lt;chr&gt;, ing_1 &lt;dbl&gt;, ing_2 &lt;dbl&gt;,
+#   ing_3 &lt;dbl&gt;, ing_4 &lt;dbl&gt;, ing_5 &lt;dbl&gt;, ing_6 &lt;dbl&gt;, ing_tri &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>¿Cuántas claves de ingreso hay?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ingresos <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tabyl</span>(clave)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> clave     n      percent
+  P001 99992 2.532007e-01
+  P002  2619 6.631857e-03
+  P003  6260 1.585163e-02
+  P004  5990 1.516794e-02
+  P005  3098 7.844786e-03
+  P006  7113 1.801161e-02
+  P007  6754 1.710254e-02
+  P008 16600 4.203468e-02
+  P009 48715 1.233566e-01
+  P011   258 6.533101e-04
+  P012  3282 8.310712e-03
+  P013     3 7.596629e-06
+  P014  5056 1.280285e-02
+  P015    67 1.696581e-04
+  P016   643 1.628211e-03
+  P018    11 2.785431e-05
+  P019   239 6.051981e-04
+  P021  1567 3.967973e-03
+  P022 19138 4.846143e-02
+  P023   872 2.208087e-03
+  P024  2541 6.434345e-03
+  P025   188 4.760554e-04
+  P026   233 5.900049e-04
+  P027   292 7.394052e-04
+  P028   116 2.937363e-04
+  P029    12 3.038652e-05
+  P030     5 1.266105e-05
+  P031   133 3.367839e-04
+  P032 16768 4.246009e-02
+  P033   679 1.719370e-03
+  P034    44 1.114172e-04
+  P035   152 3.848959e-04
+  P036  1538 3.894539e-03
+  P037   522 1.321813e-03
+  P038  3334 8.442387e-03
+  P039   603 1.526922e-03
+  P040 24129 6.109969e-02
+  P041  6323 1.601116e-02
+  P043  2275 5.760777e-03
+  P045   894 2.263795e-03
+  P048  1671 4.231322e-03
+  P049  2097 5.310044e-03
+  P050    36 9.115955e-05
+  P051 14683 3.718044e-02
+  P052  1326 3.357710e-03
+  P053  6920 1.752289e-02
+  P054   492 1.245847e-03
+  P055     8 2.025768e-05
+  P056     6 1.519326e-05
+  P057    78 1.975124e-04
+  P058   426 1.078721e-03
+  P059    48 1.215461e-04
+  P060   182 4.608622e-04
+  P061   338 8.558869e-04
+  P062  1129 2.858865e-03
+  P063  4868 1.232680e-02
+  P064    48 1.215461e-04
+  P065    62 1.569970e-04
+  P066   230 5.824082e-04
+  P067  1917 4.854246e-03
+  P068  5383 1.363088e-02
+  P069  7154 1.811543e-02
+  P070  7854 1.988798e-02
+  P071  5130 1.299024e-02
+  P072  4537 1.148864e-02
+  P073   193 4.887165e-04
+  P074   229 5.798760e-04
+  P075   892 2.258731e-03
+  P076  1176 2.977879e-03
+  P077  1460 3.697026e-03
+  P078  1290 3.266551e-03
+  P079  1280 3.241228e-03
+  P080   131 3.317195e-04
+  P081    61 1.544648e-04
+  P101  6411 1.623400e-02
+  P102  6044 1.530468e-02
+  P103   719 1.820659e-03
+  P104 17014 4.308302e-02
+  P105  1413 3.578012e-03
+  P106   200 5.064419e-04
+  P107    67 1.696581e-04
+  P108   651 1.648469e-03</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>ingresos_sueldos<span class="ot">&lt;-</span>ingresos <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(clave<span class="sc">==</span><span class="st">"P001"</span>) </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(ingresos_sueldos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 99992    17</code></pre>
+</div>
+</div>
+<p>Vamos a hacer el primer tipo de merge</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>merge_data3<span class="ot">&lt;-</span><span class="fu">merge</span>(poblacion, ingresos_sueldos, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>, <span class="st">"numren"</span>))</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 99992   198</code></pre>
+</div>
+</div>
+<p>¡La base nueva no tiene a todas las observaciones, solo la que tiene en la base más pequeña! Tenemos sólo 99,9992 individuos.</p>
+</section>
+<section id="cuatro-formas-de-hacer-un-fusionado" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="cuatro-formas-de-hacer-un-fusionado"><span class="header-section-number">5.5</span> Cuatro formas de hacer un fusionado</h2>
+<p>En realidad hay cuatro formas de hacer un “merge”</p>
+<section id="casos-en-ambas-bases" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="casos-en-ambas-bases"><span class="header-section-number">5.5.1</span> Casos en ambas bases</h3>
+<p>Por <em>default</em>, el comando tiene activado la opción “all = FALSE”, que nos deja los datos de ambas bases comunes. (tipo una intersección)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>merge_data3<span class="ot">&lt;-</span><span class="fu">merge</span>(poblacion, </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                   ingresos_sueldos,</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>, <span class="st">"numren"</span>), </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">all =</span> F)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 99992   198</code></pre>
+</div>
+</div>
+</section>
+<section id="todos-los-casos" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="todos-los-casos"><span class="header-section-number">5.5.2</span> Todos los casos</h3>
+<p>Si cambiamos la opción “all = TRUE”, que nos deja los datos comunes a ambas bases. (como una unión)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>merge_data3<span class="ot">&lt;-</span><span class="fu">merge</span>(poblacion,</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                   ingresos_sueldos, </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>, <span class="st">"numren"</span>), </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">all =</span> T)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 315743    198</code></pre>
+</div>
+</div>
+</section>
+<section id="casos-en-la-base-1" class="level3" data-number="5.5.3">
+<h3 data-number="5.5.3" class="anchored" data-anchor-id="casos-en-la-base-1"><span class="header-section-number">5.5.3</span> Casos en la base 1</h3>
+<p>Si queremos quedarnos con todos los datos que hay en la primera base, x, vamos a usar a opción all.x = TRUE.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>merge_data3<span class="ot">&lt;-</span><span class="fu">merge</span>(poblacion, </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                   ingresos_sueldos,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>, <span class="st">"numren"</span>), </span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">all.x  =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 315743    198</code></pre>
+</div>
+</div>
+</section>
+<section id="casos-de-la-base-2" class="level3" data-number="5.5.4">
+<h3 data-number="5.5.4" class="anchored" data-anchor-id="casos-de-la-base-2"><span class="header-section-number">5.5.4</span> Casos de la base 2</h3>
+<p>Notamos que hoy sí tenemos los datos de toda la población y hay missings en las variables aportadas por la base de trabajo</p>
+<p>Si queremos lo contrario, quedarnos con los datos aportados por la segunda base, y, vamos a usar la opción all.y=TRUE</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>merge_data3<span class="ot">&lt;-</span><span class="fu">merge</span>(poblacion, </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>                   ingresos_sueldos,</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>, <span class="st">"numren"</span>),</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">all.y  =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 99992   198</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="las-cuatro-formas-en-dplyr" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="las-cuatro-formas-en-dplyr"><span class="header-section-number">5.6</span> Las cuatro formas en <code>dplyr</code></h2>
+<p>El caso 1:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>merge_data3<span class="ot">&lt;-</span>dplyr<span class="sc">::</span><span class="fu">inner_join</span>(poblacion,</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>                               ingresos_sueldos,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>, <span class="st">"numren"</span>))</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 99992   198</code></pre>
+</div>
+</div>
+<p>El caso 2:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>merge_data3<span class="ot">&lt;-</span>dplyr<span class="sc">::</span><span class="fu">full_join</span>(poblacion, </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                              ingresos_sueldos, </span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>, <span class="st">"numren"</span>))</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 315743    198</code></pre>
+</div>
+</div>
+<p>El caso 3:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>merge_data3<span class="ot">&lt;-</span>dplyr<span class="sc">::</span><span class="fu">left_join</span>(poblacion,</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>                              ingresos_sueldos, </span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>, <span class="st">"numren"</span>))</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 315743    198</code></pre>
+</div>
+</div>
+<p>El caso 4:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>merge_data3<span class="ot">&lt;-</span>dplyr<span class="sc">::</span><span class="fu">right_join</span>(poblacion, </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                               ingresos_sueldos,</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>, <span class="st">"numren"</span>))</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 99992   198</code></pre>
+</div>
+</div>
+<p>También se puede usar con pipes, cualquier opción de dplyr</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>merge_data3<span class="ot">&lt;-</span>poblacion <span class="sc">%&gt;%</span> <span class="co"># pongo el conjunto que será la "izquierda</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">right_join</span>(ingresos_sueldos, </span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">by=</span><span class="fu">c</span>(<span class="st">"folioviv"</span>, <span class="st">"foliohog"</span>, <span class="st">"numren"</span>))</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(merge_data3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 99992   198</code></pre>
+</div>
+</div>
+</section>
+<section id="práctica" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="práctica"><span class="header-section-number">5.7</span> Práctica</h2>
+<ul>
+<li>Pegue a la última base la información de los hogares y las viviendas.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./P4.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Factores de expansión y algunas otras medidas</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

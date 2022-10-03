@@ -1,0 +1,18 @@
+
+# Funciones, condicionales, bucles y mapeos
+
+## Mi primera función
+
+Unos de los elementos más poderosos de R es hacer nuestra propias funciones.
+
+Para ello haremos una función sencilla. Para sumarle un valor un 1
+
+```{r}
+mi_funcion<-function(x) {
+    resultado<-x+1
+    return(resultado)
+}
+
+mi_funcion(5)
+```
+
