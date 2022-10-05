@@ -1,9 +1,59 @@
 
 # Funciones, condicionales, bucles y mapeos
 
+## Paquetes 
+```{r}
+if (!require("pacman")) install.packages("pacman")#instala pacman si se requiere
+pacman::p_load(tidyverse,
+               readxl,
+               writexl, 
+               haven,
+               sjlabelled, 
+               janitor,
+               magrittr,
+               broom # para limpiar resultados de modelos
+)
+
+```
+
+## Datos
+
+```{r}
+concentrado2020 <- read_dta("datos/concentrado2020.dta") %>% 
+  mutate(across(c(sexo_jefe, clase_hog, educa_jefe), as.numeric)) %>% # ojo aquí
+  set_labels(sexo_jefe, labels=c("Hombre", "Mujer")) %>% 
+  set_labels(clase_hog, labels=c("unipersonal","nuclear", "ampliado",
+                                 "compuesto","corresidente"))   %>% 
+  set_labels(educa_jefe,
+             labels=c("Sin instrucción", 
+                      "Preescolar",
+                      "Primaria incompleta",
+                      "Primaria completa",
+                      "Secundaria incompleta",
+                      "Secundaria completa",
+                      "Preparatoria incompleta",
+                      "Preparatoria completa",
+                      "Profesional incompleta",
+                      "Profesional completa",
+                      "Posgrado")) %>% 
+  mutate(ent=stringr::str_sub(ubica_geo, start = 1, end = 2)) %>% 
+  mutate(mun=stringr::str_sub(ubica_geo, start = 3, end = 5))
+
+```
+
+
 ## Mi primera función
 
 Unos de los elementos más poderosos de R es hacer nuestra propias funciones.
+
+La lógica de las funciones es la siguiente:
+
+```
+nombre_de_funcion(argumento1, argumento2, ...) {
+  operaciones
+  salida
+}
+```
 
 Para ello haremos una función sencilla. Para sumarle un valor un 1
 
@@ -15,4 +65,312 @@ mi_funcion<-function(x) {
 
 mi_funcion(5)
 ```
+
+Vamos a agregar un argumento, podemos agregar un segundo número en lugar de 1
+
+```{r}
+mi_funcion<-function(x, a) {
+    resultado<-x+a
+    return(resultado)
+}
+
+mi_funcion(x=5, a=6)
+```
+
+Los argumentos no necesariamente deben ser un sólo valor
+
+```{r}
+mi_funcion(x=1:5, a=6:10)
+```
+
+E incluso podríamos llamar variables de nuestra base de concentrado
+
+```{r}
+resultado_mi_funcion<-mi_funcion(x=concentrado2020$frutas, a=concentrado2020$azucar)
+```
+
+
+## Una función para hacer edades
+
+Primero un poquito de `pretty()` {base}, es un comando que calcula una secuencia de aproximadamente n+1 valores 'redondos' igualmente espaciados que cubran el rango de los valores en x. Los valores se eligen para que sean 1, 2 o 5 veces una potencia de 10.
+
+```{r}
+cortar <- function(x) {
+  cut(x,
+      breaks = pretty(x), 
+      right = TRUE, 
+      include.lowest = TRUE)
+}
+```
+
+```{r}
+#cortar(concentrado2020$edad_jefe)
+```
+
+
+Podemos utilizarla junto con mutate
+
+```{r}
+concentrado2020 %>%
+  mutate(eda_cut=cortar(edad_jefe)) %>% 
+  tabyl(eda_cut)
+```
+
+
+## Bucles
+
+### `for`
+
+Supongamos que quisiéramos repetir una operación a lo largo de una secuencia, se puede realizar
+
+```
+for (i in secuencia) {
+  operación 1
+  operación 2
+  ...
+  operación final
+}
+
+```
+Por ejemplo si quisiéramos que por cada entidad federativa se imprimiera en pantalla el promedio de la edad de los jefes entrevistados
+
+```{r}
+unique(concentrado2020$ent) # Nos dan los valores únicos de un vector
+estados<-unique(concentrado2020$ent)
+```
+
+Hoy haremos nuestro bucle con "for"
+```{r}
+for(i in estados){
+  
+  x<-concentrado2020 %>% 
+    filter(ent==i) %>% # aquí ocupamos nuestro indice
+    summarise(media=mean(ing_cor))
+  
+  assign(paste0("ingreso",i), x)
+}
+```
+
+Vamos a botar estos objetos
+```{r}
+rm(list = ls(, pattern = "ingreso")) 
+rm(x)
+```
+
+### `while()`
+
+También tenemos `while()`
+
+```
+while (expresión a probar) {
+  Operaciones
+}
+```
+
+```{r}
+# variable que se cambia
+numero = 1
+
+# variable donde se calcula la meida
+sum = 0
+
+# Calcular la suma consecutiva hasta que llegue a 30
+
+while(numero <= 30) {
+
+  # calculate sum
+  sum = sum + numero
+    
+  # increment number by 1
+  numero = numero + 1
+  
+}
+
+```
+
+
+## Condicionales
+
+Las operaciones están supeditadas a los elementos que cumplan una condición
+
+```
+if (condicion) {
+  operación 1
+  operación 2
+  ...
+  operación final
+}
+```
+
+Supongamos tenemos dos valores
+```{r}
+a<-45 # un vector entero
+b<-5000 #numeros aleatorios que siguen una normal
+```
+
+Veamos cómo podemos hacer un condicional muy simple
+
+```{r}
+if(a>18){
+  print(b)
+}
+```
+
+También se puede combinar con else
+
+```{r}
+if(a>18){
+  print("Mayor que 18")
+} else {
+  print("No cumple")
+}
+
+```
+
+Estos elementos funcionan cuando se programan procesos. Son útiles para cuando computamos modelos y se busca cierto nivel de tolerancia o se hacen procesos sucesivos.
+
+## `purrr::map()`
+
+Dentro de tidyverse existe el paquete `{purrr}`, es un paquete que tiene muchas funcionalidades parecidas a los `for`.
+
+
+Por ejemplo y siguiendo los ejemplos del for()
+```{r}
+1:10 %>%
+  map(~.x+1)
+```
+Si guardamos esto en un objeto, vemos que nos da como resultado una lista
+```{r}
+map1<-1:10 %>%
+  map(~.x+1)
+
+class(map1)
+
+```
+
+Compliquemos esto un poquito más...
+
+```{r}
+names(concentrado2020) %>% 
+  map_chr(~str_detect(.x,"ing")) # ojo a veces tenemos que hacer explícito el tipo de mapeo
+```
+
+Por ejemplo, quizás queremos identificar esta base de datos con 2020
+
+```{r}
+names(concentrado2020) %>% 
+  map_chr(~paste0(.x,"2020"))
+```
+
+Con estos nuevos nombres podríamos rápidamente volver a declarar nuestros nombres de la base y todos tienen sufijos. 
+
+Combinación con el comando `split()` 
+
+```{r}
+concentrado2020 %>% 
+  split(.$ent) %>% 
+  map(~ mean(.$ing_cor)) 
+
+  
+```
+
+Nos da una lista de valores... si hacemos algo más complejo
+
+```{r}
+concentrado2020 %>% 
+  split(.$ent) %>% 
+  map(~ mean(.$ing_cor)) %>% 
+  map_dfr(~as.data.frame(.x))
+
+```
+```{r}
+concentrado2020 %>% 
+  split(.$ent) %>% 
+  map(~ mean(.$ing_cor)) %>% 
+  map_dfc(~as.data.frame(.x)) %>% 
+  clean_names()
+```
+
+## Combinando funciones con purr::map
+
+```{r}
+mi_funcion_summ<-function(x){
+  mu<-mean(x, na.rm=T)
+  me<-median(x,na.rm=T)
+  sd<-sd(x,na.rm=T)
+  total<-as.data.frame(cbind(mu,me,sd))
+  return(total)
+}
+
+mi_funcion_summ(concentrado2020$ing_cor)
+```
+```{r}
+concentrado2020 %>% 
+  split(.$ent) %>% 
+  map(~ mi_funcion_summ(.$ing_cor)) 
+```
+
+Lo interesante es que podemos hacer elementos más complejos
+
+```{r}
+concentrado2020 %>% 
+  split(.$ent) %>% 
+  map(~ lm(ing_cor ~ edad_jefe, data = .))
+```
+
+Y el mapeo se puede ir agregando...
+
+```{r}
+concentrado2020 %>% 
+  split(.$ent) %>% 
+  map(~ lm(ing_cor ~ edad_jefe, data = .)) %>% # da solo los coeficientes
+  map(summary) # da la parte de inferencia
+```
+
+Si queremos esto en una sola base de datos
+```{r}
+concentrado2020 %>% 
+  split(.$ent) %>% 
+  map(~ lm(ing_cor ~ edad_jefe, data = .)) %>% # da solo los coeficientes
+  map(~ broom::tidy(.x))
+```
+Como broom::tidy los volvio tibble, lo podemos guardar en un excelito
+
+```{r}
+concentrado2020 %>% 
+  split(.$ent) %>% 
+  map(~ lm(ing_cor ~ edad_jefe, data = .)) %>% # da solo los coeficientes
+  map(~ broom::tidy(.x)) %>% 
+  write_xlsx(path="modelos.xlsx")
+```
+
+## Una aplicación para exportar los resultados de una base
+
+Veamos...
+
+```{r}
+names(concentrado2020)
+```
+
+```{r}
+vars<-c("clase_hog",  "sexo_jefe",  "edad_jefe" , "educa_jefe")
+
+tabs<- vars %>%
+  map(~ count(x=concentrado2020,
+              !!as.name(.x), # para que ponga la variable a tabular
+              wt=factor) %>% # para que use el pes
+        mutate(pct = round((n / sum(n) * 100), 2)) %>% # Para que ponga el %
+        adorn_totals()
+    )
+
+tabs # tabulados expandidos para mandar a un excel
+```
+```{r}
+names(tabs)<-vars # para que las hojas del excel se llamen como la variables
+
+write_xlsx(tabs, path="tabs.xlsx")            
+
+
+```
+
 
