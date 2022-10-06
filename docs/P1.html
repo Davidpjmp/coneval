@@ -196,6 +196,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="./P6.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Funciones, condicionales, bucles y mapeos</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P7.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Visualización de datos (I)</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -435,8 +440,8 @@ sum&gt; sum(1:5, NA, na.rm = TRUE)
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gc</span>()           <span class="co"># Garbage collection, reporta memoria en uso</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          used (Mb) gc trigger (Mb) limit (Mb) max used (Mb)
-Ncells  597451 32.0    1299235 69.4         NA  1299235 69.4
-Vcells 1106297  8.5    8388608 64.0      16384  1839370 14.1</code></pre>
+Ncells  597462 32.0    1299241 69.4         NA  1299241 69.4
+Vcells 1106355  8.5    8388608 64.0      16384  1839370 14.1</code></pre>
 </div>
 </div>
 <p>Para borrar todos nuestros objetos, usamos el siguiente comando, que equivale a usar la escobita de la venta de environment</p>
@@ -457,16 +462,16 @@ Vcells 1106297  8.5    8388608 64.0      16384  1839370 14.1</code></pre>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>()      <span class="co"># Lista de archivos en ese directorio</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] "01_ppt20221003.pptx"   "Icon\r"                "LICENSE"              
- [4] "Mi_Exportación.xlsx"   "P1.qmd"                "P1.rmarkdown"         
- [7] "P2.qmd"                "P3.qmd"                "P4.R"                 
-[10] "P4.qmd"                "P5.R"                  "P5.qmd"               
-[13] "P6.qmd"                "Pendiente.qmd"         "README.md"            
-[16] "_quarto.yml"           "coneval.Rproj"         "datos"                
-[19] "docs"                  "index.html"            "index.qmd"            
-[22] "instala.html"          "instala.qmd"           "intro1.png"           
-[25] "mds.xlsx"              "modelos.xlsx"          "site_libs"            
-[28] "tabs.xlsx"             "~$01_ppt20221003.pptx"</code></pre>
+<pre><code> [1] "01_ppt20221003.pptx" "Icon\r"              "LICENSE"            
+ [4] "Mi_Exportación.xlsx" "P1.qmd"              "P1.rmarkdown"       
+ [7] "P2.qmd"              "P3.qmd"              "P4.R"               
+[10] "P4.qmd"              "P5.R"                "P5.qmd"             
+[13] "P6.qmd"              "P7.qmd"              "Pendiente.qmd"      
+[16] "README.md"           "_quarto.yml"         "coneval.Rproj"      
+[19] "datos"               "docs"                "index.html"         
+[22] "index.qmd"           "instala.html"        "instala.qmd"        
+[25] "intro1.png"          "mds.xlsx"            "modelos.xlsx"       
+[28] "site_libs"           "tabs.xlsx"          </code></pre>
 </div>
 </div>
 <p>Checar que esto también se puede hacer desde el menú:</p>
