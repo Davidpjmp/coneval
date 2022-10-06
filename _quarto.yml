@@ -4,14 +4,20 @@ project:
 
 book:
   title: "R para el monitoreo de la política de desarrollo social"
-  author: "Ana Escoto y Mónica Lara"
-  date: "09/19/2022"
+  author: 
+    - "Ana Escoto"
+    - "Mónica Lara"
+  date: "09/30/2022"
   chapters:
     - index.qmd
     - instala.qmd
     - P1.qmd
     - P2.qmd
     - P3.qmd
+    - P4.qmd
+    - P5.qmd
+    - P6.qmd
+    - P7.qmd
    
 
 format:
