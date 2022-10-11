@@ -1,0 +1,206 @@
+# Visualización de datos (II)
+
+## Paquetes y datos
+```{r}
+#Paquetería #
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, readxl, writexl, haven, sjlabelled, foreign, janitor, esquisse, RColorBrewer, wesanderson)
+```
+
+```{r}
+#Importar #
+concentrado2020 <- haven::read_dta("datos/concentrado2020.dta")
+```
+
+
+## Variables cualitativas
+
+Los gráficos más utilizados son los gráficos de barras.
+Primero vamos a hacer nuestro primer gráfico de barras o columnas.
+
+Al igual que en la sesión anterior, vamos agregando capas a nuestros gráficos.
+
+En los datos incluiremos la variable que queremos graficar,
+en este caso la jefatura de hogar. Lo guardaremos como un objeto.
+
+```{r}
+g<- concentrado2020 %>% 
+  ggplot(aes(x=sexo_jefe))
+g
+
+```
+
+Vemos que graficamos nuestra variable, sin embargo, todavía
+no hemos especificado la geometría así que la vamos a agregar.
+
+```{r}
+
+g+geom_bar()
+
+
+```
+
+
+También podemos voltear nuestras barras. 
+
+```{r}
+
+  g +
+  geom_bar()+
+  coord_flip()
+
+```
+
+Aunque, se ve mejor como estaba antes.
+
+Para hacer nuestra gráfica de barras y que se vean 
+las etiquetas con facilidad, vamos a etiquetar nuestra variable.
+
+
+```{r}
+etiqueta_sex<-c("Hombre", "Mujer")
+
+concentrado2020<-concentrado2020 %>% 
+  mutate(sexo_jefe=as_numeric(sexo_jefe)) %>% # para quitar el "string"
+  sjlabelled::set_labels(sexo_jefe, labels=etiqueta_sex) 
+```
+
+Ahora sí podemos ver las etiquetas en nuestro gráfico
+```{r}
+g<-concentrado2020 %>% 
+  ggplot(aes(x=as_label(sexo_jefe))) +
+  geom_bar()
+g
+
+```
+
+Vamos a ponerle un color a hombre y otro a mujer y a quitar el fondo gris.
+
+Opción 1. Ponerle color manualmente
+
+```{r}
+g<- concentrado2020 %>% 
+  ggplot(aes(x = as_label(sexo_jefe), fill = as.factor(sexo_jefe))) + #debo rellenar como as.factor, ya que si no hubiera tratado a la variable como continua.
+  geom_bar()
+g
+```
+Esos son los colores por default. Ahora especificamos los colores.
+
+```{r}
+g + scale_fill_manual(
+    values = c("1" = "cadetblue4",
+               "2" = "chartreuse4")
+  ) +
+  theme_minimal()
+
+
+```
+2. Opción 2, rellenamos el gráfico con RColorBrewer
+```{r}
+
+g + 
+  scale_fill_brewer(palette="Set2") +
+  theme_minimal()
+
+```
+Opción 3. Ponerle color con Wesanderson.
+```{r}
+pal <- wes_palette(2, name = "Royal1", type = "discrete")
+
+g + 
+  scale_fill_manual(values=pal) +
+  theme_minimal()
+
+
+```
+
+Pero, no queremos el conteo, sino los porcentajes
+
+```{r}
+g<- concentrado2020 %>% 
+  ggplot(aes(as_label(sexo_jefe), fill = as.factor(sexo_jefe))) +
+  geom_bar(aes(y = (..count..)/sum(..count..))) + 
+  scale_y_continuous(labels=scales::percent) +
+  theme_minimal()
+g
+
+```
+
+Al gráfico de porcentajes, le agregaremos el color.
+
+```{r}
+g + 
+  scale_fill_brewer(palette="Set2") 
+```
+Ahora, le agregamos los títulos
+
+```{r}
+
+g + 
+  scale_fill_brewer(palette="Set2") +
+   labs(
+    x = "Sexo del jefe del hogar",
+    y = "Porcentaje",
+    title = "Sexo de los jefes y jefas de hogar en México, 2020",
+    caption = "Fuente: elaboración propia con base en ENIGH 2020",
+    fill = "Sexo del jefe del hogar"
+  )
+
+
+
+```
+
+Y detalles en la fuente de los títulos.
+
+
+```{r}
+
+concentrado2020 %>% 
+  ggplot(aes(as_label(sexo_jefe), fill = as.factor(sexo_jefe))) +
+  geom_bar(aes(y = (..count..)/sum(..count..))) + 
+  scale_y_continuous(labels=scales::percent) +
+  scale_fill_brewer(palette="Set2") +
+   labs(x = "Sexo del jefe del hogar",
+    y = "Porcentaje",
+    title = "Sexo de los jefes y jefas de hogar en México, 2020",
+    caption = "Fuente: elaboración propia con base en ENIGH 2020",
+    fill = "Sexo del jefe del hogar") +
+  theme_minimal()+
+  theme(plot.title = element_text(color = "black", size = 14, face = "bold"),
+    plot.caption = element_text(face = "italic"))
+
+```
+
+
+Por último, agregaremos las etiquetas de nuestros datos.
+```{r}
+
+concentrado2020 %>% 
+  count(sexo_jefe) %>% 
+  mutate(pct = prop.table(n)) %>% 
+  ggplot(aes(x = as_label(sexo_jefe), y = pct, fill = as.factor(sexo_jefe))) +
+  geom_col(position = 'dodge') + 
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette="Set2") +
+  theme_classic()+
+  geom_text(aes(label = round(pct*100)), 
+            vjust = -0.2,
+            size = 3,
+            colour = "black") +
+  labs(
+    x = "Sexo del jefe del hogar",
+    y = "Porcentaje",
+    title = "Sexo de los jefes y jefas de hogar en México, 2020",
+    caption = "Fuente: elaboración propia con base en ENIGH 2020",
+    fill = "Sexo del jefe del hogar"
+  ) +
+  theme(
+    plot.title = element_text(color = "black", size = 14, face = "bold"),
+    plot.caption = element_text(face = "italic")
+  )
+```
+
+
+## Práctica
+
+Escoge una variable cualitativa y elabora tu gráfico.

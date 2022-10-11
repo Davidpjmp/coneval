@@ -93,6 +93,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./P8.html" rel="next">
 <link href="./P6.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -200,6 +201,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <a href="./P7.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Visualización de datos (I)</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P8.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Visualización de datos (II)</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -210,11 +216,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#paquetes-y-datos" id="toc-paquetes-y-datos" class="nav-link active" data-scroll-target="#paquetes-y-datos"><span class="toc-section-number">7.1</span>  Paquetes y datos</a></li>
-  <li><a href="#visualización-de-datos-introducción" id="toc-visualización-de-datos-introducción" class="nav-link" data-scroll-target="#visualización-de-datos-introducción"><span class="toc-section-number">7.2</span>  Visualización de datos: introducción</a>
+  <li><a href="#visualización-de-datos-introducción" id="toc-visualización-de-datos-introducción" class="nav-link" data-scroll-target="#visualización-de-datos-introducción"><span class="toc-section-number">7.2</span>  Visualización de datos: introducción</a></li>
+  <li><a href="#variables-cuantitativas" id="toc-variables-cuantitativas" class="nav-link" data-scroll-target="#variables-cuantitativas"><span class="toc-section-number">7.3</span>  Variables cuantitativas</a>
   <ul class="collapse">
-  <li><a href="#sobre-los-colores-en-r" id="toc-sobre-los-colores-en-r" class="nav-link" data-scroll-target="#sobre-los-colores-en-r"><span class="toc-section-number">7.2.1</span>  Sobre los colores en R:</a></li>
+  <li><a href="#sobre-los-colores-en-r" id="toc-sobre-los-colores-en-r" class="nav-link" data-scroll-target="#sobre-los-colores-en-r"><span class="toc-section-number">7.3.1</span>  Sobre los colores en R:</a></li>
   </ul></li>
-  <li><a href="#práctica-en-clase" id="toc-práctica-en-clase" class="nav-link" data-scroll-target="#práctica-en-clase"><span class="toc-section-number">7.3</span>  Práctica en clase:</a></li>
+  <li><a href="#práctica-en-clase" id="toc-práctica-en-clase" class="nav-link" data-scroll-target="#práctica-en-clase"><span class="toc-section-number">7.4</span>  Práctica en clase:</a></li>
   </ul>
 </nav>
     </div>
@@ -269,7 +276,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><code>ggplot(datos) + (geometria) + (esteticas)</code></p>
 <p>Esta semana, haremos gráficas para una sola variable, cuantitativa o cualitativa.</p>
 <p>La próxima semana haremos gráficas para dos variables.</p>
-<p>##Variables cuantitativas</p>
+</section>
+<section id="variables-cuantitativas" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="variables-cuantitativas"><span class="header-section-number">7.3</span> Variables cuantitativas</h2>
 <p>Para las variables cuantitativas, las gráficas más utilizadas son los histogramas, gráficos de densidad.</p>
 <p>Menos utilizados: de área y polígonos de frecuencias (ver https://r-graph-gallery.com/)</p>
 <p>Bueno, en series de tiempo también se utilizan los gráficos de líneas.</p>
@@ -312,8 +321,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="P7_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<section id="sobre-los-colores-en-r" class="level3" data-number="7.2.1">
-<h3 data-number="7.2.1" class="anchored" data-anchor-id="sobre-los-colores-en-r"><span class="header-section-number">7.2.1</span> Sobre los colores en R:</h3>
+<section id="sobre-los-colores-en-r" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="sobre-los-colores-en-r"><span class="header-section-number">7.3.1</span> Sobre los colores en R:</h3>
 <p>Podemos agregar manualmente los colores, como lo hicimos anteriormente.</p>
 <p>Sin embargo, existen paquetes que ya traen paletas cargadas y que se pueden utilizar dependiendo de los datos.</p>
 <p>Una paleta es la de RColorBrewer: <a href="https://www.geeksforgeeks.org/introduction-to-color-palettes-in-r-with-rcolorbrewer/" class="uri">https://www.geeksforgeeks.org/introduction-to-color-palettes-in-r-with-rcolorbrewer/</a></p>
@@ -521,8 +530,8 @@ YlOrRd           9      seq       TRUE</code></pre>
 <p>El paquete <code>{esquisse}</code> es una forma de graficar de forma más sencilla</p>
 </section>
 </section>
-<section id="práctica-en-clase" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="práctica-en-clase"><span class="header-section-number">7.3</span> Práctica en clase:</h2>
+<section id="práctica-en-clase" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="práctica-en-clase"><span class="header-section-number">7.4</span> Práctica en clase:</h2>
 <p>elaboren un histograma, diagrama de caja y brazos o un diagrama de densidad con una variable cuantitativa que seleccionen. Modifica los colores, etiquetas, eje y, eje x, título, fuente, etc.</p>
 
 
@@ -634,6 +643,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./P8.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Visualización de datos (II)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
