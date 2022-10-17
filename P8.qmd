@@ -1,6 +1,7 @@
 # Visualización de datos (II)
 
 ## Paquetes y datos
+
 ```{r}
 #Paquetería #
 if(!require("pacman")) install.packages("pacman")
@@ -12,16 +13,13 @@ pacman::p_load(tidyverse, readxl, writexl, haven, sjlabelled, foreign, janitor, 
 concentrado2020 <- haven::read_dta("datos/concentrado2020.dta")
 ```
 
-
 ## Variables cualitativas
 
-Los gráficos más utilizados son los gráficos de barras.
-Primero vamos a hacer nuestro primer gráfico de barras o columnas.
+Los gráficos más utilizados son los gráficos de barras. Primero vamos a hacer nuestro primer gráfico de barras o columnas.
 
 Al igual que en la sesión anterior, vamos agregando capas a nuestros gráficos.
 
-En los datos incluiremos la variable que queremos graficar,
-en este caso la jefatura de hogar. Lo guardaremos como un objeto.
+En los datos incluiremos la variable que queremos graficar, en este caso la jefatura de hogar. Lo guardaremos como un objeto.
 
 ```{r}
 g<- concentrado2020 %>% 
@@ -30,8 +28,7 @@ g
 
 ```
 
-Vemos que graficamos nuestra variable, sin embargo, todavía
-no hemos especificado la geometría así que la vamos a agregar.
+Vemos que graficamos nuestra variable, sin embargo, todavía no hemos especificado la geometría así que la vamos a agregar.
 
 ```{r}
 
@@ -40,8 +37,7 @@ g+geom_bar()
 
 ```
 
-
-También podemos voltear nuestras barras. 
+También podemos voltear nuestras barras.
 
 ```{r}
 
@@ -53,9 +49,7 @@ También podemos voltear nuestras barras.
 
 Aunque, se ve mejor como estaba antes.
 
-Para hacer nuestra gráfica de barras y que se vean 
-las etiquetas con facilidad, vamos a etiquetar nuestra variable.
-
+Para hacer nuestra gráfica de barras y que se vean las etiquetas con facilidad, vamos a etiquetar nuestra variable.
 
 ```{r}
 etiqueta_sex<-c("Hombre", "Mujer")
@@ -66,6 +60,7 @@ concentrado2020<-concentrado2020 %>%
 ```
 
 Ahora sí podemos ver las etiquetas en nuestro gráfico
+
 ```{r}
 g<-concentrado2020 %>% 
   ggplot(aes(x=as_label(sexo_jefe))) +
@@ -84,6 +79,7 @@ g<- concentrado2020 %>%
   geom_bar()
 g
 ```
+
 Esos son los colores por default. Ahora especificamos los colores.
 
 ```{r}
@@ -95,7 +91,9 @@ g + scale_fill_manual(
 
 
 ```
-2. Opción 2, rellenamos el gráfico con RColorBrewer
+
+2.  Opción 2, rellenamos el gráfico con RColorBrewer
+
 ```{r}
 
 g + 
@@ -103,7 +101,9 @@ g +
   theme_minimal()
 
 ```
+
 Opción 3. Ponerle color con Wesanderson.
+
 ```{r}
 pal <- wes_palette(2, name = "Royal1", type = "discrete")
 
@@ -132,6 +132,7 @@ Al gráfico de porcentajes, le agregaremos el color.
 g + 
   scale_fill_brewer(palette="Set2") 
 ```
+
 Ahora, le agregamos los títulos
 
 ```{r}
@@ -152,7 +153,6 @@ g +
 
 Y detalles en la fuente de los títulos.
 
-
 ```{r}
 
 concentrado2020 %>% 
@@ -171,8 +171,8 @@ concentrado2020 %>%
 
 ```
 
-
 Por último, agregaremos las etiquetas de nuestros datos.
+
 ```{r}
 
 concentrado2020 %>% 
@@ -199,7 +199,6 @@ concentrado2020 %>%
     plot.caption = element_text(face = "italic")
   )
 ```
-
 
 ## Práctica
 

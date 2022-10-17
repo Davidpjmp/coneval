@@ -1,0 +1,193 @@
+# Visualización de datos (IV)
+
+## Paquetes y datos
+
+Ahora cargaremos nuestros paquetes para hoy.
+
+```{r}
+
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, readxl, writexl, haven, sjlabelled, foreign, janitor, esquisse, RColorBrewer, wesanderson)
+
+```
+
+Y cargaremos las bases de datos.
+
+```{r}
+concentrado2020 <- haven::read_dta("datos/concentrado2020.dta")
+```
+
+
+## Gráficos de dos variables: cuantitativa y cualitativa
+
+Primero vamos a convertir nuestras variables.
+
+```{r}
+concentrado2020 <- concentrado2020 %>% 
+  mutate(sexo_factor = factor(concentrado2020$sexo_jefe, labels = c("Hombre", "Mujer")))
+
+etiqueta_sex<-c("Hombre", "Mujer")
+
+concentrado2020<-concentrado2020 %>% 
+  mutate(sexo_jefe=as_numeric(sexo_jefe)) %>% # para quitar el "string"
+  sjlabelled::set_labels(sexo_jefe, labels=etiqueta_sex) 
+
+
+concentrado2020 <- concentrado2020 %>% 
+  mutate(estrato=case_when(est_socio==1~"Bajo",
+                           est_socio==2~"Medio Bajo",
+                           est_socio==3~"Medio Alto",
+                           est_socio==4~"Alto"),
+         estrato = factor(estrato, 
+                          levels=c("Bajo", "Medio Bajo", "Medio Alto", "Alto")))
+```
+
+Podemos hacer un boxplot
+
+```{r}
+concentrado2020 %>% 
+ggplot(aes(x = edad_jefe, y = as_label(sexo_jefe), fill = as.factor(sexo_jefe))) +
+  geom_boxplot() +
+  theme_minimal()
+```
+
+
+Podemos voltear la geometría.
+```{r}
+concentrado2020 %>% 
+ggplot(aes(x = edad_jefe, y = as_label(sexo_jefe), fill = as.factor(sexo_jefe))) +
+  geom_boxplot() +
+  coord_flip()+
+  theme_minimal()
+```
+
+
+También un histograma, diferenciando por sexo. 
+
+
+```{r}
+concentrado2020 %>% 
+ggplot(aes(x = edad_jefe, fill = as.factor(sexo_jefe))) +
+  geom_histogram(bins = 30L) +
+  scale_fill_brewer(palette = "RdYlBu", direction = -1) +
+  theme_minimal()
+```
+También podemos hacer los histogramas por separado.
+
+```{r}
+concentrado2020 %>% 
+ggplot(aes(x = edad_jefe, fill = as.factor(sexo_jefe))) +
+  geom_histogram(bins = 30L) +
+  scale_fill_brewer(palette = "RdYlBu", direction = 1) +
+  theme_minimal() +
+  facet_wrap(vars(as_label(sexo_jefe)))
+```
+  
+  
+ O gráficos de densidad.
+
+
+```{r}
+concentrado2020 %>% 
+ggplot(aes(x = edad_jefe, fill = as.factor(sexo_jefe))) +
+  geom_density() +
+  scale_fill_brewer(palette = "RdYlBu", direction = -1) +
+  theme_minimal()
+```
+Por separado también
+
+```{r}
+concentrado2020 %>% 
+ggplot(aes(x = edad_jefe, fill = as.factor(sexo_jefe))) +
+  geom_density() +
+  scale_fill_brewer(palette = "RdYlBu", direction = -1) +
+  facet_wrap(vars(as_label(sexo_jefe)))+
+  theme_minimal()
+```
+
+
+
+También podemos relacionar una variable cuantitativa con dos variables cualitativas.
+
+```{r}
+concentrado2020 %>% 
+ggplot(aes(x = edad_jefe, y = as_label(est_socio), fill = as.factor(est_socio))) +
+  geom_boxplot() +
+  theme_minimal() +
+  facet_wrap(vars(as_label(sexo_jefe)))
+```
+
+O bien, un gráfico con dos variables cuantitativas y una cualitativa.
+En este caso el tamaño de los puntos, indica la diferencia entre hombres
+y mujeres.
+
+```{r}
+
+concentrado2020$ln_bene_gob<-log(concentrado2020$bene_gob)
+
+concentrado2020 %>% 
+  filter(ln_bene_gob>0) %>% 
+  ggplot(aes(x= edad_jefe, y= ln_bene_gob, size=as.factor(sexo_jefe))) + 
+  geom_point(colour=2, shape = 20)+
+ theme_minimal()
+
+ 
+```
+
+Podemos indicar la diferencia entre hombres y mujeres no por tamaño, sino por
+color.
+
+```{r}
+concentrado2020 %>% 
+  filter(ln_bene_gob>0) %>% 
+  ggplot(aes(x= edad_jefe, y= ln_bene_gob, colour=as.factor(sexo_jefe))) + 
+  geom_point(size=2, shape = 20)+
+  scale_fill_hue(direction=1)+
+ theme_minimal()
+```
+
+Ahora queremos ese mismo gráfico, sin embargo vamos a separarlo por estrato.
+
+```{r}
+concentrado2020 %>% 
+  filter(ln_bene_gob>0) %>% 
+  ggplot(aes(x= edad_jefe, y= ln_bene_gob, colour=as.factor(sexo_jefe))) + 
+  geom_point(size=2, shape = 20)+
+  scale_fill_hue(direction=1)+
+  facet_wrap(vars(as_label(est_socio)))+
+ theme_minimal()
+```
+
+
+```{r}
+
+concentrado2020 %>% 
+  filter(ln_bene_gob>0) %>% 
+  ggplot(aes(x= edad_jefe, y= ln_bene_gob, colour=as.factor((sexo_jefe)))) + 
+  geom_point(size=2, shape = 20)+
+  scale_fill_hue(direction=1)+
+  facet_wrap(vars(as_label(est_socio)))+
+ theme_minimal()+
+ scale_color_manual(
+    values = c("1" = "#0B0B33",
+    "2" = "#E7E98C")
+  )+
+  labs(
+    x = "Edad del jefe del hogar",
+    y = "Ingresos por beneficios del gobierno (en logartimo)",
+    title = "Relación entre la edad del jefe del hogar e ingreso proveniente de beneficios del gobierno 2020",
+    subtitle = "Según la jefatura de hogar y el estrato socioeconómico",
+    caption = "Fuente: elaboración propia con datos de ENIGH",
+    colour = "Jefatura de hogar"
+  ) +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(color = "black", size = 12, face = "bold", hjust=0.5),
+    plot.subtitle = element_text(color = "black", size =12, hjust=0.5),
+    plot.caption = element_text(face = "italic", size = 8, hjust=0.5)
+  )
+
+
+```
+
+
