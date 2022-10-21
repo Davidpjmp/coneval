@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.163">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R para el monitoreo de la política de desarrollo social - 11&nbsp; API INEGI e intro a</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./P12.html" rel="next">
+<link href="./P10.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.5.1/plotly-latest.min.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">API INEGI e intro a</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R para el monitoreo de la política de desarrollo social</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Introducción al curso</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./instala.html" class="sidebar-item-text sidebar-link">Instalación de R y Rstudio</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Primer acercamiento al uso del programa</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Manejo de datos: importación, selección y revisión</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis descriptivo básico</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P4.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Factores de expansión y algunas otras medidas</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P5.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fusionado de conjuntos de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P6.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Funciones, condicionales, bucles y mapeos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P7.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Visualización de datos (I)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P8.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Visualización de datos (II)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P9.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Visualización de datos (III)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P10.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualización de datos (IV)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P11.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">API INEGI e intro a</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P12.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Visualización espacial - Mapas (I)</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#token" id="toc-token" class="nav-link active" data-scroll-target="#token"><span class="toc-section-number">11.1</span>  Token</a></li>
+  <li><a href="#paquetes" id="toc-paquetes" class="nav-link" data-scroll-target="#paquetes"><span class="toc-section-number">11.2</span>  Paquetes</a></li>
+  <li><a href="#consulta-con-inegir" id="toc-consulta-con-inegir" class="nav-link" data-scroll-target="#consulta-con-inegir"><span class="toc-section-number">11.3</span>  Consulta con <code>{inegiR}</code></a></li>
+  <li><a href="#consulta-general" id="toc-consulta-general" class="nav-link" data-scroll-target="#consulta-general"><span class="toc-section-number">11.4</span>  Consulta general</a></li>
+  <li><a href="#plotly" id="toc-plotly" class="nav-link" data-scroll-target="#plotly"><span class="toc-section-number">11.5</span>  <code>{plotly}</code></a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">API INEGI e intro a</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>En esta breve práctica revisaremos un poco de los gráficos de series de tiempo, y con esa excusa, bajaremos datos del INEGI directamente a nuestro ambiente.</p>
+<p>Hay un paquete especializado (que antes funcionaba mejor) que nos permite descargar algunos indicadores del INEGI <code>{inegiR}</code>, específicamente los del Banco de Información Económica (BIE)</p>
+<section id="token" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="token"><span class="header-section-number">11.1</span> Token</h2>
+<p>Necesitamos crear un objeto donde esté nuestro token</p>
+<div class="cell">
+
+</div>
+<pre><code>token&lt;-"aquí va tu token"
+</code></pre>
+<p>El token está ligado a tu cuenta de correo, no lo compartas porque si alguien lo utiliza mal, tu cuenta puede ser bloqueada.</p>
+</section>
+<section id="paquetes" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="paquetes"><span class="header-section-number">11.2</span> Paquetes</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(<span class="st">'pacman'</span>)) <span class="fu">install.packages</span>(<span class="st">'pacman'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: pacman</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, <span class="co"># ya lo conocemos</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>               inegiR, <span class="co"># para consultas en el BIE</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>               httr, jsonlite, <span class="co"># Para consultas en todo el banco</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               plotly, <span class="co"># gráficos interactivos</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               lubridate) <span class="co"># para manejo de fechas</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="consulta-con-inegir" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="consulta-con-inegir"><span class="header-section-number">11.3</span> Consulta con <code>{inegiR}</code></h2>
+<p>Esto sólo sirve para los indicadores del BIE: <a href="https://www.inegi.org.mx/servicios/api_indicadores.html" class="uri">https://www.inegi.org.mx/servicios/api_indicadores.html</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>inegiR<span class="sc">::</span><span class="fu">inegi_series</span>(<span class="at">serie=</span><span class="dv">628194</span>,<span class="co"># este número está en el sitio este el IPC</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">token =</span> token)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          date date_shortcut       values notes
+1   2022-09-01            M9 124.57100000    NA
+2   2022-08-01            M8 123.80300000    NA
+3   2022-07-01            M7 122.94800000    NA
+4   2022-06-01            M6 122.04400000    NA
+5   2022-05-01            M5 121.02200000    NA
+6   2022-04-01            M4 120.80900000    NA
+7   2022-03-01            M3 120.15900000    NA
+8   2022-02-01            M2 118.98100000    NA
+9   2022-01-01            M1 118.00200000    NA
+10  2021-12-01           M12 117.30800000    NA
+11  2021-11-01           M11 116.88400000    NA
+12  2021-10-01           M10 115.56100000    NA
+13  2021-09-01            M9 114.60100000    NA
+14  2021-08-01            M8 113.89900000    NA
+15  2021-07-01            M7 113.68200000    NA
+16  2021-06-01            M6 113.01800000    NA
+17  2021-05-01            M5 112.41900000    NA
+18  2021-04-01            M4 112.19000000    NA
+19  2021-03-01            M3 111.82400000    NA
+20  2021-02-01            M2 110.90700000    NA
+21  2021-01-01            M1 110.21000000    NA
+22  2020-12-01           M12 109.27100000    NA
+23  2020-11-01           M11 108.85600000    NA
+24  2020-10-01           M10 108.77400000    NA
+25  2020-09-01            M9 108.11400000    NA
+26  2020-08-01            M8 107.86700000    NA
+27  2020-07-01            M7 107.44400000    NA
+28  2020-06-01            M6 106.74300000    NA
+29  2020-05-01            M5 106.16200000    NA
+30  2020-04-01            M4 105.75500000    NA
+31  2020-03-01            M3 106.83800000    NA
+32  2020-02-01            M2 106.88900000    NA
+33  2020-01-01            M1 106.44700000    NA
+34  2019-12-01           M12 105.93400000    NA
+35  2019-11-01           M11 105.34600000    NA
+36  2019-10-01           M10 104.50300000    NA
+37  2019-09-01            M9 103.94200000    NA
+38  2019-08-01            M8 103.67000000    NA
+39  2019-07-01            M7 103.68700000    NA
+40  2019-06-01            M6 103.29900000    NA
+41  2019-05-01            M5 103.23300000    NA
+42  2019-04-01            M4 103.53100000    NA
+43  2019-03-01            M3 103.47600000    NA
+44  2019-02-01            M2 103.07900000    NA
+45  2019-01-01            M1 103.10800000    NA
+46  2018-12-01           M12 103.02000000    NA
+47  2018-11-01           M11 102.30300000    NA
+48  2018-10-01           M10 101.44000000    NA
+49  2018-09-01            M9 100.91700000    NA
+50  2018-08-01            M8 100.49200000    NA
+51  2018-07-01            M7  99.90909910    NA
+52  2018-06-01            M6  99.37646493    NA
+53  2018-05-01            M5  98.99408017    NA
+54  2018-04-01            M4  99.15484705    NA
+55  2018-03-01            M3  99.49215698    NA
+56  2018-02-01            M2  99.17137448    NA
+57  2018-01-01            M1  98.79499970    NA
+58  2017-12-01           M12  98.27288299    NA
+59  2017-11-01           M11  97.69517399    NA
+60  2017-10-01           M10  96.69826913    NA
+61  2017-09-01            M9  96.09351524    NA
+62  2017-08-01            M8  95.79376765    NA
+63  2017-07-01            M7  95.32273574    NA
+64  2017-06-01            M6  94.96363964    NA
+65  2017-05-01            M5  94.72549432    NA
+66  2017-04-01            M4  94.83893263    NA
+67  2017-03-01            M3  94.72248933    NA
+68  2017-02-01            M2  94.14478034    NA
+69  2017-01-01            M1  93.60388244    NA
+70  2016-12-01           M12  92.03903480    NA
+71  2016-11-01           M11  91.61683394    NA
+72  2016-10-01           M10  90.90615422    NA
+73  2016-09-01            M9  90.35774385    NA
+74  2016-08-01            M8  89.80933349    NA
+75  2016-07-01            M7  89.55691448    NA
+76  2016-06-01            M6  89.32402789    NA
+77  2016-05-01            M5  89.22561452    NA
+78  2016-04-01            M4  89.62527796    NA
+79  2016-03-01            M3  89.91000060    NA
+80  2016-02-01            M2  89.77778112    NA
+81  2016-01-01            M1  89.38638139    NA
+82  2015-12-01           M12  89.04681772    NA
+83  2015-11-01           M11  88.68546788    NA
+84  2015-10-01           M10  88.20391850    NA
+85  2015-09-01            M9  87.75241902    NA
+86  2015-08-01            M8  87.42487529    NA
+87  2015-07-01            M7  87.24081976    NA
+88  2015-06-01            M6  87.11310776    NA
+89  2015-05-01            M5  86.96736583    NA
+90  2015-04-01            M4  87.40384038    NA
+91  2015-03-01            M3  87.63071699    NA
+92  2015-02-01            M2  87.27537713    NA
+93  2015-01-01            M1  87.11010277    NA
+94  2014-12-01           M12  87.18898371    NA
+95  2014-11-01           M11  86.76377787    NA
+96  2014-10-01           M10  86.06962558    NA
+97  2014-09-01            M9  85.59633992    NA
+98  2014-08-01            M8  85.21996514    NA
+99  2014-07-01            M7  84.91495883    NA
+100 2014-06-01            M6  84.68207224    NA
+101 2014-05-01            M5  84.53557906    NA
+102 2014-04-01            M4  84.80677925    NA
+103 2014-03-01            M3  84.96529239    NA
+104 2014-02-01            M2  84.73315704    NA
+105 2014-01-01            M1  84.51905163    NA
+106 2013-12-01           M12  83.77005830    NA
+107 2013-11-01           M11  83.29226516    NA
+108 2013-10-01           M10  82.52298816    NA
+109 2013-09-01            M9  82.13233968    NA
+110 2013-08-01            M8  81.82432839    NA
+111 2013-07-01            M7  81.59219304    NA
+112 2013-06-01            M6  81.61923793    NA
+113 2013-05-01            M5  81.66882024    NA
+114 2013-04-01            M4  81.94152293    NA
+115 2013-03-01            M3  81.88743314    NA
+116 2013-02-01            M2  81.29094297    NA
+117 2013-01-01            M1  80.89278202    NA
+118 2012-12-01           M12  80.56824328    NA
+119 2012-11-01           M11  80.38343650    NA
+120 2012-10-01           M10  79.84103612    NA
+121 2012-09-01            M9  79.43911894    NA
+122 2012-08-01            M8  79.09054030    NA
+123 2012-07-01            M7  78.85389747    NA
+124 2012-06-01            M6  78.41366669    NA
+125 2012-05-01            M5  78.05381934    NA
+126 2012-04-01            M4  78.30097963    NA
+127 2012-03-01            M3  78.54738867    NA
+128 2012-02-01            M2  78.50231384    NA
+129 2012-01-01            M1  78.34304946    NA
+130 2011-12-01           M12  77.79238536    NA
+131 2011-11-01           M11  77.15833283    NA
+132 2011-10-01           M10  76.33271230    NA
+133 2011-09-01            M9  75.82111305    NA
+134 2011-08-01            M8  75.63555502    NA
+135 2011-07-01            M7  75.51610674    NA
+136 2011-06-01            M6  75.15550814    NA
+137 2011-05-01            M5  75.15926438    NA
+138 2011-04-01            M4  75.71744095    NA
+139 2011-03-01            M3  75.72345093    NA
+140 2011-02-01            M2  75.57846024    NA
+141 2011-01-01            M1  75.29599135    NA
+142 2010-12-01           M12  74.93095445    NA
+143 2010-11-01           M11  74.56158125    NA
+144 2010-10-01           M10  73.96892635    NA
+145 2010-09-01            M9  73.51511019    NA
+146 2010-08-01            M8  73.13174950    NA
+147 2010-07-01            M7  72.92919000    NA
+148 2010-06-01            M6  72.77118323    NA
+149 2010-05-01            M5  72.79397765    NA
+150 2010-04-01            M4  73.25556464    NA
+151 2010-03-01            M3  73.48972549    NA
+152 2010-02-01            M2  72.97167051    NA
+153 2010-01-01            M1  72.55204598    NA
+154 2009-12-01           M12  71.77185517    NA
+155 2009-11-01           M11  71.47604578    NA
+156 2009-10-01           M10  71.10719063    NA
+157 2009-09-01            M9  70.89271587    NA
+158 2009-08-01            M8  70.53888432    NA
+159 2009-07-01            M7  70.37051645    NA
+160 2009-06-01            M6  70.17935416    NA
+161 2009-05-01            M5  70.05035847    NA
+162 2009-04-01            M4  70.25499019    NA
+163 2009-03-01            M3  70.00995018    NA
+164 2009-02-01            M2  69.60949368    NA
+165 2009-01-01            M1  69.45614941    NA
+166 2008-12-01           M12  69.29555236    NA
+167 2008-11-01           M11  68.81894178    NA
+168 2008-10-01           M10  68.04548569    NA
+169 2008-09-01            M9  67.58493481    NA
+170 2008-08-01            M8  67.12749227    NA
+171 2008-07-01            M7  66.74205936    NA
+172 2008-06-01            M6  66.37216810    NA
+173 2008-05-01            M5  66.09863507    NA
+174 2008-04-01            M4  66.17012666    NA
+175 2008-03-01            M3  66.01989072    NA
+176 2008-02-01            M2  65.54483430    NA
+177 2008-01-01            M1  65.35056368    NA
+178 2007-12-01           M12  65.04905568    NA
+179 2007-11-01           M11  64.78122126    NA
+180 2007-10-01           M10  64.32740509    NA
+181 2007-09-01            M9  64.07770259    NA
+182 2007-08-01            M8  63.58399619    NA
+183 2007-07-01            M7  63.32600481    NA
+184 2007-06-01            M6  63.05817039    NA
+185 2007-05-01            M5  62.98253436    NA
+186 2007-04-01            M4  63.29129513    NA
+187 2007-03-01            M3  63.32911314    NA
+188 2007-02-01            M2  63.19234663    NA
+189 2007-01-01            M1  63.01620793    NA
+190 2006-12-01           M12  62.69242357    NA
+191 2006-11-01           M11  62.33185730    NA
+192 2006-10-01           M10  62.00651878    NA
+193 2006-09-01            M9  61.73661213    NA
+194 2006-08-01            M8  61.11960865    NA
+195 2006-07-01            M7  60.80929371    NA
+196 2006-06-01            M6  60.64299806    NA
+197 2006-05-01            M5  60.59067451    NA
+198 2006-04-01            M4  60.86161727    NA
+199 2006-03-01            M3  60.77251181    NA
+200 2006-02-01            M2  60.69635773    NA
+201 2006-01-01            M1  60.60362589    NA
+202 2005-12-01           M12  60.25031239    NA
+203 2005-11-01           M11  59.88249335    NA
+204 2005-10-01           M10  59.45457994    NA
+205 2005-09-01            M9  59.30900649    NA
+206 2005-08-01            M8  59.07225536    NA
+207 2005-07-01            M7  59.00179988    NA
+208 2005-06-01            M6  58.77178347    NA
+209 2005-05-01            M5  58.82825146    NA
+210 2005-04-01            M4  58.97641519    NA
+211 2005-03-01            M3  58.76712098    NA
+212 2005-02-01            M2  58.50343099    NA
+213 2005-01-01            M1  58.30916037    NA
+214 2004-12-01           M12  58.30708815    NA
+215 2004-11-01           M11  58.18689940    NA
+216 2004-10-01           M10  57.69474717    NA
+217 2004-09-01            M9  57.29791705    NA
+218 2004-08-01            M8  56.82804118    NA
+219 2004-07-01            M7  56.47939018    NA
+220 2004-06-01            M6  56.33174451    NA
+221 2004-05-01            M5  56.24160294    NA
+222 2004-04-01            M4  56.38303195    NA
+223 2004-03-01            M3  56.29807094    NA
+224 2004-02-01            M2  56.10794476    NA
+225 2004-01-01            M1  55.77431735    NA
+226 2003-12-01           M12  55.42981079    NA
+227 2003-11-01           M11  55.19254161    NA
+228 2003-10-01           M10  54.73820739    NA
+229 2003-09-01            M9  54.53823816    NA
+230 2003-08-01            M8  54.21548991    NA
+231 2003-07-01            M7  54.05333870    NA
+232 2003-06-01            M6  53.97511240    NA
+233 2003-05-01            M5  53.93055967    NA
+234 2003-04-01            M4  54.10514420    NA
+235 2003-03-01            M3  54.01293041    NA
+236 2003-02-01            M2  53.67412245    NA
+237 2003-01-01            M1  53.52544068    NA
+238 2002-12-01           M12  53.30992980    NA
+239 2002-11-01           M11  53.07887728    NA
+240 2002-10-01           M10  52.65303609    NA
+241 2002-09-01            M9  52.42198356    NA
+242 2002-08-01            M8  52.10856030    NA
+243 2002-07-01            M7  51.91118135    NA
+244 2002-06-01            M6  51.76258618    NA
+245 2002-05-01            M5  51.51142923    NA
+246 2002-04-01            M4  51.40723497    NA
+247 2002-03-01            M3  51.12794844    NA
+248 2002-02-01            M2  50.86774985    NA
+249 2002-01-01            M1  50.90047201    NA
+250 2001-12-01           M12  50.43489879    NA
+251 2001-11-01           M11  50.36514891    NA
+252 2001-10-01           M10  50.17613537    NA
+253 2001-09-01            M9  49.95038115    NA
+254 2001-08-01            M8  49.48968755    NA
+255 2001-07-01            M7  49.19820196    NA
+256 2001-06-01            M6  49.32636377    NA
+257 2001-05-01            M5  49.20997046    NA
+258 2001-04-01            M4  49.09730863    NA
+259 2001-03-01            M3  48.85088778    NA
+260 2001-02-01            M2  48.54332816    NA
+261 2001-01-01            M1  48.57547625    NA
+262 2000-12-01           M12  48.30767118    NA
+263 2000-11-01           M11  47.79028786    NA
+264 2000-10-01           M10  47.38513583    NA
+265 2000-09-01            M9  47.06107160    NA
+266 2000-08-01            M8  46.71978519    NA
+267 2000-07-01            M7  46.46446621    NA
+268 2000-06-01            M6  46.28392024    NA
+269 2000-05-01            M5  46.01137907    NA
+270 2000-04-01            M4  45.84001827    NA
+271 2000-03-01            M3  45.58068078    NA
+272 2000-02-01            M2  45.32938031    NA
+273 2000-01-01            M1  44.93083012    NA
+274 1999-12-01           M12  44.33551639    NA
+275 1999-11-01           M11  43.89577645    NA
+276 1999-10-01           M10  43.50885123    NA
+277 1999-09-01            M9  43.23501839    NA
+278 1999-08-01            M8  42.82125526    NA
+279 1999-07-01            M7  42.58157977    NA
+280 1999-06-01            M6  42.30200620    NA
+281 1999-05-01            M5  42.02587708    NA
+282 1999-04-01            M4  41.77457661    NA
+283 1999-03-01            M3  41.39468378    NA
+284 1999-02-01            M2  41.01364281    NA
+285 1999-01-01            M1  40.46977028    NA
+286 1998-12-01           M12  39.47297432    NA
+287 1998-11-01           M11  38.53278623    NA
+288 1998-10-01           M10  37.86226893    NA
+289 1998-09-01            M9  37.32737639    NA
+290 1998-08-01            M8  36.73163210    NA
+291 1998-07-01            M7  36.38187811    NA
+292 1998-06-01            M6  36.03442041    NA
+293 1998-05-01            M5  35.61348136    NA
+294 1998-04-01            M4  35.33204206    NA
+295 1998-03-01            M3  35.00453340    NA
+296 1998-02-01            M2  34.59923784    NA
+297 1998-01-01            M1  34.00392411    NA
+298 1997-12-01           M12  33.27987451    NA
+299 1997-11-01           M11  32.82004201    NA
+300 1997-10-01           M10  32.45694082    NA
+301 1997-09-01            M9  32.19961259    NA
+302 1997-08-01            M8  31.80350220    NA
+303 1997-07-01            M7  31.52321104    NA
+304 1997-06-01            M6  31.25095691    NA
+305 1997-05-01            M5  30.97611945    NA
+306 1997-04-01            M4  30.69597181    NA
+307 1997-03-01            M3  30.36788907    NA
+308 1997-02-01            M2  29.99459809    NA
+309 1997-01-01            M1  29.49888603    NA
+310 1996-12-01           M12  28.75933645    NA
+311 1996-11-01           M11  27.86708345    NA
+312 1996-10-01           M10  27.45116754    NA
+313 1996-09-01            M9  27.11275149    NA
+314 1996-08-01            M8  26.68607171    NA
+315 1996-07-01            M7  26.33603069    NA
+316 1996-06-01            M6  25.96690173    NA
+317 1996-05-01            M5  25.55084230    NA
+318 1996-04-01            M4  25.09344962    NA
+319 1996-03-01            M3  24.39982588    NA
+320 1996-02-01            M2  23.87426203    NA
+321 1996-01-01            M1  23.32975376    NA
+322 1995-12-01           M12  22.52016727    NA
+323 1995-11-01           M11  21.80960838    NA
+324 1995-10-01           M10  21.28476212    NA
+325 1995-09-01            M9  20.85564253    NA
+326 1995-08-01            M8  20.43298127    NA
+327 1995-07-01            M7  20.09958836    NA
+328 1995-06-01            M6  19.69802427    NA
+329 1995-05-01            M5  19.09209019    NA
+330 1995-04-01            M4  18.32613326    NA
+331 1995-03-01            M3  16.97361720    NA
+332 1995-02-01            M2  16.02870735    NA
+333 1995-01-01            M1  15.37699094    NA
+334 1994-12-01           M12  14.81920437    NA
+335 1994-11-01           M11  14.69036086    NA
+336 1994-10-01           M10  14.61224530    NA
+337 1994-09-01            M9  14.53593664    NA
+338 1994-08-01            M8  14.43328665    NA
+339 1994-07-01            M7  14.36632677    NA
+340 1994-06-01            M6  14.30289457    NA
+341 1994-05-01            M5  14.23168224    NA
+342 1994-04-01            M4  14.16325130    NA
+343 1994-03-01            M3  14.09422476    NA
+344 1994-02-01            M2  14.02212406    NA
+345 1994-01-01            M1  13.95037498    NA
+346 1993-12-01           M12  13.84305490    NA
+347 1993-11-01           M11  13.73830236    NA
+348 1993-10-01           M10  13.67797303    NA
+349 1993-09-01            M9  13.62226067    NA
+350 1993-08-01            M8  13.52211219    NA
+351 1993-07-01            M7  13.45012344    NA
+352 1993-06-01            M6  13.38579712    NA
+353 1993-05-01            M5  13.31113749    NA
+354 1993-04-01            M4  13.23548040    NA
+355 1993-03-01            M3  13.15959369    NA
+356 1993-02-01            M2  13.08334531    NA
+357 1993-01-01            M1  12.97731976    NA
+358 1992-12-01           M12  12.81655348    NA
+359 1992-11-01           M11  12.63662034    NA
+360 1992-10-01           M10  12.53249354    NA
+361 1992-09-01            M9  12.44289652    NA
+362 1992-08-01            M8  12.33559223    NA
+363 1992-07-01            M7  12.26027241    NA
+364 1992-06-01            M6  12.18334519    NA
+365 1992-05-01            M5  12.10143789    NA
+366 1992-04-01            M4  12.02217132    NA
+367 1992-03-01            M3  11.91594772    NA
+368 1992-02-01            M2  11.79590044    NA
+369 1992-01-01            M1  11.65777847    NA
+370 1991-12-01           M12  11.44967987    NA
+371 1991-11-01           M11  11.18637410    NA
+372 1991-10-01           M10  10.91534274    NA
+373 1991-09-01            M9  10.78985037    NA
+374 1991-08-01            M8  10.68342298    NA
+375 1991-07-01            M7  10.60958427    NA
+376 1991-06-01            M6  10.51664758    NA
+377 1991-05-01            M5  10.40744167    NA
+378 1991-04-01            M4  10.30668755    NA
+379 1991-03-01            M3  10.19983964    NA
+380 1991-02-01            M2  10.05642472    NA
+381 1991-01-01            M1   9.88387989    NA
+382 1990-12-01           M12   9.63821395    NA
+383 1990-11-01           M11   9.34372310    NA
+384 1990-10-01           M10   9.10205989    NA
+385 1990-09-01            M9   8.97306137    NA
+386 1990-08-01            M8   8.84695044    NA
+387 1990-07-01            M7   8.69873483    NA
+388 1990-06-01            M6   8.54293859    NA
+389 1990-05-01            M5   8.35883768    NA
+390 1990-04-01            M4   8.21547155    NA
+391 1990-03-01            M3   8.09230992    NA
+392 1990-02-01            M2   7.95211985    NA
+393 1990-01-01            M1   7.77603730    NA
+394 1989-12-01           M12   7.41802958    NA
+395 1989-11-01           M11   7.17585544    NA
+396 1989-10-01           M10   7.07652502    NA
+397 1989-09-01            M9   6.97339280    NA
+398 1989-08-01            M8   6.90733278    NA
+399 1989-07-01            M7   6.84214822    NA
+400 1989-06-01            M6   6.77438464    NA
+401 1989-05-01            M5   6.69309877    NA
+402 1989-04-01            M4   6.60222444    NA
+403 1989-03-01            M3   6.50494490    NA
+404 1989-02-01            M2   6.43518354    NA
+405 1989-01-01            M1   6.34902379    NA
+406 1988-12-01           M12   6.19731639    NA
+407 1988-11-01           M11   6.07065435    NA
+408 1988-10-01           M10   5.99048648    NA
+409 1988-09-01            M9   5.94513902    NA
+410 1988-08-01            M8   5.91134334    NA
+411 1988-07-01            M7   5.85745654    NA
+412 1988-06-01            M6   5.76129214    NA
+413 1988-05-01            M5   5.64610869    NA
+414 1988-04-01            M4   5.53894074    NA
+415 1988-03-01            M3   5.37354743    NA
+416 1988-02-01            M2   5.11178304    NA
+417 1988-01-01            M1   4.71824594    NA
+418 1987-12-01           M12   4.08639246    NA
+419 1987-11-01           M11   3.56051142    NA
+420 1987-10-01           M10   3.29884463    NA
+421 1987-09-01            M9   3.04508139    NA
+422 1987-08-01            M8   2.85687155    NA
+423 1987-07-01            M7   2.64102153    NA
+424 1987-06-01            M6   2.44314573    NA
+425 1987-05-01            M5   2.27832506    NA
+426 1987-04-01            M4   2.11860646    NA
+427 1987-03-01            M3   1.94815270    NA
+428 1987-02-01            M2   1.82738639    NA
+429 1987-01-01            M1   1.70440129    NA
+430 1986-12-01           M12   1.57673463    NA
+431 1986-11-01           M11   1.46130432    NA
+432 1986-10-01           M10   1.36882403    NA
+433 1986-09-01            M9   1.29481167    NA
+434 1986-08-01            M8   1.22153124    NA
+435 1986-07-01            M7   1.13133289    NA
+436 1986-06-01            M6   1.07756664    NA
+437 1986-05-01            M5   1.01257010    NA
+438 1986-04-01            M4   0.95926311    NA
+439 1986-03-01            M3   0.91166672    NA
+440 1986-02-01            M2   0.87117448    NA
+441 1986-01-01            M1   0.83409223    NA
+442 1985-12-01           M12   0.76634013    NA
+443 1985-11-01           M11   0.71749512    NA
+444 1985-10-01           M10   0.68585222    NA
+445 1985-09-01            M9   0.66075231    NA
+446 1985-08-01            M8   0.63537685    NA
+447 1985-07-01            M7   0.60876282    NA
+448 1985-06-01            M6   0.58827559    NA
+449 1985-05-01            M5   0.57390224    NA
+450 1985-04-01            M4   0.56062106    NA
+451 1985-03-01            M3   0.54388540    NA
+452 1985-02-01            M2   0.52359622    NA
+453 1985-01-01            M1   0.50271145    NA
+454 1984-12-01           M12   0.46799582    NA
+455 1984-11-01           M11   0.44892941    NA
+456 1984-10-01           M10   0.43403365    NA
+457 1984-09-01            M9   0.41938044    NA
+458 1984-08-01            M8   0.40724884    NA
+459 1984-07-01            M7   0.39599271    NA
+460 1984-06-01            M6   0.38342338    NA
+461 1984-05-01            M5   0.37003169    NA
+462 1984-04-01            M4   0.35815555    NA
+463 1984-03-01            M3   0.34330428    NA
+464 1984-02-01            M2   0.32923232    NA
+465 1984-01-01            M1   0.31272772    NA
+466 1983-12-01           M12   0.29404738    NA
+467 1983-11-01           M11   0.28198324    NA
+468 1983-10-01           M10   0.26634118    NA
+469 1983-09-01            M9   0.25778750    NA
+470 1983-08-01            M8   0.25009061    NA
+471 1983-07-01            M7   0.24074613    NA
+472 1983-06-01            M6   0.22940389    NA
+473 1983-05-01            M5   0.22103390    NA
+474 1983-04-01            M4   0.21184586    NA
+475 1983-03-01            M3   0.19923205    NA
+476 1983-02-01            M2   0.19003396    NA
+477 1983-01-01            M1   0.18035509    NA
+478 1982-12-01           M12   0.16265642    NA
+479 1982-11-01           M11   0.14696270    NA
+480 1982-10-01           M10   0.13989012    NA
+481 1982-09-01            M9   0.13299550    NA
+482 1982-08-01            M8   0.12625588    NA
+483 1982-07-01            M7   0.11351720    NA
+484 1982-06-01            M6   0.10795443    NA
+485 1982-05-01            M5   0.10299301    NA
+486 1982-04-01            M4   0.09751204    NA
+487 1982-03-01            M3   0.09249895    NA
+488 1982-02-01            M2   0.08923965    NA
+489 1982-01-01            M1   0.08586554    NA
+490 1981-12-01           M12   0.08180110    NA
+491 1981-11-01           M11   0.07965694    NA
+492 1981-10-01           M10   0.07815287    NA
+493 1981-09-01            M9   0.07645648    NA
+494 1981-08-01            M8   0.07506005    NA
+495 1981-07-01            M7   0.07354449    NA
+496 1981-06-01            M6   0.07227149    NA
+497 1981-05-01            M5   0.07127547    NA
+498 1981-04-01            M4   0.07021344    NA
+499 1981-03-01            M3   0.06866487    NA
+500 1981-02-01            M2   0.06722682    NA
+501 1981-01-01            M1   0.06561511    NA
+502 1980-12-01           M12   0.06356711    NA
+503 1980-11-01           M11   0.06194248    NA
+504 1980-10-01           M10   0.06088618    NA
+505 1980-09-01            M9   0.05997772    NA
+506 1980-08-01            M8   0.05931896    NA
+507 1980-07-01            M7   0.05811485    NA
+508 1980-06-01            M6   0.05653615    NA
+509 1980-05-01            M5   0.05543680    NA
+510 1980-04-01            M4   0.05454698    NA
+511 1980-03-01            M3   0.05360981    NA
+512 1980-02-01            M2   0.05252912    NA
+513 1980-01-01            M1   0.05134222    NA
+514 1979-12-01           M12   0.04895551    NA
+515 1979-11-01           M11   0.04810445    NA
+516 1979-10-01           M10   0.04749306    NA
+517 1979-09-01            M9   0.04667788    NA
+518 1979-08-01            M8   0.04611242    NA
+519 1979-07-01            M7   0.04542496    NA
+520 1979-06-01            M6   0.04488103    NA
+521 1979-05-01            M5   0.04438876    NA
+522 1979-04-01            M4   0.04381469    NA
+523 1979-03-01            M3   0.04342575    NA
+524 1979-02-01            M2   0.04284450    NA
+525 1979-01-01            M1   0.04223742    NA
+526 1978-12-01           M12   0.04078932    NA
+527 1978-11-01           M11   0.04044631    NA
+528 1978-10-01           M10   0.04003442    NA
+529 1978-09-01            M9   0.03955507    NA
+530 1978-08-01            M8   0.03910873    NA
+531 1978-07-01            M7   0.03872266    NA
+532 1978-06-01            M6   0.03807683    NA
+533 1978-05-01            M5   0.03756016    NA
+534 1978-04-01            M4   0.03719563    NA
+535 1978-03-01            M3   0.03678660    NA
+536 1978-02-01            M2   0.03640771    NA
+537 1978-01-01            M1   0.03589248    NA
+538 1977-12-01           M12   0.03511174    NA
+539 1977-11-01           M11   0.03463239    NA
+540 1977-10-01           M10   0.03425781    NA
+541 1977-09-01            M9   0.03399804    NA
+542 1977-08-01            M8   0.03340531    NA
+543 1977-07-01            M7   0.03273365    NA
+544 1977-06-01            M6   0.03236767    NA
+545 1977-05-01            M5   0.03197587    NA
+546 1977-04-01            M4   0.03169744    NA
+547 1977-03-01            M3   0.03122527    NA
+548 1977-02-01            M2   0.03068994    NA
+549 1977-01-01            M1   0.03002689    NA
+550 1976-12-01           M12   0.02909976    NA
+551 1976-11-01           M11   0.02838791    NA
+552 1976-10-01           M10   0.02716083    NA
+553 1976-09-01            M9   0.02571273    NA
+554 1976-08-01            M8   0.02486454    NA
+555 1976-07-01            M7   0.02462917    NA
+556 1976-06-01            M6   0.02442250    NA
+557 1976-05-01            M5   0.02432491    NA
+558 1976-04-01            M4   0.02415556    NA
+559 1976-03-01            M3   0.02398764    NA
+560 1976-02-01            M2   0.02375514    NA
+561 1976-01-01            M1   0.02331885    NA
+562 1975-12-01           M12   0.02287681    NA
+563 1975-11-01           M11   0.02269167    NA
+564 1975-10-01           M10   0.02253380    NA
+565 1975-09-01            M9   0.02241898    NA
+566 1975-08-01            M8   0.02225681    NA
+567 1975-07-01            M7   0.02206593    NA
+568 1975-06-01            M6   0.02189084    NA
+569 1975-05-01            M5   0.02152487    NA
+570 1975-04-01            M4   0.02124070    NA
+571 1975-03-01            M3   0.02106274    NA
+572 1975-02-01            M2   0.02093070    NA
+573 1975-01-01            M1   0.02081589    NA
+574 1974-12-01           M12   0.02055325    NA
+575 1974-11-01           M11   0.02039394    NA
+576 1974-10-01           M10   0.01984283    NA
+577 1974-09-01            M9   0.01945677    NA
+578 1974-08-01            M8   0.01923862    NA
+579 1974-07-01            M7   0.01903770    NA
+580 1974-06-01            M6   0.01876645    NA
+581 1974-05-01            M5   0.01858275    NA
+582 1974-04-01            M4   0.01843779    NA
+583 1974-03-01            M3   0.01819094    NA
+584 1974-02-01            M2   0.01805172    NA
+585 1974-01-01            M1   0.01765274    NA
+586 1973-12-01           M12   0.01704279    NA
+587 1973-11-01           M11   0.01640557    NA
+588 1973-10-01           M10   0.01620608    NA
+589 1973-09-01            M9   0.01600085    NA
+590 1973-08-01            M8   0.01562914    NA
+591 1973-07-01            M7   0.01538229    NA
+592 1973-06-01            M6   0.01499766    NA
+593 1973-05-01            M5   0.01487567    NA
+594 1973-04-01            M4   0.01471923    NA
+595 1973-03-01            M3   0.01448960    NA
+596 1973-02-01            M2   0.01436331    NA
+597 1973-01-01            M1   0.01424562    NA
+598 1972-12-01           M12   0.01404183    NA
+599 1972-11-01           M11   0.01399446    NA
+600 1972-10-01           M10   0.01390405    NA
+601 1972-09-01            M9   0.01389400    NA
+602 1972-08-01            M8   0.01383086    NA
+603 1972-07-01            M7   0.01374044    NA
+604 1972-06-01            M6   0.01368877    NA
+605 1972-05-01            M5   0.01358831    NA
+606 1972-04-01            M4   0.01356104    NA
+607 1972-03-01            M3   0.01347637    NA
+608 1972-02-01            M2   0.01340317    NA
+609 1972-01-01            M1   0.01336155    NA
+610 1971-12-01           M12   0.01330271    NA
+611 1971-11-01           M11   0.01323956    NA
+612 1971-10-01           M10   0.01321803    NA
+613 1971-09-01            M9   0.01320511    NA
+614 1971-08-01            M8   0.01316206    NA
+615 1971-07-01            M7   0.01304294    NA
+616 1971-06-01            M6   0.01305299    NA
+617 1971-05-01            M5   0.01299415    NA
+618 1971-04-01            M4   0.01296687    NA
+619 1971-03-01            M3   0.01290085    NA
+620 1971-02-01            M2   0.01285206    NA
+621 1971-01-01            M1   0.01279896    NA
+622 1970-12-01           M12   0.01267410    NA
+623 1970-11-01           M11   0.01256789    NA
+624 1970-10-01           M10   0.01250044    NA
+625 1970-09-01            M9   0.01249613    NA
+626 1970-08-01            M8   0.01246599    NA
+627 1970-07-01            M7   0.01240859    NA
+628 1970-06-01            M6   0.01234831    NA
+629 1970-05-01            M5   0.01227368    NA
+630 1970-04-01            M4   0.01224785    NA
+631 1970-03-01            M3   0.01223206    NA
+632 1970-02-01            M2   0.01219618    NA
+633 1970-01-01            M1   0.01219761    NA
+634 1969-12-01           M12   0.01210576    NA
+635 1969-11-01           M11   0.01201535    NA
+636 1969-10-01           M10   0.01201391    NA
+637 1969-09-01            M9   0.01188905    NA
+638 1969-08-01            M8   0.01177854    NA
+639 1969-07-01            M7   0.01176562    NA
+640 1969-06-01            M6   0.01172113    NA
+641 1969-05-01            M5   0.01167951    NA
+642 1969-04-01            M4   0.01167951    NA
+643 1969-03-01            M3   0.01164794    NA
+644 1969-02-01            M2   0.01163646    NA
+645 1969-01-01            M1   0.01159484    NA</code></pre>
+</div>
+</div>
+<p>Podemos guardar esta consulta en un objeto y luego graficar</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>consulta1<span class="ot">&lt;-</span><span class="fu">inegi_series</span>(<span class="at">serie=</span><span class="dv">628194</span>, <span class="co"># IPC mensual</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">token =</span> token)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Hacemos un gráfico:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>consulta1 <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">as_date</span>(date),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">y=</span>values) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="P11_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="consulta-general" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="consulta-general"><span class="header-section-number">11.4</span> Consulta general</h2>
+<p>Para poder bajar los otros indicadores tenemos un codigo un poco más complicado</p>
+<p>[Este código fue inspirado por este de acá <a href="https://github.com/claudiodanielpc/medium/blob/main/api_inegi_bie.R" class="uri">https://github.com/claudiodanielpc/medium/blob/main/api_inegi_bie.R</a>]</p>
+<p>Vamos a hacer una función que nos haga la consulta:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>url1 <span class="ot">&lt;-</span><span class="st">"https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>url2 <span class="ot">&lt;-</span><span class="st">"/es/0700/false/BISE/2.0/"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>url3<span class="ot">&lt;-</span> <span class="st">"?type=json"</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#funcion</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>consulta_api<span class="ot">&lt;-</span> <span class="cf">function</span>(token,indicador){</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  url<span class="ot">&lt;-</span><span class="fu">paste0</span>(url1,indicador,url2,token, url3)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  res<span class="ot">=</span><span class="fu">GET</span>(url)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  resultado <span class="ot">&lt;-</span><span class="fu">content</span>(res, <span class="at">as =</span> <span class="st">'text'</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fromJSON</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Se extrae elemento "Series"</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="st">"Series"</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Se extraen el elemento "OBSERVATIONS" que es aquel que contiene los datos</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="st">"OBSERVATIONS"</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Se transforma a dataframe y se limpian los nombres</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Se seleccionan las variables requeridas</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(time_period, obs_value)<span class="sc">%&gt;%</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Se transforman a numérico </span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(resultado)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Checa que dejo url que se pueda cambiar por si cambia el sistema de consulta.</p>
+<p>Vamos a ver si funciona:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">consulta_api</span>(<span class="at">token=</span>token,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">indicador =</span> <span class="st">"1002000001"</span>) <span class="co"># este es población en general</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   time_period obs_value
+1         1910  15160369
+2         1921  14334780
+3         1930  16552722
+4         1940  19653552
+5         1950  25791017
+6         1960  34923129
+7         1970  48225238
+8         1980  66846833
+9         1990  81249645
+10        1995  91158290
+11        2000  97483412
+12        2005 103263388
+13        2010 112336538
+14        2015 119938473
+15        2020 126014024</code></pre>
+</div>
+</div>
+<p>guardamos nuestra consulta en un objeto y graficamos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>consulta2<span class="ot">&lt;-</span><span class="fu">consulta_api</span>(<span class="at">token=</span>token,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">indicador =</span> <span class="st">"1002000001"</span>) <span class="co"># este es población en general</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>gploba<span class="ot">&lt;-</span>consulta2 <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>time_period, <span class="at">y=</span>obs_value<span class="sc">/</span><span class="dv">1000000</span>))<span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()<span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Año censal"</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Millones de personas"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">title=</span><span class="st">"Población en México"</span>) </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>gploba</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="P11_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="plotly" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="plotly"><span class="header-section-number">11.5</span> <code>{plotly}</code></h2>
+<p>Vamos a hacerlo interactivo con <code>{plotly}</code> Este paquete vuelve interactivo cualquier grafico, pero lo exporta como html</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>interactivo<span class="ot">&lt;-</span><span class="fu">ggplotly</span>(gploba)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>interactivo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="htmlwidget-a9cbffa005acbf6054c2" style="width:100%;height:464px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a9cbffa005acbf6054c2">{"x":{"data":[{"x":[1910,1921,1930,1940,1950,1960,1970,1980,1990,1995,2000,2005,2010,2015,2020],"y":[15.160369,14.33478,16.552722,19.653552,25.791017,34.923129,48.225238,66.846833,81.249645,91.15829,97.483412,103.263388,112.336538,119.938473,126.014024],"text":["time_period: 1910<br />obs_value/1e+06:  15.16037","time_period: 1921<br />obs_value/1e+06:  14.33478","time_period: 1930<br />obs_value/1e+06:  16.55272","time_period: 1940<br />obs_value/1e+06:  19.65355","time_period: 1950<br />obs_value/1e+06:  25.79102","time_period: 1960<br />obs_value/1e+06:  34.92313","time_period: 1970<br />obs_value/1e+06:  48.22524","time_period: 1980<br />obs_value/1e+06:  66.84683","time_period: 1990<br />obs_value/1e+06:  81.24965","time_period: 1995<br />obs_value/1e+06:  91.15829","time_period: 2000<br />obs_value/1e+06:  97.48341","time_period: 2005<br />obs_value/1e+06: 103.26339","time_period: 2010<br />obs_value/1e+06: 112.33654","time_period: 2015<br />obs_value/1e+06: 119.93847","time_period: 2020<br />obs_value/1e+06: 126.01402"],"type":"scatter","mode":"lines","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":40.1826484018265,"l":43.1050228310502},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Población en México","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1904.5,2025.5],"tickmode":"array","ticktext":["1925","1950","1975","2000","2025"],"tickvals":[1925,1950,1975,2000,2025],"categoryorder":"array","categoryarray":["1925","1950","1975","2000","2025"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.65296803652968,"tickwidth":0.33208800332088,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088,"zeroline":false,"anchor":"y","title":{"text":"Año censal","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[8.7508178,131.5979862],"tickmode":"array","ticktext":["25","50","75","100","125"],"tickvals":[25,50,75,100,125],"categoryorder":"array","categoryarray":["25","50","75","100","125"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.65296803652968,"tickwidth":0.33208800332088,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088,"zeroline":false,"anchor":"x","title":{"text":"Millones de personas","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(179,179,179,1)","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"13eed5e9315f2":{"x":{},"y":{},"type":"scatter"}},"cur_data":"13eed5e9315f2","visdat":{"13eed5e9315f2":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./P10.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualización de datos (IV)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./P12.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Visualización espacial - Mapas (I)</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
