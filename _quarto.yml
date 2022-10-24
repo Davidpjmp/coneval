@@ -21,7 +21,9 @@ book:
     - P8.qmd
     - P9.qmd
     - P10.qmd
-   
+    - P11.qmd
+    - P12.qmd
+    - P13.qmd
 
 format:
   html:
