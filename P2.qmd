@@ -230,17 +230,3 @@ subset4<-concentrado2020 %>%
   dplyr::filter(ing_cor>5000 & sexo_jefe==1) %>%
     dplyr::select(sexo_jefe, edad_jefe, ing_cor)
 ```
-
-## Leer desde archivos de texto y desde una url
-
-Desde el portal <https://datos.gob.mx/> tenemos acceso a directo a varias fuentes de información, al ser datos abiertos, los archivos de texto son muy comunes.
-
-Leeremos parte de esa información, específicamente la de CONAPO <https://datos.gob.mx/busca/dataset/proyecciones-de-la-poblacion-de-mexico-y-de-las-entidades-federativas-2016-2050>
-
-En estas bases hay acentos y otros carecteres especiales del español, por lo que agregaremos una opción de "encoding", de lo contrario da error.
-
-```{r}
-mig_inter_quin_proyecciones <- read.csv("http://www.conapo.gob.mx/work/models/CONAPO/Datos_Abiertos/Proyecciones2018/mig_inter_quin_proyecciones.csv", encoding="latin1")
-#View(mig_inter_quin_proyecciones)
-names(mig_inter_quin_proyecciones)
-```

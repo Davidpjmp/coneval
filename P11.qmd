@@ -1,0 +1,131 @@
+# API INEGI e intro a `{plotly}`
+
+En esta breve práctica revisaremos un poco de los gráficos de series de tiempo, y con esa excusa, bajaremos datos del INEGI directamente a nuestro ambiente.
+
+Hay un paquete especializado (que antes funcionaba mejor) que nos permite descargar algunos indicadores del INEGI `{inegiR}`, específicamente los del Banco de Información Económica (BIE)
+
+## Token
+
+Necesitamos crear un objeto donde esté nuestro token
+
+```{r echo=F}
+token<-"aca36af1-d33d-4f34-ae91-74b3f2ed4531" 
+```
+
+    token<-"aquí va tu token"
+
+El token está ligado a tu cuenta de correo, no lo compartas porque si alguien lo utiliza mal, tu cuenta puede ser bloqueada.
+
+## Paquetes
+
+```{r}
+if(!require('pacman')) install.packages('pacman')
+pacman::p_load(tidyverse, # ya lo conocemos
+               inegiR, # para consultas en el BIE
+               httr, jsonlite, # Para consultas en todo el banco
+               plotly, # gráficos interactivos
+               lubridate) # para manejo de fechas
+```
+
+## Consulta con `{inegiR}`
+
+Esto sólo sirve para los indicadores del BIE: <https://www.inegi.org.mx/servicios/api_indicadores.html>
+
+```{r}
+inegiR::inegi_series(serie=628194,# este número está en el sitio este el IPC
+                     token = token)
+```
+
+Podemos guardar esta consulta en un objeto y luego graficar
+
+```{r}
+
+consulta1<-inegi_series(serie=628194, # IPC mensual
+                        token = token)
+```
+
+Hacemos un gráfico:
+
+```{r}
+consulta1 %>% 
+  ggplot()+
+  aes(x=as_date(date),
+      y=values) +
+  geom_line()
+```
+
+## Consulta general
+
+Para poder bajar los otros indicadores tenemos un codigo un poco más complicado
+
+\[Este código fue inspirado por este de acá <https://github.com/claudiodanielpc/medium/blob/main/api_inegi_bie.R>\]
+
+Vamos a hacer una función que nos haga la consulta:
+
+```{r}
+url1 <-"https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/"
+url2 <-"/es/0700/false/BISE/2.0/"
+url3<- "?type=json"
+
+#funcion
+
+consulta_api<- function(token,indicador){
+  url<-paste0(url1,indicador,url2,token, url3)
+  res=GET(url)
+  resultado <-content(res, as = 'text')%>%
+  fromJSON()%>%
+  #Se extrae elemento "Series"
+  pluck("Series")%>%
+  #Se extraen el elemento "OBSERVATIONS" que es aquel que contiene los datos
+  pluck("OBSERVATIONS")%>%
+  #Se transforma a dataframe y se limpian los nombres
+  as.data.frame()%>%
+  janitor::clean_names() %>% 
+  #Se seleccionan las variables requeridas
+  select(time_period, obs_value)%>%
+  #Se transforman a numérico 
+  mutate_all(as.numeric)
+  
+  return(resultado)
+}
+    
+
+
+```
+
+Checa que dejo url que se pueda cambiar por si cambia el sistema de consulta.
+
+Vamos a ver si funciona:
+
+```{r}
+consulta_api(token=token,
+             indicador = "1002000001") # este es población en general
+```
+
+guardamos nuestra consulta en un objeto y graficamos
+
+```{r}
+consulta2<-consulta_api(token=token,
+             indicador = "1002000001") # este es población en general
+```
+
+```{r}
+gploba<-consulta2 %>% 
+  ggplot(aes(x=time_period, y=obs_value/1000000))+
+  geom_line() + 
+  theme_light()+
+  labs(x="Año censal",
+       y="Millones de personas",
+       title="Población en México") 
+
+gploba
+```
+
+## `{plotly}`
+
+Vamos a hacerlo interactivo con `{plotly}` Este paquete vuelve interactivo cualquier grafico, pero lo exporta como html
+
+```{r}
+interactivo<-ggplotly(gploba)
+interactivo
+```

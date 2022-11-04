@@ -24,6 +24,8 @@ book:
     - P11.qmd
     - P12.qmd
     - P13.qmd
+    - P14.qmd
+    - P15.qmd
 
 format:
   html:

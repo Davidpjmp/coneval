@@ -1,4 +1,4 @@
-# Análisis descriptivo básico II
+# Factores de expansión y algunas otras medidas
 
 ## Paquetes
 
@@ -10,150 +10,357 @@ pacman::p_load(tidyverse,
                haven,
                sjlabelled, 
                janitor,
-               ggpubr,
                magrittr,
                GGally,
                wesanderson,
                gt,
-               gtsummary,
-               srvyr
+               srvyr,
+               dineq
 )
 ```
 
 ## Cargando los datos
 
-Desde STATA
+Desde STATA y haremos unos cambios...
 
 ```{r}
-ehpm_2019 <- read_dta("datos/ehpm_2019.dta", encoding="latin1") %>% 
-  janitor::clean_names() # checa esto
+
+concentrado2020 <- read_dta("datos/concentrado2020.dta") %>% 
+  mutate(across(c(sexo_jefe, clase_hog, educa_jefe), as.numeric)) %>% # ojo aquí
+  set_labels(sexo_jefe, labels=c("Hombre", "Mujer")) %>% 
+  set_labels(clase_hog, labels=c("unipersonal","nuclear", "ampliado",
+                                 "compuesto","corresidente"))   %>% 
+   set_labels(educa_jefe,
+             labels=c("Sin instrucción", 
+                      "Preescolar",
+                      "Primaria incompleta",
+                      "Primaria completa",
+                      "Secundaria incompleta",
+                      "Secundaria completa",
+                      "Preparatoria incompleta",
+                      "Preparatoria completa",
+                      "Profesional incompleta",
+                      "Profesional completa",
+                      "Posgrado"))
+```
+
+## La función tally
+
+El comando "tabyl()" del paquete "janitor" es muy útil pero no es compatible con los factores del expansión. En realidad, tabyl() nos ahorra un poco el hecho de tener que agrupar nuestra base en categorías y luego hacer un conteo para cada una de ellas. "tally()" es un comando que nos hace ese conteo y "group_by" nos agrupa las observaciones de nuestra base de datos para hacer cualquier operación.
+
+```{r}
+concentrado2020 %>% 
+ group_by(as_label(sexo_jefe)) %>% 
+  tally(factor) %>% #nombre del factor
+  adorn_totals()  # Agrega total
+```
+
+Podemos usar funciones de tabyl
+
+```{r}
+concentrado2020 %>% 
+ group_by(as_label(sexo_jefe)) %>% 
+  tally(factor) %>% #nombre del factor
+  adorn_totals() %>% # Agrega total
+  adorn_percentages("all")  %>% 
+  adorn_pct_formatting()
+```
+
+## Otras formas
+
+La función "count()" también permite dar pesos
+
+```{r}
+concentrado2020 %>% 
+  count(sexo_jefe, clase_hog,  wt = factor) 
 
 ```
 
-Desde Excel:
-
-```{r 3}
-ejemploxl <- readxl::read_excel("datos/ejemplo_xlsx.xlsx", sheet = "para_importar")%>% 
-  janitor::clean_names() # checa esto
-
-```
-
-## Visualización de datos, un pequeño disclaimer
-
-Hay cursos específicos de visualización de datos. Es maravilloso pero también requiere que estudiemos bien qué tipo de datos tenemos y cuáles son nuestros objetivos.
-
-Me gusta mucho este recurso: <https://www.data-to-viz.com/>
-
-## Gráficos de base
-
-"plot()" Es la función más simple.
+Es compatible con etiquetas
 
 ```{r}
-  plot(as_label(ehpm_2019$pobreza))
+concentrado2020 %>% 
+  count(as_label(sexo_jefe), as_label(clase_hog),  wt = factor) 
 ```
 
-Esto es igual que:
+Podemos mover un poquito con pivot_wider para que se vea más a lo que acostumbramos a una tabla de frecuencias
 
 ```{r}
-barplot(table(as_label(ehpm_2019$pobreza)))
-```
-
-Histograma y el boxplot
-
-```{r}
-hist(ejemploxl$esperanza_de_vida)
-```
-
-```{r}
-boxplot(ejemploxl$esperanza_de_vida)
-```
-
-## *Grammar of graphics: ggplot*
-
-Hoy vamos a presentar a un gran paquete ¡Es de los famosos! Y tiene más de diez años.
-
--   <https://qz.com/1007328/all-hail-ggplot2-the-code-powering-all-those-excellent-charts-is-10-years-old/>
-
-"gg" proviene de "Grammar of Graphics", funciona un poco como sintácticamente, de ahí su nombre.
-
-Algunos recursos para aprender ggplot
-
--   <https://ggplot2-book.org/> hecha por el mero mero.
-
--   <http://sape.inf.usi.ch/quick-reference/ggplot2>
-
--   <https://raw.githubusercontent.com/rstudio/cheatsheets/master/data-visualization-2.1.pdf>
-
-Vamos a revisar una presentación que es muy interesante
-
--   <https://evamaerey.github.io/ggplot2_grammar_guide/ggplot2_grammar_guide.html>
-
--   <https://huygens.science.uva.nl/ggPlotteR/> Hace gráficos de ggplot con la base de datos de Gapminder
-
-# Un lienzo para dibujar
-
-Para hacer un gráfico, ggplot2 tiene el comando "ggplot()". Hacer gráficos con esta función tiene una lógica aditiva. Lo ideal es que iniciemos estableciendo el mapeo estético de nuestro gráfico, con el comando aes()
-
-```{r}
-g1<-ehpm_2019 %>%
-  ggplot(aes(as_label(pobreza)))
-
-g1 # imprime el lienzo
-```
-
-## Gráficos univariados
-
-### Para cualitativas
-
-```{r}
-g1 + geom_bar()
+concentrado2020 %>% 
+  mutate_at(vars(sexo_jefe, clase_hog), as_label) %>% 
+  count(sexo_jefe, clase_hog,  wt = factor) %>% 
+  tidyr::pivot_wider(names_from = sexo_jefe, 
+              values_from = n)
 ```
 
 ```{r}
-g1 +  geom_bar(aes(
-  fill = as_label(pobreza)
-  )) # colorea la geometría
-
-# Esto es equivalente
-
-ehpm_2019 %>%
-  ggplot(aes(as_label(pobreza),
-             fill = as_label(pobreza)
-             )
-         ) + geom_bar()
-
+concentrado2020 %>% 
+  mutate_at(vars(sexo_jefe, clase_hog), as_label) %>% # otra forma de mutate y as_label
+  count(sexo_jefe, clase_hog,  wt = factor) %>% 
+  pivot_wider(names_from = sexo_jefe, 
+              values_from = n) %>%
+  adorn_totals() %>% # Agrega total
+  adorn_percentages("col")  %>% 
+  adorn_pct_formatting()
 ```
 
-### Para variables cuantitativas
+## Diseño complejo
 
-Podemos hacer histogramas y gráficos de densidad, de manera fácil. La idea es agregar en nuestro "lienzo" una geometría, un valor para dibujar en él. Esto se agrega con un "+" y con la figura que se añadirá a nuestro gráfico.
+Hay muchos diseños muestrales, asumiremos el diseño simple, pero hay que revisar la documentación de la base
 
 ```{r}
-g2<-ehpm_2019 %>%
-  ggplot(aes(r106))
+# Muestreo aleatorio
+ags_srvy <- concentrado2020 %>%
+  as_survey_design(weights = factor)
 
-g2 # imprime el lienzo
 ```
 
-#### Histograma
+Si revisamos las encuestas tiene un diseño complejo, hay estratos y unidades primarias de muestreo
 
 ```{r}
-g2 + geom_histogram() 
+
+# Muestreo estratificado
+ags_srvy <- concentrado2020 %>%
+  as_survey_design(
+    upm = upm,
+    strata = est_dis,
+    weights = factor,
+    nest = TRUE)
+
 ```
 
-#### Densidad
+Como vemos esto es un archivo bien grande, por lo que mejor vamos a seleccionar un par de variables:
 
 ```{r}
-g2 + geom_density() 
+# simple random sample
+ags_srvy <- concentrado2020 %>%
+  select(upm, est_dis, factor, clase_hog,
+         sexo_jefe, edad_jefe, educa_jefe,ing_cor, factor) %>% 
+  as_survey_design(
+    upm=upm,
+    strata = est_dis,
+    weights = factor,
+    nest = TRUE)
+
 ```
 
-## Intro a dos variables
-
-Vamos a terminar con un código que resume mucho de lo que hemos visto hoy:
+Para una media ponderada
 
 ```{r}
-ehpm_2019 %>% 
-  filter(actpr2012==10) %>%  # nos qur106mos sólo con los ocupados
-  select(r106, money, aproba1) %>% 
-  GGally::ggpairs()
+ags_srvy %>%
+  filter(ing_cor>0) %>% # sólo con ingresos
+  summarise(
+    media_ponderada = survey_mean(ing_cor, na.rm=T))
+
 ```
+
+Si queremos los intervalos de confianza (*spoiler*):
+
+```{r}
+ags_srvy %>%
+  summarize(
+    media_ponderada = survey_mean(ing_cor,
+                                  vartype = "ci") )
+
+```
+
+```{r}
+ags_srvy %>%
+  summarize(
+    mediana_ponderada = survey_median(ing_cor,
+                                  vartype = "ci") )
+
+```
+
+```{r}
+ags_srvy %>%
+  mutate(sexo_jefe=as_label(sexo_jefe)) %>% 
+  group_by(sexo_jefe) %>% #variables cuali
+  summarize(proportion = survey_mean(), # proporción
+            total = survey_total() ) # totales
+```
+
+## Creación de quintiles y otros grupos
+
+Uno de los elementos más comunes es crear grupos. Por ejemplo, la función cut, nos ayuda a crear variables con ciertos cortes. Por ejemplo, para recodificar por grupos etarios
+
+```{r}
+concentrado2020 %<>% 
+  mutate(grupo=cut(edad_jefe,
+                   breaks=c(0, 25, 50, 75, 100)))
+  
+       
+concentrado2020 %>% 
+  tabyl(grupo)
+```
+
+Algunas opciones se pueden modificar dentro de la función cut
+
+```{r}
+concentrado2020 %<>% 
+  mutate(grupo=cut(edad_jefe,
+                   breaks=c(0, 25, 50, 75, 100),
+                   include.lowest=T,
+                   right= F))
+  
+       
+concentrado2020 %>% 
+  tabyl(grupo)
+
+```
+
+Esto nos puede ayudar para hacer variables de rangos de cualquier tipo.
+
+Otro tipo de variables muy importante son los quintiles y demás.
+
+```{r}
+concentrado2020 %<>%
+  mutate(quintil0=ntile(ing_cor, n=5))
+
+concentrado2020 %>% 
+  tabyl(quintil0)
+```
+
+Pero quizás nos interesa más los quintiles que toman en cuenta el factor de expansión
+
+```{r}
+
+concentrado2020 %<>%
+  mutate(quintil1=dineq::ntiles.wtd(ing_cor, n=5, weights=factor))
+
+concentrado2020 %>% 
+  tabyl(quintil1)
+
+concentrado2020 %>% 
+  count(quintil1, wt=factor) %>% 
+  mutate(p=n/sum(n)*100) %>%
+  adorn_totals()
+```
+
+Podemos también ver la diferencia en los máximos y minimos de ambas variables
+
+```{r}
+concentrado2020 %>% 
+  group_by(quintil0) %>% 
+  summarise(min=min(ing_cor),
+            max=max(ing_cor))
+```
+
+Veamos con la ponderación:
+
+```{r}
+concentrado2020 %>% 
+  group_by(quintil1) %>% 
+  summarise(min=min(ing_cor),
+            max=max(ing_cor))
+```
+
+La flexibilidad de dplyr nos permite además hacer quintiles fácilmente adentro de grupos. Por ejemplo si quisiéramos hacer quintiles estatales... Claro para eso debemos tener la variable.
+
+La variable "ubica_geo", nos da esa información pero junta
+
+```{r}
+concentrado2020 %>% 
+  select(ubica_geo) %>% 
+  head
+
+```
+
+Vamos a crear dos variables, uan que nos diga la entidad y la otra el municipio
+
+```{r}
+concentrado2020 %<>%
+  mutate(ent=stringr::str_sub(ubica_geo, start = 1, end = 2)) %>% 
+  mutate(mun=stringr::str_sub(ubica_geo, start = 3, end = 5))
+
+concentrado2020 %>% tabyl(ent)
+concentrado2020 %>% tabyl(mun)
+  
+```
+
+Hoy sí podemos hacer nuestras variables dentro de cada entidad federativa
+
+```{r}
+concentrado2020 %<>%
+  group_by(ent) %>% 
+  mutate(quintil2=dineq::ntiles.wtd(ing_cor, n=5, weights=factor)) %>% 
+  ungroup()
+```
+
+¿Discreparán muchos los hogares en sus distribuciones a nivel nacional y por entidad?
+
+```{r}
+```
+
+```{r}
+concentrado2020 %>% 
+  tabyl(quintil1,quintil2) %>% 
+  adorn_totals(c("row", "col"))
+```
+
+Y si queremos este tabulado más bonito
+
+```{r}
+concentrado2020 %>% 
+  tabyl(quintil1,quintil2) %>% 
+  adorn_totals(c("row", "col")) %>% 
+  gt()
+```
+
+concentrado2020 %\>% tabyl(quintil1,quintil2) %\>% adorn_totals(c("row", "col")) %\>% gt() %\>% tab_header( title = md("Distribución de los hogares en **México**"), subtitle = md("Según quintiles y *quintiles*")) %\>% tab_footnote( footnote = paste(get_label(concentrado2020\$ing_cor)) )
+
+## Recodificación de variables
+
+Por ejemplo, si quisiéramos hacer una variable que separara a los hogares de acuerdo al grupo etario del jefe
+
+### if_else()
+
+```{r}
+concentrado2020 %<>% 
+  mutate(joven=dplyr::if_else(edad_jefe<30, 1, 0))
+
+concentrado2020 %>% tabyl(edad_jefe,joven)
+
+```
+
+### case_when()
+
+Esto nos ayuda para recodificación múltiple
+
+```{r}
+concentrado2020 %<>% 
+  mutate(grupo_edad2=dplyr::case_when(edad_jefe<30 ~ 1,
+                                      edad_jefe>29 & edad_jefe<45 ~ 2,
+                                      edad_jefe>44 & edad_jefe<65 ~ 3,
+                                      edad_jefe>64 ~ 4))
+
+#TRUE~ 4
+
+concentrado2020 %>% tabyl(edad_jefe,grupo_edad2)
+
+```
+
+### rename()
+
+Para cambiar los nombres de las variables podemos cambiarlos nombres
+
+```{r}
+concentrado2020 %<>%
+  dplyr::rename(nuevo_nombre=grupo_edad2)
+```
+
+Esto en base sería similar a 
+
+```{r}
+
+names(concentrado2020)[134]<-"grupo_edad2"
+names(concentrado2020)
+```
+
+## Práctica
+
+-   Genere una variable de deciles de ingresos dentro de cada tamaño de localidad tam_loc
+
+-   Etiquete los valores de los deciles con números romanos
+
+-   Encuentre el coeficiente de variación para las estimaciones dentro de esa variable, sexo del jefe y tamaño de localidad

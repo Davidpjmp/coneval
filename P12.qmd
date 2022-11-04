@@ -1,0 +1,146 @@
+# Visualización espacial - Mapas (I)
+
+## Mapas
+
+Hoy vamos a replicar los mapas de Diego Valle para nuestros datos de carencias sociales a nivel estatal y municipal.
+
+Diego Valle Jones tiene varios proyectos, entre ellos el paquete "mxmaps" (<https://www.diegovalle.net/mxmaps/> y <https://github.com/diegovalle/mxmaps/#what-does-it-do>).
+
+Este se basa en el paquete `{cholorplethr}` e incluye funciones para crear mapas con base en datos del INEGI. Las bases de datos incluidas en el paquete hacen "match" con los códigos estatales y municipales del INEGI.
+
+La idea central del "choroplethr" es la de colorear regiones, estados, municipios, con con colores de acuerdo con alguna métrica. Por ejemplo, el número de personas o el porcentaje de asegurados.
+
+Entonces, lo primero que vamos a hacer es instalarlo.
+
+```{r}
+if (!require("remotes")) {
+  install.packages("remotes")
+}
+
+remotes::install_github("diegovalle/mxmaps")
+```
+
+Posteriormente, cargaremos nuestros paquetes de siempre y agregamos mxmaps.
+
+```{r}
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, readxl, writexl, haven, sjlabelled, foreign, janitor, esquisse, RColorBrewer, wesanderson, mxmaps, knitr)
+```
+
+## Nivel estatal
+
+El primer ejemplo, es con los datos a nivel estatal de población.
+
+```{r}
+data("df_mexstate_2020")
+
+df_mxstate_2020$value <- df_mxstate_2020$pop
+
+mxstate_choropleth(df_mxstate_2020,
+                   title = "Población total, por estado 2020")
+```
+
+Las dos funciones básicas del paquete son `mxstate_choropleth()` y `mxmunicipio_choropleth()`
+
+Los datos que vayamos a utilizar deben tener una columna que se llame region con el código del INEGI para estados o municipios y otra columna que se llame value, con la variable que vamos a graficar.
+
+Las funciones str_mxstate y str_mxmunicipio los provee el paquete para homologar los códigos. Las bases de datos que vienen en el paquete, contienen variables demográficas del censo 2020.
+
+Se puede especificar el título y el número de colores con `num_color`. Si se requiere una escala continua, ponemos `num_color=1`.
+
+Veamos la base.
+
+```{r}
+head(df_mxstate_2020)
+```
+
+También podemos hacer un mapa con el porcentaje de personas hablantes de lenguas indígenas.
+
+```{r}
+df_mxstate_2020$value <-  df_mxstate_2020$indigenous_language / df_mxstate_2020$pop * 100
+
+mxstate_choropleth(df_mxstate_2020, 
+                   num_colors = 1,
+                   title = "Porcentaje de la población hablante de lengua indígena, 2020",
+                   legend = "%")
+```
+
+Lo podemos hacer con nuestros datos.
+
+```{r}
+carencias_2020_estatal <- read_excel("datos/carencias_2020_estatal.xlsx")
+```
+
+```{r}
+carencias_2020_estatal$value<- round(carencias_2020_estatal$rezago_educativo)
+
+mxstate_choropleth(carencias_2020_estatal,
+                   num_colors = 1,
+                   title = "Porcentaje de personas con carencias por rezago educativo, 2020",
+                   legend = "%")
+```
+
+## Nivel Municipal
+
+Ahora veamos la base de datos municipal.
+
+```{r}
+data("df_mxmunicipio_2020")
+head(df_mxmunicipio_2020)
+```
+
+Hacemos el ejemplo del paquete.
+
+```{r}
+df_mxmunicipio_2020$value <-  df_mxmunicipio_2020$indigenous_language / 
+  df_mxmunicipio_2020$pop * 100
+mxmunicipio_choropleth(df_mxmunicipio_2020, 
+                       num_colors = 1,
+                       title = "Porcentaje de la población hablante de lengua indígena, 2020",
+                       legend = "%")
+```
+
+Con nuestros datos:
+
+```{r}
+carencias_2020_municipal<- read_excel("datos/carencias_2020_municipal.xlsx")
+```
+
+```{r}
+
+carencias_2020_municipal$rezago_educativo <- as.numeric(carencias_2020_municipal$rezago_educativo)
+carencias_2020_municipal$value<- round(carencias_2020_municipal$rezago_educativo)
+
+mxmunicipio_choropleth(carencias_2020_municipal, 
+                       num_colors = 1,
+                       title = "Porcentaje de la población con carencias por rezago educativo, 2020",
+                       legend = "%")
+```
+
+Podemos hacer un subset de algunos municipios.
+
+```{r}
+mxmunicipio_choropleth(carencias_2020_municipal, num_colors = 1,
+                       zoom = subset(carencias_2020_municipal, municipio_name %in% 
+                                       c("Tecate",
+                                         "Tijuana",
+                                         "Mexicali"))$region,
+                       title = "Porcentaje de la población con carencias por rezago educativo, 2020",
+                       legend = "%") 
+```
+
+O bien utilizar el parámetro show_states.
+
+```{r}
+mxmunicipio_choropleth(carencias_2020_municipal, num_colors = 1,
+                       zoom = subset(carencias_2020_municipal, state_name %in% 
+                                       c("Yucatán", "Veracruz"))$region,
+                       title = "Porcentaje de la población con carencias por rezago educativo en Yucatán y Veracruz, 2020",
+                       show_states = FALSE,
+                       legend = "%")
+
+```
+
+## Práctica.
+
+Escoge alguna otra de las carencias sociales y elabora tu mapa a nivel estatal y municipal. Compara los resultados con los mapas que hicimos en la sesión.

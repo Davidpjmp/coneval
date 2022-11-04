@@ -1,258 +1,260 @@
-# Factores de expansión e intro a la regresión lineal
+# Fusionado de conjuntos de datos
 
-## Paquetes
+## Importación bases ENIGH 2020
+
+Vamos a trabajar con esta base que tiene elementos separados.
 
 ```{r}
-if (!require("pacman")) install.packages("pacman")#instala pacman si se requiere
-pacman::p_load(tidyverse,
-               readxl,
-               writexl, 
-               haven,
-               sjlabelled, 
-               janitor,
-               ggpubr,
-               magrittr,
-               GGally,
-               wesanderson,
-               gt,
-               gtsummary,
-               srvyr
-)
+if (!require("pacman")) install.packages("pacman") # instala pacman si se requiere
+pacman::p_load(skimr,tidyverse, magrittr, # sobretodo para dplyr
+              haven, readxl, #importación
+              janitor, 
+              sjlabelled) 
 ```
 
-## Cargando los datos
-
-Desde STATA
+Hoy cargamos la versión seccionada de la base
 
 ```{r}
-ehpm_2019 <- read_dta("datos/ehpm_2019.dta", encoding="latin1") %>% 
-  janitor::clean_names() # checa esto
+viviendas <- haven::read_dta("datos/viviendas2020.dta")
+hogares <- haven::read_dta("datos/hogares2020.dta")
+poblacion<- haven::read_dta("datos/poblacion2020.dta")
+
 
 ```
 
-## La función tally
+## Juntando bases
 
-El comando "tabyl()" del paquete "janitor" es muy útil pero no es compatible con los factores del expansión. En realidad, tabyl() nos ahorra un poco el hecho de tener que agrupar nuestra base en categorías y luego hacer un conteo para cada una de ellas. "tally()" es un comando que nos hace ese conteo y "group_by" nos agrupa las observaciones de nuestra base de datos para hacer cualquier operación.
-
-```{r}
-ehpm_2019 %>% 
- group_by(as_label(r104)) %>% 
-  tally(fac00) %>% #nombre del factor
-  adorn_totals()  # Agrega total
-```
-
-Podemos usar funciones de tabyl
+Muchas bases de datos están organizadas en varias tablas. La ventaja de la programación por objetos de R, nos permite tener las bases cargadas en nuestro ambiente y llamarlas y juntarlas cuando sea necesario.
 
 ```{r}
-ehpm_2019 %>% 
- group_by(as_label(r104)) %>% 
-  tally(fac00) %>% #nombre del factor
-  adorn_totals() %>% # Agrega total
-  adorn_percentages("all")  %>% 
-  adorn_pct_formatting()
-```
+dim(viviendas)
+names(viviendas[,1:15])
+dim(hogares)
+names(hogares[,1:15])
+dim(poblacion)
+names(poblacion[,1:15])
 
-## Otras formas
-
-La función "count()" también permite dar pesos
-
-```{r}
-ehpm_2019 %>% 
-  count(r104, pobreza,  wt = fac00) 
 
 ```
 
-Es compatible con etiquetas
+Para juntar bases usamos el comando "merge"
+
+En "by" ponemos el id, correspondiente a la variable o variables que forman el id, entrecomillado. Cuando estamos mezclando bases del mismo nivel de análisis el id es igual en ambas bases. Cuando estamos incoporando información de bases de distinto nivel debemos escoger
+
+En general ponemos el id de la base de mayor nivel. En este caso, sabemos que a una vivienda corresponde más de un hogar. Tal como revisamos nuestra documentación, sabemos que el id de la tabla "viviendas" es "folioviv"
 
 ```{r}
-ehpm_2019 %>% 
-  count(as_label(r104), as_label(pobreza),  wt = fac00) 
-```
-
-Podemos mover un poquito con pivot_wider para que se vea más a lo que acostumbramos a una tabla de frecuencias
-
-```{r}
-ehpm_2019 %>% 
-  mutate_at(vars(r104, pobreza), as_label) %>% 
-  count(r104, pobreza,  wt = fac00) %>% 
-  tidyr::pivot_wider(names_from = r104, 
-              values_from = n)
-```
-
-```{r}
-ehpm_2019 %>% 
-  mutate_at(vars(r104, pobreza), as_label) %>% # otra forma de mutate y as_label
-  count(r104, pobreza,  wt = fac00) %>% 
-  pivot_wider(names_from = r104, 
-              values_from = n) %>%
-  adorn_totals() %>% # Agrega total
-  adorn_percentages("col")  %>% 
-  adorn_pct_formatting()
-```
-
-## Diseño complejo
-
-Hay muchos diseños muestrales, asumiremos el diseño simple, pero hay que revisar la documentación de la base
-
-```{r}
-# Muestreo aleatorio
-ags_srvy <- ehpm_2019 %>%
-  as_survey_design(weights = fac00)
+merge_data<- merge(viviendas, hogares, by="folioviv")
 
 ```
 
-Si revisamos las encuestas tiene un diseño complejo, hay estratos y unidades primarias de muestreo
+Revisemos la base creada
 
 ```{r}
-
-# Muestreo estratificado
-ags_srvy <- ehpm_2019 %>%
-  as_survey_design(
-    upm=correlativo,
-    strata = estratoarea,
-    weights = fac00,
-    nest = TRUE)
+names(merge_data)
+dim(merge_data)
 
 ```
 
-Como vemos esto es un archivo bien grande, por lo que mejor vamos a seleccionar un par de variables:
+Algunos elementos
+
+(1) El orden de las variables corresponde al orden que pusimos las bases en las opciones.
+
+(2) También vemos que las variables que se repetían en ambas bases se repiten en la nueva base, seguida de un un punto y una "x", para lo que proviene de la primera base y con una "y", lo que proviene de la segunda. R dejará las variables intactas y son coincidentes, en nuestro caso, porque las variables son iguales. R hace esto para precaver que por error tengamos alguna variable con un nombre igual y no sea la misma
+
+## Merge con id compuesto
+
+Los identificadores pueden estar compuestos de más de una variable:
+
+-   Viviendas {viviendas} es "folioviv"
 
 ```{r}
-# simple random sample
-ags_srvy <- ehpm_2019 %>%
-  select(correlativo, estratoarea, fac00, actpr, actpr2012,
-         r104, r106, aproba1, money, fac00) %>% 
-  as_survey_design(
-    upm=correlativo,
-    strata = estratoarea,
-    weights = fac00,
-    nest = TRUE)
+viviendas %>% 
+  janitor::get_dupes(folioviv)
+```
+
+-   Hogares {hogares} es "folioviv", "foliohog"
+
+```{r}
+hogares %>% 
+  janitor::get_dupes(c(folioviv, foliohog))
+```
+
+-   Poblacion {individuos} es "folioviv", "foliohog", "numren"
+
+```{r}
+poblacion %>% 
+  janitor::get_dupes(c(folioviv, foliohog, numren))
+```
+
+Esto significa que tenemos un id compuesto. No es una sola variable. Para esto modificamos ligeramente cómo ponemos el "by", pero siempre eligiendo el id de la base de mayor nivel. (Tené cuidado con los paréntesis)
+
+```{r}
+merge_data2<- merge(hogares, poblacion, by=c("folioviv", "foliohog"))
+dim(merge_data2)
 
 ```
 
-Para una media ponderada
+Revisemos la base
 
 ```{r}
-ags_srvy %>%
-  filter(r106>14 & r106<99) %>% #filtro de r106d para tabulados
-  filter(actpr2012==10) %>% # sólo ocupados
-  filter(money>0) %>% # sólo con ingresos
-  summarise(
-    media_ponderada = survey_mean(money, na.rm=T))
+merge_data2 %>% 
+  tail()
+```
+
+## Bases de distinto tamaño
+
+Hasta ahorita hemos hecho merge que son de unidades de distinto nivel y son incluyentes. A veces tenemos bases de datos que son de distinto tamaño y del mismo nivel. A veces las dos aportan casos y a veces aportan variables, y a veces, las dos aportan las dos cosas.
+
+Vamos a revisar qué pasaría si quisiéramos incorporar la información los ingresos
+
+```{r}
+rm(merge_data, merge_data2) # botamos otros ejemplos
+ingresos<- haven::read_dta("datos/ingresos2020.dta")
 
 ```
 
-Si queremos los intervalos de confianza (*spoiler*):
+Esta base tiene otro ID
+
+-   Ingresos {clave de ingreso} es "folioviv", "foliohog", "numren", clave
 
 ```{r}
-ags_srvy %>%
-  filter(r106>14 & r106<99) %>% #filtro de r106d para tabulados
-  filter(actpr2012==10) %>% # sólo ocupados
-  filter(money>0) %>% # sólo con ingresos
-  summarize(
-    media_ponderada = survey_mean(money,
-                                  vartype = "ci") )
+ingresos %>% 
+  janitor::get_dupes(c(folioviv, foliohog, numren, clave))
+```
+
+¿Cuántas claves de ingreso hay?
+```{r}
+ingresos %>% 
+  tabyl(clave)
+```
+
+
+
+```{r}
+ingresos_sueldos<-ingresos %>% 
+    filter(clave=="P001") 
+dim(ingresos_sueldos)
 
 ```
 
+Vamos a hacer el primer tipo de merge
+
 ```{r}
-ags_srvy %>%
-  filter(r106>14 & r106<99) %>% #filtro de r106d para tabulados
-  filter(actpr2012==10) %>% # sólo ocupados
-  filter(money>0) %>% # sólo con ingresos
-  summarize(
-    mediana_ponderada = survey_median(money,
-                                  vartype = "ci") )
+merge_data3<-merge(poblacion, ingresos_sueldos, by=c("folioviv", "foliohog", "numren"))
+dim(merge_data3)
+```
+
+¡La base nueva no tiene a todas las observaciones, solo la que tiene en la base más pequeña! Tenemos sólo 99,9992 individuos.
+
+## Cuatro formas de hacer un fusionado
+
+En realidad hay cuatro formas de hacer un "merge"
+
+### Casos en ambas bases
+
+Por *default*, el comando tiene activado la opción "all = FALSE", que nos deja los datos de ambas bases comunes. (tipo una intersección)
+
+```{r}
+merge_data3<-merge(poblacion, 
+                   ingresos_sueldos,
+                   by=c("folioviv", "foliohog", "numren"), 
+                   all = F)
+dim(merge_data3)
+```
+
+### Todos los casos
+
+Si cambiamos la opción "all = TRUE", que nos deja los datos comunes a ambas bases. (como una unión)
+
+```{r}
+merge_data3<-merge(poblacion,
+                   ingresos_sueldos, 
+                   by=c("folioviv", "foliohog", "numren"), 
+                   all = T)
+dim(merge_data3)
+```
+
+### Casos en la base 1
+
+Si queremos quedarnos con todos los datos que hay en la primera base, x, vamos a usar a opción all.x = TRUE.
+
+```{r}
+merge_data3<-merge(poblacion, 
+                   ingresos_sueldos,
+                   by=c("folioviv", "foliohog", "numren"), 
+                   all.x  = TRUE)
+dim(merge_data3)
+```
+
+### Casos de la base 2
+
+Notamos que hoy sí tenemos los datos de toda la población y hay missings en las variables aportadas por la base de trabajo
+
+Si queremos lo contrario, quedarnos con los datos aportados por la segunda base, y, vamos a usar la opción all.y=TRUE
+
+```{r}
+merge_data3<-merge(poblacion, 
+                   ingresos_sueldos,
+                   by=c("folioviv", "foliohog", "numren"),
+                   all.y  = TRUE)
+dim(merge_data3)
+```
+
+## Las cuatro formas en `dplyr`
+
+El caso 1:
+
+```{r}
+merge_data3<-dplyr::inner_join(poblacion,
+                               ingresos_sueldos,
+                               by=c("folioviv", "foliohog", "numren"))
+dim(merge_data3)
 
 ```
 
-```{r}
-ags_srvy %>%
-  mutate(r104=as_label(r104)) %>% 
-  group_by(r104) %>% #variables cuali
-  summarize(proportion = survey_mean(), # proporción
-            total = survey_total() ) # totales
-```
 
-## Introducción a la regresión lineal
-
-### La relación entre dos variables
-
-En términos *mincerianos*, los ingresos estarían explicados por la escolaridad y la experiencia...
+El caso 2:
 
 ```{r}
-ehpm_2019 %>% 
-  filter(actpr2012==10) %>% 
-  filter(money>0) %>% 
-  filter(aproba1<99) %>% 
-  ggplot() +
-    aes(x=aproba1, y=log(money)) + 
-  geom_point()
+merge_data3<-dplyr::full_join(poblacion, 
+                              ingresos_sueldos, 
+                              by=c("folioviv", "foliohog", "numren"))
+dim(merge_data3)
 
 ```
 
-Cuando tenemos muchos casos es útil la opción "jitter"
+
+El caso 3:
 
 ```{r}
-ehpm_2019 %>% 
-  filter(actpr2012==10) %>% 
-  filter(money>0) %>% 
-  filter(aproba1<99) %>% 
-  ggplot() +
-    aes(x=aproba1, y=log(money)) + 
-  geom_jitter()
+merge_data3<-dplyr::left_join(poblacion,
+                              ingresos_sueldos, 
+                              by=c("folioviv", "foliohog", "numren"))
+dim(merge_data3)
 
 ```
 
-También cambiar un poquito la transparencia...
+El caso 4:
 
 ```{r}
-ehpm_2019 %>% 
-  filter(actpr2012==10) %>% 
-  filter(money>0) %>% 
-  filter(aproba1<99) %>% 
-  ggplot() +
-    aes(x=aproba1, y=log(money), alpha=I(0.5)) + 
-  geom_jitter()
+merge_data3<-dplyr::right_join(poblacion, 
+                               ingresos_sueldos,
+                               by=c("folioviv", "foliohog", "numren"))
+dim(merge_data3)
 
 ```
 
-¿Cómo se ve la línea MCO ajustada por estos elementos?
+También se puede usar con pipes, cualquier opción de dplyr
 
 ```{r}
-ehpm_2019 %>% 
-  filter(actpr2012==10) %>% 
-  filter(money>0) %>% 
-  filter(aproba1<99) %>% 
-  ggplot() +
-    aes(x=aproba1, y=log(money), alpha=I(0.5)) + 
-  geom_jitter()+
-  geom_smooth(method = lm)
-
+merge_data3<-poblacion %>% # pongo el conjunto que será la "izquierda
+  dplyr::right_join(ingresos_sueldos, 
+                    by=c("folioviv", "foliohog", "numren"))
+dim(merge_data3)
 ```
 
-¿cómo se ajusta esa línea?
 
-```{r}
-model<-ehpm_2019 %>% 
-  filter(actpr2012==10) %>% 
-  filter(money>0) %>% 
-  filter(aproba1<99) %>% 
-  with(
-    lm(log(money)~ aproba1)
-  )
+## Práctica
 
-model
-```
-
-Para ver esto más guapo:
-
-```{r}
-model %>%
-   gtsummary::tbl_regression() 
-  #%>% 
-  # add_significance_stars() %>% 
-  # add_n() %>% 
-  # add_glance_table()
-
-```
+- Pegue a la última base la información de los hogares y las viviendas.

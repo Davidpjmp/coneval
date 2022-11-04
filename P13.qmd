@@ -1,0 +1,338 @@
+# Visualización espacial - Mapas (II)
+
+En esta practica vamos a revisar cómo hacer mapas desde "0" y también un poco de geolocalización
+
+## Paquetes
+
+Paquetes en desarrollo a instalar:
+
+```{r}
+#remotes::install_github("ropensci/rnaturalearthdata")
+#remotes::install_github("ropensci/rnaturalearthhires")
+```
+
+Paquetes en CRAN
+
+```{r}
+if(!require('pacman')) install.packages('pacman')
+pacman::p_load(tidyverse, # ya lo conocemos
+             googleway, ggrepel, ggspatial, lwgeom, sf, mxmaps,
+             rnaturalearth,
+             rnaturalearthdata, rnaturalearthhires, # github pero para que los cargue
+             mapview, ggmap, osmdata) 
+```
+
+## Mapa mundial
+
+Vamos a hacer un mapa mundial con el paquete `{rnaturalearth}` Más sobre este paquete por acá: <https://cran.r-project.org/web/packages/rnaturalearth/vignettes/rnaturalearth.html>
+
+Vamos a utilizar también el paquete `{sf}` <https://r-spatial.github.io/sf/articles/>
+
+Por ello, vamos a pedir que nos baje la información en formato sf
+
+Vamos a hacer un mapa mundial, primero jalamos la información en un objeto
+
+```{r}
+world <- rnaturalearth::ne_countries(scale = "medium",
+                                     returnclass = "sf")
+class(world)
+
+```
+
+Hay otros bases que están a un nivel administrativo más bajo
+
+```{r}
+world_states <- rnaturalearth::ne_states(returnclass = "sf")
+class(world)
+
+```
+
+Vamos a hacer los graficos, utilizando `{ggplot2}` con `geom_sf()`
+
+```{r}
+world %>% 
+  ggplot() +
+  geom_sf() 
+```
+
+Vamos a modificar el tema para que se vea mejor:
+
+```{r}
+world %>% 
+  ggplot() +
+  geom_sf(alpha=I(0.0)) +
+  theme_minimal()
+```
+
+Veamos el caso del otro objeto con mas divisiones geopolíticas:
+
+```{r}
+world_states %>% 
+  ggplot() +
+  geom_sf(alpha=I(0.0))   +
+  coord_sf(xlim = c(-102.15, -74.12), 
+           ylim = c(7.65, 33.97)) + # podemos limitar coordenadas
+  theme_minimal()
+```
+
+A jugar con las coordenadas <https://www.geodatos.net/coordenadas>
+
+De Tijuana a Cuba
+
+```{r}
+world_states %>% 
+  ggplot() +
+  geom_sf(alpha=I(0.0))   +
+  coord_sf(xlim = c(-117.00371, -77.781167), 
+           ylim = c(32.5027, 21.521757)) + # podemos limitar coordenadas
+  theme_minimal()
+```
+
+## Mapa de México
+
+Vamos a especificar que sólo queremos la información de México
+
+```{r}
+sfdf_mexico_0 <- ne_countries(country = 'mexico', 
+                              returnclass = "sf",
+                              scale = "large")
+
+sfdf_mexico_1 <- ne_states(country = 'mexico', 
+                           returnclass = "sf")
+
+```
+
+Veamos como quedaría el mapa, sin divisiones políticas:
+
+```{r}
+sfdf_mexico_0 %>% 
+  ggplot()+
+  geom_sf() +
+  theme_void() # 
+```
+
+Ahora con dimensiones políticas
+
+```{r}
+sfdf_mexico_1 %>% 
+  ggplot()+
+  geom_sf(alpha=I(0.1), fill="green") +
+  theme_void() # 
+```
+
+## Algunos adornos interesantes de `{ggspatial}`
+
+Algunas anotaciones sobre la escala se pueden anotar en nuestros mapas
+
+### La escala
+
+```{r}
+sfdf_mexico_1 %>% 
+  ggplot()+
+  geom_sf(alpha=I(0.1), fill="green") +
+  annotation_scale(location = "bl", #Bottom left 
+                   width_hint = 0.5)+
+  theme_void() 
+```
+
+### Para no nortearse...
+
+```{r}
+sfdf_mexico_1 %>% 
+  ggplot()+
+  geom_sf(alpha=I(0.1), fill="green") +
+  annotation_scale(location = "bl", #Bottom left 
+                   width_hint = 0.5) +
+  annotation_north_arrow(location = "bl",
+                         which_north = "true", 
+                         pad_x = unit(0.75, "in"), 
+                         pad_y = unit(0.5,"in"), 
+                         style = north_arrow_fancy_orienteering) +
+  theme_void() 
+```
+
+## Open street map `{osmdata}`
+
+En el paquete `{osmdata}` tenemos toda la información de Open Stret Map. <https://rspatialdata.github.io/osm.html>
+
+Revisemos algunos elementos
+
+```{r}
+osmdata::available_features() %>% head()
+
+```
+
+```{r}
+osmdata::available_tags("amenity") %>% head()
+```
+
+```{r}
+osmdata::available_tags("water") 
+
+```
+
+```{r}
+osmdata::available_tags("public_transport")
+```
+
+function `getbb()` to retrieve the bounding box of a place using its name
+
+```{r}
+cdmx_bb<-osmdata::getbb("Mexico City")
+```
+
+Podemos hacer una *overpass query* `opq()`, utilizando los datos anteriores:
+
+> The Overpass API (formerly known as OSM Server Side Scripting, or OSM3S before 2011) is a read-only API that serves up custom selected parts of the OSM map data. It acts as a database over the web: the client sends a query to the API and gets back the data set that corresponds to the query.
+
+```{r}
+
+cdmx_hospitals <- cdmx_bb %>%
+  opq() %>%
+  add_osm_feature(key = "amenity", value = "hospital") %>%
+  osmdata_sf()
+```
+
+Veamos qué hay adentro de este objeto
+
+```{r}
+cdmx_hospitals$osm_multipolygons
+
+```
+
+Estos polígonos ya los podemos dibujar con sus coordenadas:
+
+```{r}
+cdmx_hospitals$osm_multipolygons %>% 
+  ggplot()+
+  geom_sf(fill = 'light blue')+
+  theme_minimal()
+```
+
+```{r}
+cdmx_map <- ggmap::get_map(cdmx_bb, maptype = "roadmap")
+
+```
+
+Hoy podemos utilizar este mapa...
+
+```{r}
+ggmap(cdmx_map) +
+  geom_sf(
+    data = cdmx_hospitals$osm_polygons,
+    inherit.aes = FALSE,
+    colour = "#08519c",
+    fill = "#08306b",
+    alpha = .5,
+    size = 1
+  ) +
+  labs(
+    title = "Hospitals en CDMX",
+    x = "Latitude",
+    y = "Longitude"
+  )
+
+```
+
+Si usaramos nuestro mapa, vemos que no es tan exacto:
+
+```{r}
+
+world_states %>% 
+  ggplot() +
+  geom_sf(alpha=I(0.0))   +
+  coord_sf(xlim = cdmx_bb[1,], 
+           ylim = cdmx_bb[2,]) +
+  geom_sf(
+    data = cdmx_hospitals$osm_polygons) +
+    coord_sf(xlim = cdmx_bb[1,], 
+           ylim = cdmx_bb[2,]) 
+ labs(
+    title = "Hospitales en CDMX",
+    x = "Latitude",
+    y = "Longitude"
+  ) 
+
+```
+
+## Geolocalización con R
+
+Siguiendo el tutorial de Jesse Saddler <https://github.com/jessesadler/intro-to-r>, vamos a geolocalizar un par de puntos, especificos.
+
+Utilizando el OSM, encontramos las coordenadas del Pepsi Center y de Coneval
+
+```{r}
+
+latitud1 <- 19.3939006 # Pepsi Center
+latitud2 <- 19.3898313 # Coneval
+longitud1 <- -99.1736976 # Pepsi Center
+longitud2 <- -99.1735151 # Coneval
+
+
+lon<-c(longitud1, longitud2)
+lat<-c(latitud1, latitud2)
+nombres<-c("Pepsi Center", "Coneval")
+
+lugares<-as_tibble(cbind(nombres, lon, lat))
+
+
+
+```
+
+Necesitaremos las coordenadas de nuestros puntos para poner el mapa, una vez que tenemos nuestra *dataframe* vamos a pasar como un objeto *sf* que se pueda graficar:
+
+```{r}
+lugares_sf <- sf::st_as_sf(lugares, coords = c("lon", "lat"), crs = 4326)
+```
+
+Hoy si podemos usar el paquete {mapview} que nos permite tener un mapa interactivo
+
+```{r}
+mapview::mapview(lugares_sf)
+```
+
+## De vuelta a `{mxmaps}`
+
+Tambien podemos traer los mapas desde el paquete de Diego Valle-Jones
+
+```{r}
+
+data(mxmunicipio.map) 
+data(mxstate.map) 
+
+head(mxmunicipio.map) 
+head(mxstate.map) 
+```
+
+El mapa de estados:
+
+```{r}
+mxstate.map %>% 
+ ggplot(aes(long, lat, group=group)) +
+ geom_polygon(fill = "white", color = "black", size = .2) +
+ coord_map()
+```
+
+El mapa de la CDMX:
+
+```{r}
+mxmunicipio.map %>% 
+ filter(region>"09000" & region<"10000") %>% 
+ ggplot(aes(long, lat, group=group)) +
+ geom_polygon(fill = "white", color = "black", size = .2) +
+ coord_map()
+```
+
+El mapa de la CDMX con los puntos
+
+```{r}
+mxmunicipio.map %>% 
+ filter(region>"09000" & region<"10000") %>% 
+ ggplot(aes(long, lat, group=group)) +
+ geom_polygon(fill = "white", color = "black", size = .2) +
+ annotate("text", 
+          x=as.numeric(lugares$lon), 
+          y=as.numeric(lugares$lat),
+          label=lugares$nombres) +
+ coord_map()
+```

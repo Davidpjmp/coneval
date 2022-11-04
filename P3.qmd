@@ -1,5 +1,22 @@
 # Análisis descriptivo básico
 
+
+## Leer desde archivos de texto y desde una url
+
+Desde el portal <https://datos.gob.mx/> tenemos acceso a directo a varias fuentes de información, al ser datos abiertos, los archivos de texto son muy comunes.
+
+Leeremos parte de esa información, específicamente la de CONAPO <https://datos.gob.mx/busca/dataset/proyecciones-de-la-poblacion-de-mexico-y-de-las-entidades-federativas-2016-2050>
+
+En estas bases hay acentos y otros carecteres especiales del español, por lo que agregaremos una opción de "encoding", de lo contrario da error.
+
+```{r}
+mig_inter_quin_proyecciones <- read.csv("http://www.conapo.gob.mx/work/models/CONAPO/Datos_Abiertos/Proyecciones2018/mig_inter_quin_proyecciones.csv", encoding="latin1")
+#View(mig_inter_quin_proyecciones)
+names(mig_inter_quin_proyecciones)
+```
+
+## Análisis descriptivo básico
+
 Vamos a llamar algunas librerías básicas, el tidyverse (que son muchas librerías) y sjlabelled que nos sirve para el manejo de etiquetas
 
 ```{r}
@@ -79,10 +96,10 @@ class(concentrado2020$sexo_jefe) # variable sin etiqueta
 class(as_label(concentrado2020$sexo_jefe)) # variable con etiqueta
 
 class(as_label(concentrado2020$educa_jefe)) # variable ordinal
-class(as_label(concentrado2020$ing_cor)) # variable de intervalo/razón
+class(concentrado2020$ing_cor) # variable de intervalo/razón
 ```
 
-En general, tendremos variables de factor que podrían ser consideradas como cualitativas y numéricas. Aunque en realidad, R tiene muchas formas de almacenamiento. Como mostramos con el comando "glimpse()" en capítulo anterior, podemos revisar una variable en específico:
+En general, tendremos variables de factor que podrían ser consideradas como cualitativas y numéricas. Aunque en realidad, R tiene muchas formas de almacenamiento. Como mostramos con el comando "glimpse()" en la práctica anterior, podemos revisar una variable en específico:
 
 ```{r}
 dplyr::glimpse(concentrado2020$sexo_jefe)
@@ -105,8 +122,7 @@ Son variables que dan cuenta de cualidades o condiciones a través de categoría
 Vamos a darle una "ojeada" a esta variable
 
 ```{r}
-glimpse(concentrado2020$educa_jefe
-        )
+glimpse(concentrado2020$educa_jefe)
 ```
 
 Etiquetemos también nuestra variable ordinal
@@ -291,3 +307,4 @@ concentrado2020 %>%
   filter(!is.na(ing_cor)) %>% # la ventaja de esta forma es que podemos hacer más operaciones
     with(hist(ing_cor, main= "histograma"))
 ```
+
