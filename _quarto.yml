@@ -23,9 +23,11 @@ book:
     - P10.qmd
     - P11.qmd
     - P12.qmd
-    - P13.qmd
+    - P13_osm.qmd
     - P14.qmd
     - P15.qmd
+    - P16.qmd
+    - P17.qmd
 
 format:
   html:

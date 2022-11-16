@@ -1,0 +1,2763 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.163">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>R para el monitoreo de la política de desarrollo social - 17&nbsp; Análisis de texto (III)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./P16.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Análisis de texto (III)</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">R para el monitoreo de la política de desarrollo social</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Introducción al curso</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./instala.html" class="sidebar-item-text sidebar-link">Instalación de R y Rstudio</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P1.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Primer acercamiento al uso del programa</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Manejo de datos: importación, selección y revisión</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P3.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Análisis descriptivo básico</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P4.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Factores de expansión y algunas otras medidas</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P5.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Fusionado de conjuntos de datos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P6.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Funciones, condicionales, bucles y mapeos</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P7.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Visualización de datos (I)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P8.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Visualización de datos (II)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P9.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Visualización de datos (III)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P10.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Visualización de datos (IV)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P11.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">API INEGI e intro a <code>{plotly}</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P12.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Visualización espacial - Mapas (I)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P13_osm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Visualización espacial - Mapas (II)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P14.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Introducción a los tableros con <code>{shiny}</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P15.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Análisis de texto (I)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P16.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Análisis de texto (II)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./P17.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Análisis de texto (III)</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#paquetes" id="toc-paquetes" class="nav-link active" data-scroll-target="#paquetes"><span class="toc-section-number">17.1</span>  Paquetes</a></li>
+  <li><a href="#datos" id="toc-datos" class="nav-link" data-scroll-target="#datos"><span class="toc-section-number">17.2</span>  Datos</a></li>
+  <li><a href="#asociación-entre-palabras" id="toc-asociación-entre-palabras" class="nav-link" data-scroll-target="#asociación-entre-palabras"><span class="toc-section-number">17.3</span>  Asociación entre palabras</a>
+  <ul class="collapse">
+  <li><a href="#con-tidytext" id="toc-con-tidytext" class="nav-link" data-scroll-target="#con-tidytext"><span class="toc-section-number">17.3.1</span>  Con <code>{tidytext}</code></a></li>
+  <li><a href="#con-udpipe" id="toc-con-udpipe" class="nav-link" data-scroll-target="#con-udpipe"><span class="toc-section-number">17.3.2</span>  Con <code>{udpipe}</code></a></li>
+  </ul></li>
+  <li><a href="#correlaciones" id="toc-correlaciones" class="nav-link" data-scroll-target="#correlaciones"><span class="toc-section-number">17.4</span>  Correlaciones</a></li>
+  <li><a href="#modelos" id="toc-modelos" class="nav-link" data-scroll-target="#modelos"><span class="toc-section-number">17.5</span>  Modelos</a></li>
+  <li><a href="#sujeto-verbo-y-objeto-svo" id="toc-sujeto-verbo-y-objeto-svo" class="nav-link" data-scroll-target="#sujeto-verbo-y-objeto-svo"><span class="toc-section-number">17.6</span>  Sujeto, Verbo y Objeto (SVO)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Análisis de texto (III)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<p>En esta segunda práctica veremos más análisis sobre los <em>tokens</em> y palabras.</p>
+<section id="paquetes" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="paquetes"><span class="header-section-number">17.1</span> Paquetes</h2>
+<p>NOTA: Además de estos paquetes, necesitamos descargar JAVA en nuestro sistema operativo</p>
+<p><a href="https://www.java.com/en/download/" class="uri">https://www.java.com/en/download/</a></p>
+<p>Además instalamos este paquete que está en español:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#remotes::install_github("agusnieto77/ACEP")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"pacman"</span>)) <span class="fu">install.packages</span>(<span class="st">"pacman"</span>) <span class="co"># instala pacman si se requiere</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: pacman</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, magrittr, tidytext,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>               tm, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>               NLP, SnowballC, </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               wordcloud, ggwordcloud,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               quanteda, udpipe,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>               igraph, ggraph, <span class="co"># para unos gráficos</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>               readxl, janitor, textrank,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>               broom, epubr, pdftools, tesseract, tokenizers,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>               ACEP)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En esta práctica empezaremos a avanzar en el análisis de texto, encontrando palabras claves, separando sujetos y acciiones y correlación entre palabras</p>
+</section>
+<section id="datos" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="datos"><span class="header-section-number">17.2</span> Datos</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>amlo1 <span class="ot">&lt;-</span> <span class="fu">readLines</span>(<span class="st">"datos/text/20220107_amlo.txt"</span>) </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>count1<span class="ot">&lt;-</span>tokenizers<span class="sc">::</span><span class="fu">count_words</span>(amlo1) </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>amlo1<span class="ot">&lt;-</span>amlo1[<span class="sc">!</span>count1<span class="sc">==</span><span class="dv">0</span>] </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>amlo2 <span class="ot">&lt;-</span> <span class="fu">readLines</span>(<span class="st">"datos/text/20220916_amlo.txt"</span>) </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>count2<span class="ot">&lt;-</span>tokenizers<span class="sc">::</span><span class="fu">count_words</span>(amlo2) </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>amlo2<span class="ot">&lt;-</span>amlo2[<span class="sc">!</span>count2<span class="sc">==</span><span class="dv">0</span>] </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Para <code>{tidytext}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>amlo1_df <span class="ot">&lt;-</span><span class="fu">tibble</span>(<span class="at">text=</span>amlo1)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>amlo2_df <span class="ot">&lt;-</span><span class="fu">tibble</span>(<span class="at">text=</span>amlo2)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>stop<span class="ot">&lt;-</span>quanteda<span class="sc">::</span><span class="fu">stopwords</span>(<span class="at">language=</span><span class="st">"spa"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Para <code>{udpipe}</code>, si no hemos descargado:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>udmodel <span class="ot">&lt;-</span> <span class="fu">udpipe_download_model</span>(<span class="at">language =</span> <span class="st">"spanish"</span>)  <span class="co"># esto trabaja con la estructura del español</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Downloading udpipe model from https://raw.githubusercontent.com/jwijffels/udpipe.models.ud.2.5/master/inst/udpipe-ud-2.5-191206/spanish-gsd-ud-2.5-191206.udpipe to /Users/anaescoto/Dropbox/2022/Curso_r_cnvl/coneval/spanish-gsd-ud-2.5-191206.udpipe</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> - This model has been trained on version 2.5 of data from https://universaldependencies.org</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> - The model is distributed under the CC-BY-SA-NC license: https://creativecommons.org/licenses/by-nc-sa/4.0</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> - Visit https://github.com/jwijffels/udpipe.models.ud.2.5 for model license details.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> - For a list of all models and their licenses (most models you can download with this package have either a CC-BY-SA or a CC-BY-SA-NC license) read the documentation at ?udpipe_download_model. For building your own models: visit the documentation by typing vignette('udpipe-train', package = 'udpipe')</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Downloading finished, model stored at '/Users/anaescoto/Dropbox/2022/Curso_r_cnvl/coneval/spanish-gsd-ud-2.5-191206.udpipe'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>amlo1_udpipe <span class="ot">&lt;-</span> udpipe<span class="sc">::</span><span class="fu">udpipe</span>(<span class="at">x =</span> amlo1, </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">object =</span> udmodel) <span class="co">#"tokeniza" el texto</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>amlo2_udpipe<span class="ot">&lt;-</span>udpipe<span class="sc">::</span><span class="fu">udpipe</span>(<span class="at">x =</span> amlo2, </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">object =</span> udmodel) <span class="co">#"tokeniza" el texto</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="asociación-entre-palabras" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="asociación-entre-palabras"><span class="header-section-number">17.3</span> Asociación entre palabras</h2>
+<section id="con-tidytext" class="level3" data-number="17.3.1">
+<h3 data-number="17.3.1" class="anchored" data-anchor-id="con-tidytext"><span class="header-section-number">17.3.1</span> Con <code>{tidytext}</code></h3>
+<p>Vamos a primero a utilizar otras funciones de <code>{tidytext}</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>amlo_bigrams <span class="ot">&lt;-</span> amlo1_df <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">unnest_tokens</span>(bigram, text, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(bigram))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Como vemos tenemos el problema de las “stop”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>bigrams_separado<span class="ot">&lt;-</span> amlo_bigrams <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">separate</span>(bigram, <span class="fu">c</span>(<span class="st">"word1"</span>, <span class="st">"word2"</span>), <span class="at">sep =</span> <span class="st">" "</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>bigrams_filtrado <span class="ot">&lt;-</span> bigrams_separado <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word1 <span class="sc">%in%</span> stop) <span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word2 <span class="sc">%in%</span> stop)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># new bigram counts:</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>bigram_conteo <span class="ot">&lt;-</span> bigrams_filtrado <span class="sc">%&gt;%</span> </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word1, word2, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>bigram_conteo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 600 × 3
+   word1      word2          n
+   &lt;chr&gt;      &lt;chr&gt;      &lt;int&gt;
+ 1 comisión   federal        6
+ 2 inversión  extranjera     4
+ 3 500        mil            3
+ 4 desarrollo nacional       3
+ 5 inversión  pública        3
+ 6 mercado    interno        3
+ 7 mil        500            3
+ 8 mil        barriles       3
+ 9 millones   500            3
+10 tren       maya           3
+# … with 590 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>bigram_conteo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 600 × 3
+   word1      word2          n
+   &lt;chr&gt;      &lt;chr&gt;      &lt;int&gt;
+ 1 comisión   federal        6
+ 2 inversión  extranjera     4
+ 3 500        mil            3
+ 4 desarrollo nacional       3
+ 5 inversión  pública        3
+ 6 mercado    interno        3
+ 7 mil        500            3
+ 8 mil        barriles       3
+ 9 millones   500            3
+10 tren       maya           3
+# … with 590 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bigram_grafo<span class="ot">&lt;-</span> bigram_conteo <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  igraph<span class="sc">::</span><span class="fu">graph_from_data_frame</span>()</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>bigram_grafo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>IGRAPH e886034 DN-- 65 41 -- 
++ attr: name (v/c), n (e/n)
++ edges from e886034 (vertex names):
+ [1] comisión     -&gt;federal    inversión    -&gt;extranjera
+ [3] 500          -&gt;mil        desarrollo   -&gt;nacional  
+ [5] inversión    -&gt;pública    mercado      -&gt;interno   
+ [7] mil          -&gt;500        mil          -&gt;barriles  
+ [9] millones     -&gt;500        tren         -&gt;maya      
+[11] 100          -&gt;mil        2            -&gt;mil       
+[13] 3            -&gt;millones   68           -&gt;mil       
+[15] adultos      -&gt;mayores    barriles     -&gt;diarios   
++ ... omitted several edges</code></pre>
+</div>
+</div>
+<p>Esto ya nos permite hacer un poco análisis de redes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2017</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>ggraph<span class="sc">::</span><span class="fu">ggraph</span>(bigram_grafo, <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>() <span class="sc">+</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="P17_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(bigram_grafo, <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width =</span> n, <span class="at">edge_alpha =</span> n), <span class="at">edge_colour =</span> <span class="st">"pink"</span>) <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">col =</span> <span class="st">"darkgreen"</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>(<span class="at">base_family =</span> <span class="st">"Arial Narrow"</span>) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cooccurrencias"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="P17_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="con-udpipe" class="level3" data-number="17.3.2">
+<h3 data-number="17.3.2" class="anchored" data-anchor-id="con-udpipe"><span class="header-section-number">17.3.2</span> Con <code>{udpipe}</code></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>amlo_filtro<span class="ot">&lt;-</span>amlo1_udpipe <span class="sc">%&gt;%</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(upos<span class="sc">==</span><span class="fu">c</span>(<span class="st">"NOUN"</span>, <span class="st">"ADJ"</span>)) <span class="co"># vamos a ver relaciones entre adjetivos y nombres</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>cooc<span class="ot">&lt;-</span><span class="fu">cooccurrence</span>(<span class="at">x=</span>amlo_filtro,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">term =</span> <span class="st">"lemma"</span>, <span class="co">#checa que trabajaremos con los lemmas</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">group =</span> <span class="fu">c</span>(<span class="st">"doc_id"</span>, <span class="st">"paragraph_id"</span>, <span class="st">"sentence_id"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Vamos a hacer el gráfico parecido al anterior:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>cooc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               term1           term2 cooc
+1          inversión         privado    6
+2          inversión          millón    5
+3             empleo          estado    4
+4              dólar       inversión    4
+5         extranjero       inversión    4
+6              dólar          millón    4
+7          inversión         público    4
+8             empleo         sureste    4
+9             estado         sureste    4
+10          comisión         empresa    3
+11          comisión         federal    3
+12           empresa         federal    3
+13    importantísimo       inversión    3
+14           energía             ley    3
+15         inversión            país    3
+16               año         periodo    3
+17           energía          planta    3
+18               año         primero    3
+19               año       refinería    3
+20            barril       refinería    3
+21             costo       refinería    3
+22            diario       refinería    3
+23             igual       refinería    3
+24               mes       refinería    3
+25           energía       renovable    3
+26             amiga           amigo    2
+27      construcción        economía    2
+28           ejemplo          empleo    2
+29           apagado         energía    2
+30             banca         energía    2
+31          comisión         energía    2
+32      constitución         energía    2
+33        desarrollo         energía    2
+34           empresa         energía    2
+35           ejemplo          estado    2
+36           energía          excusa    2
+37           acuerdo      extranjero    2
+38               bue      extranjero    2
+39             cifra      extranjero    2
+40             dólar      extranjero    2
+41         bienestar         familia    2
+42           energía         federal    2
+43            diésel        gasolina    2
+44        extranjero       histórico    2
+45            acción      importante    2
+46         ejecución      importante    2
+47        importante     institución    2
+48           acuerdo       inversión    2
+49               bue       inversión    2
+50             cifra       inversión    2
+51         histórico       inversión    2
+52           energía          limpio    2
+53           lección           mayor    2
+54           interno         mercado    2
+55             anual          millón    2
+56        extranjero          millón    2
+57        importante          millón    2
+58               año           mismo    2
+59        desarrollo        nacional    2
+60           energía        nacional    2
+61        importante       normativa    2
+62        desarrollo            país    2
+63           energía      particular    2
+64               año          pasado    2
+65         bienestar             paz    2
+66        importante     pensamiento    2
+67            adulto         pensión    2
+68               año         pensión    2
+69      discapacidad         pensión    2
+70            humano         pensión    2
+71             mayor         pensión    2
+72            millón         pensión    2
+73           pensión         persona    2
+74           empresa       petrolero    2
+75               ley          planta    2
+76        importante        política    2
+77           energía     preferencia    2
+78           energía        pretexto    2
+79           energía       prioridad    2
+80    importantísimo         privado    2
+81              país         privado    2
+82             gente        programa    2
+83            millón        programa    2
+84          comisión         público    2
+85           empresa         público    2
+86           energía         público    2
+87           federal         público    2
+88           privado         público    2
+89           empresa       refinería    2
+90            millón   reforestación    2
+91           energía        subsidio    2
+92           energía    subutilizado    2
+93           ejemplo         sureste    2
+94          adecuado          tiempo    2
+95        definición          tiempo    2
+96            manejo          tiempo    2
+97          contento      trabajador    2
+98            férreo             vía    2
+99       ferrocarril             vía    2
+100       industrial             vía    2
+101    modernización             vía    2
+102           parque             vía    2
+103           puente             vía    2
+104           puerto             vía    2
+105     agropecuario            agua    1
+106           adulto             año    1
+107            apoyo       Aprovecho    1
+108          actitud        atrasado    1
+109      alimentario autosuficiencia    1
+110            apoyo          avance    1
+111          apagado           banca    1
+112              año          barril    1
+113       adversario       beneficio    1
+114         anhelado       bienestar    1
+115            ayuda       bienestar    1
+116           amplio           bordo    1
+117          acuerdo             bue    1
+118            ayuda       campesino    1
+119        bienestar       campesino    1
+120      alimentario           campo    1
+121  autosuficiencia           campo    1
+122             buen           canto    1
+123            caída       capacidad    1
+124             buen            caso    1
+125            canto            caso    1
+126          acuerdo           cifra    1
+127              bue           cifra    1
+128           actual   circunstancia    1
+129             buen     colaborador    1
+130            apoyo         combate    1
+131          apagado        comisión    1
+132            banca        comisión    1
+133        comercial      compromiso    1
+134            apoyo        conjunto    1
+135          combate        conjunto    1
+136            caída       constante    1
+137        capacidad       constante    1
+138          apagado    constitución    1
+139            banca    constitución    1
+140         comisión    constitución    1
+141     agropecuario    construcción    1
+142             agua    construcción    1
+143     construcción    constructivo    1
+144        capacidad      consumidor    1
+145     agropecuario         consumo    1
+146             agua         consumo    1
+147     construcción         consumo    1
+148     construcción     coquizadora    1
+149           cierto           costa    1
+150              año           costo    1
+151           barril           costo    1
+152      combustible           crudo    1
+153         adecuado      definición    1
+154       corrupción      deliberado    1
+155            causa    delincuencia    1
+156             buen         demanda    1
+157            causa         demanda    1
+158     delincuencia         demanda    1
+159        actividad     democrático    1
+160       antepasado     democrático    1
+161            apoyo         derecho    1
+162          combate         derecho    1
+163         conjunto         derecho    1
+164     agropecuario      desarrollo    1
+165             agua      desarrollo    1
+166          apagado      desarrollo    1
+167            banca      desarrollo    1
+168          capital      desarrollo    1
+169      combustible      desarrollo    1
+170        comercial      desarrollo    1
+171         comisión      desarrollo    1
+172       compromiso      desarrollo    1
+173     constitución      desarrollo    1
+174     construcción      desarrollo    1
+175          consumo      desarrollo    1
+176              año          diario    1
+177           barril          diario    1
+178            costo          diario    1
+179          aumento          diésel    1
+180        bienestar         directo    1
+181            ayuda       dirigente    1
+182           adulto    discapacidad    1
+183              año    discapacidad    1
+184     agropecuario  disponibilidad    1
+185             agua  disponibilidad    1
+186     construcción  disponibilidad    1
+187          consumo  disponibilidad    1
+188       desarrollo  disponibilidad    1
+189            caída           doble    1
+190        capacidad           doble    1
+191        constante           doble    1
+192          acuerdo           dólar    1
+193            anual           dólar    1
+194              bue           dólar    1
+195            cifra           dólar    1
+196     construcción           dólar    1
+197      disminución          doloso    1
+198     agropecuario       doméstico    1
+199             agua       doméstico    1
+200        capacidad       doméstico    1
+201     construcción       doméstico    1
+202       consumidor       doméstico    1
+203          consumo       doméstico    1
+204       desarrollo       doméstico    1
+205   disponibilidad       doméstico    1
+206           amplio         dragado    1
+207            bordo         dragado    1
+208       conciencia        duradero    1
+209     constructivo        economía    1
+210        comercial       económico    1
+211       compromiso       económico    1
+212       desarrollo       económico    1
+213            causa       educativo    1
+214     delincuencia       educativo    1
+215          demanda       educativo    1
+216            apoyo        efectivo    1
+217        Aprovecho        efectivo    1
+218            cargo          efecto    1
+219           acción       ejecución    1
+220         comisión       eléctrico    1
+221        capacidad         embargo    1
+222       consumidor         embargo    1
+223        doméstico         embargo    1
+224      coquizadora          empleo    1
+225          apagado         empresa    1
+226            banca         empresa    1
+227    circunstancia         empresa    1
+228     constitución         empresa    1
+229       desarrollo         empresa    1
+230         director         empresa    1
+231        eléctrico         empresa    1
+232       conciencia          empuje    1
+233         duradero          empuje    1
+234      alimentario      energético    1
+235  autosuficiencia      energético    1
+236            campo      energético    1
+237             buen         energía    1
+238            canto         energía    1
+239        capacidad         energía    1
+240             caso         energía    1
+241       consumidor         energía    1
+242        doméstico         energía    1
+243          embargo         energía    1
+244            época      escritorio    1
+245        contenido         escuela    1
+246            causa         espacio    1
+247     delincuencia         espacio    1
+248          demanda         espacio    1
+249        educativo         espacio    1
+250    circunstancia        especial    1
+251          empresa        especial    1
+252       compromiso    especialista    1
+253      alimentario     estratégico    1
+254  autosuficiencia     estratégico    1
+255            campo     estratégico    1
+256       energético     estratégico    1
+257     construcción           etapa    1
+258     constructivo           etapa    1
+259         economía           etapa    1
+260            apoyo     excepcional    1
+261        Aprovecho     excepcional    1
+262         efectivo     excepcional    1
+263          apagado          excusa    1
+264            banca          excusa    1
+265         comisión          excusa    1
+266     constitución          excusa    1
+267       desarrollo          excusa    1
+268          empresa          excusa    1
+269            caída     exploración    1
+270        capacidad     exploración    1
+271        constante     exploración    1
+272            doble     exploración    1
+273           cumbre      exteriores    1
+274            caída      extracción    1
+275        capacidad      extracción    1
+276        constante      extracción    1
+277            doble      extracción    1
+278      exploración      extracción    1
+279         comisión      extranjero    1
+280         decisión      extranjero    1
+281           diésel      extranjero    1
+282        eléctrico      extranjero    1
+283          empresa      extranjero    1
+284            causa           falta    1
+285     delincuencia           falta    1
+286          demanda           falta    1
+287        educativo           falta    1
+288          espacio           falta    1
+289            ayuda         familia    1
+290        campesino         familia    1
+291           cierto         familia    1
+292        contenido         familia    1
+293            costa         familia    1
+294          directo         familia    1
+295          escuela         familia    1
+296             buen              fe    1
+297            canto              fe    1
+298             caso              fe    1
+299          energía              fe    1
+300          apagado         federal    1
+301            banca         federal    1
+302     constitución         federal    1
+303           delito         federal    1
+304       desarrollo         federal    1
+305        eléctrico         federal    1
+306           excusa         federal    1
+307       extranjero         federal    1
+308           férreo     ferrocarril    1
+309            ayuda    fertilizante    1
+310        bienestar    fertilizante    1
+311        campesino    fertilizante    1
+312          familia    fertilizante    1
+313        capacidad           forma    1
+314       consumidor           forma    1
+315        doméstico           forma    1
+316          embargo           forma    1
+317          energía           forma    1
+318            apoyo        fraterno    1
+319           delito           fuero    1
+320          federal           fuero    1
+321           actual     fundamental    1
+322          capital     fundamental    1
+323    circunstancia     fundamental    1
+324       desarrollo     fundamental    1
+325       extranjero        gasolina    1
+326       compromiso         general    1
+327     especialista         general    1
+328           amplio           gente    1
+329            bordo           gente    1
+330       conciencia           gente    1
+331          dragado           gente    1
+332         duradero           gente    1
+333           empuje           gente    1
+334        actividad        gobierno    1
+335       adversario        gobierno    1
+336       aeropuerto        gobierno    1
+337        beneficio        gobierno    1
+338           delito        gobierno    1
+339      democrático        gobierno    1
+340          derecho        gobierno    1
+341            época        gobierno    1
+342       escritorio        gobierno    1
+343          federal        gobierno    1
+344            fuero        gobierno    1
+345        campesino        grandeza    1
+346          derecho        gratuito    1
+347         gobierno        gratuito    1
+348             buen        gravedad    1
+349       adversario           grupo    1
+350        beneficio           grupo    1
+351         gobierno           grupo    1
+352          empresa           gusto    1
+353            canal        hectárea    1
+354     agropecuario      hidráulico    1
+355             agua      hidráulico    1
+356     construcción      hidráulico    1
+357          consumo      hidráulico    1
+358       desarrollo      hidráulico    1
+359   disponibilidad      hidráulico    1
+360        doméstico      hidráulico    1
+361             gran        historia    1
+362          acuerdo       histórico    1
+363              bue       histórico    1
+364            cifra       histórico    1
+365            dólar       histórico    1
+366      disminución       homicidio    1
+367           doloso       homicidio    1
+368           adulto          humano    1
+369              año          humano    1
+370            apoyo          humano    1
+371          combate          humano    1
+372         conjunto          humano    1
+373          derecho          humano    1
+374     discapacidad          humano    1
+375            gasto          humano    1
+376            apego           ideal    1
+377              año           igual    1
+378           barril           igual    1
+379            costo           igual    1
+380           diario           igual    1
+381         chatarra      Imagínense    1
+382       adversario      importante    1
+383            anual      importante    1
+384            apoyo      importante    1
+385        beneficio      importante    1
+386            causa      importante    1
+387          combate      importante    1
+388         conjunto      importante    1
+389     delincuencia      importante    1
+390          demanda      importante    1
+391          derecho      importante    1
+392            dólar      importante    1
+393        educativo      importante    1
+394          espacio      importante    1
+395            falta      importante    1
+396         gobierno      importante    1
+397            grupo      importante    1
+398           humano      importante    1
+399            causa   impostergable    1
+400     delincuencia   impostergable    1
+401          demanda   impostergable    1
+402        educativo   impostergable    1
+403          espacio   impostergable    1
+404            falta   impostergable    1
+405       importante   impostergable    1
+406            causa       impunidad    1
+407       corrupción       impunidad    1
+408     delincuencia       impunidad    1
+409          demanda       impunidad    1
+410        educativo       impunidad    1
+411          espacio       impunidad    1
+412            falta       impunidad    1
+413       importante       impunidad    1
+414    impostergable       impunidad    1
+415     construcción    inauguración    1
+416      coquizadora    inauguración    1
+417            apego    incongruente    1
+418            ideal    incongruente    1
+419      alimentario   indispensable    1
+420            apoyo   indispensable    1
+421  autosuficiencia   indispensable    1
+422            campo   indispensable    1
+423       energético   indispensable    1
+424      estratégico   indispensable    1
+425         fraterno   indispensable    1
+426         comisión       industria    1
+427        eléctrico       industria    1
+428          empresa       industria    1
+429       extranjero       industria    1
+430          federal       industria    1
+431           férreo      industrial    1
+432      ferrocarril      industrial    1
+433             gran         infamia    1
+434         historia         infamia    1
+435           actual       inflación    1
+436    circunstancia       inflación    1
+437      fundamental       inflación    1
+438         comisión      influencia    1
+439        eléctrico      influencia    1
+440          empresa      influencia    1
+441       extranjero      influencia    1
+442          federal      influencia    1
+443        industria      influencia    1
+444        industria        informal    1
+445    inflacionario         ingreso    1
+446       distintivo          inicio    1
+447           acción     institución    1
+448        ejecución     institución    1
+449      combustible         interno    1
+450       desarrollo         interno    1
+451        industria         interno    1
+452         informal         interno    1
+453           amplio      inundación    1
+454            bordo      inundación    1
+455          dragado      inundación    1
+456            gente      inundación    1
+457            anual       inversión    1
+458         chatarra       inversión    1
+459     construcción       inversión    1
+460            gasto       inversión    1
+461           humano       inversión    1
+462       Imagínense       inversión    1
+463       importante       inversión    1
+464         especial        invitado    1
+465        económico          jornal    1
+466            causa           joven    1
+467     delincuencia           joven    1
+468          demanda           joven    1
+469        educativo           joven    1
+470          espacio           joven    1
+471            falta           joven    1
+472       importante           joven    1
+473    impostergable           joven    1
+474        impunidad           joven    1
+475        comercial           junto    1
+476       compromiso           junto    1
+477       desarrollo           junto    1
+478        económico           junto    1
+479            causa           justo    1
+480     delincuencia           justo    1
+481          demanda           justo    1
+482        educativo           justo    1
+483          espacio           justo    1
+484            falta           justo    1
+485       importante           justo    1
+486    impostergable           justo    1
+487        impunidad           justo    1
+488            joven           justo    1
+489      ferrocarril       kilómetro    1
+490            causa         laboral    1
+491     delincuencia         laboral    1
+492          demanda         laboral    1
+493        educativo         laboral    1
+494          espacio         laboral    1
+495            falta         laboral    1
+496       importante         laboral    1
+497    impostergable         laboral    1
+498        impunidad         laboral    1
+499            joven         laboral    1
+500            justo         laboral    1
+501      alimentario         lección    1
+502  autosuficiencia         lección    1
+503            campo         lección    1
+504       energético         lección    1
+505        enseñanza         lección    1
+506      estratégico         lección    1
+507    indispensable         lección    1
+508          apagado             ley    1
+509            banca             ley    1
+510        capacidad             ley    1
+511         comisión             ley    1
+512     constitución             ley    1
+513       consumidor             ley    1
+514       desarrollo             ley    1
+515        doméstico             ley    1
+516          embargo             ley    1
+517          empresa             ley    1
+518           excusa             ley    1
+519          federal             ley    1
+520            forma             ley    1
+521        actividad        libertad    1
+522      democrático        libertad    1
+523         gobierno        libertad    1
+524          apagado          limpio    1
+525            banca          limpio    1
+526         comisión          limpio    1
+527     constitución          limpio    1
+528       desarrollo          limpio    1
+529          empresa          limpio    1
+530           excusa          limpio    1
+531          federal          limpio    1
+532              ley          limpio    1
+533        contenido           madre    1
+534          escuela           madre    1
+535          familia           madre    1
+536         decisión            malo    1
+537       extranjero            malo    1
+538         adecuado          manejo    1
+539       definición          manejo    1
+540        bienestar          manera    1
+541       corrupción          manera    1
+542       deliberado          manera    1
+543          directo          manera    1
+544      disminución          manera    1
+545           doloso          manera    1
+546          familia          manera    1
+547        homicidio          manera    1
+548        capacidad      manifiesto    1
+549       consumidor      manifiesto    1
+550        doméstico      manifiesto    1
+551          embargo      manifiesto    1
+552          energía      manifiesto    1
+553            forma      manifiesto    1
+554              ley      manifiesto    1
+555             buen            mano    1
+556          demanda            mano    1
+557        contenido   mantenimiento    1
+558          escuela   mantenimiento    1
+559          familia   mantenimiento    1
+560            madre   mantenimiento    1
+561           adulto           mayor    1
+562      alimentario           mayor    1
+563              año           mayor    1
+564  autosuficiencia           mayor    1
+565            campo           mayor    1
+566     discapacidad           mayor    1
+567       energético           mayor    1
+568        enseñanza           mayor    1
+569      estratégico           mayor    1
+570           humano           mayor    1
+571    indispensable           mayor    1
+572       compromiso     medicamento    1
+573     especialista     medicamento    1
+574          general     medicamento    1
+575             buen          médico    1
+576       compromiso          médico    1
+577     especialista          médico    1
+578          general          médico    1
+579         gravedad          médico    1
+580      medicamento          médico    1
+581         decisión           mejor    1
+582       extranjero           mejor    1
+583             malo           mejor    1
+584      combustible         mercado    1
+585       desarrollo         mercado    1
+586        industria         mercado    1
+587         informal         mercado    1
+588       aeropuerto             mes    1
+589              año             mes    1
+590          aumento             mes    1
+591           barril             mes    1
+592            costo             mes    1
+593           diario             mes    1
+594           diésel             mes    1
+595         gobierno             mes    1
+596            igual             mes    1
+597          aumento        mexicano    1
+598           diésel        mexicano    1
+599              mes        mexicano    1
+600          aumento          mezcla    1
+601           diésel          mezcla    1
+602              mes          mezcla    1
+603         mexicano          mezcla    1
+604            apoyo       migración    1
+605          combate       migración    1
+606         conjunto       migración    1
+607          derecho       migración    1
+608           humano       migración    1
+609       importante       migración    1
+610        ingeniero         militar    1
+611          acuerdo          millón    1
+612           adulto          millón    1
+613              año          millón    1
+614        bienestar          millón    1
+615              bue          millón    1
+616            cifra          millón    1
+617     construcción          millón    1
+618          directo          millón    1
+619     discapacidad          millón    1
+620          familia          millón    1
+621        histórico          millón    1
+622           humano          millón    1
+623            legal          millón    1
+624           manera          millón    1
+625            mayor          millón    1
+626             meta          millón    1
+627     construcción           mismo    1
+628     constructivo           mismo    1
+629         economía           mismo    1
+630            etapa           mismo    1
+631    inflacionario           mismo    1
+632          ingreso           mismo    1
+633         gasolina           mitad    1
+634        enseñanza          modelo    1
+635          lección          modelo    1
+636            mayor          modelo    1
+637           férreo   modernización    1
+638      ferrocarril   modernización    1
+639       industrial   modernización    1
+640            apego            modo    1
+641            ideal            modo    1
+642     incongruente            modo    1
+643         decisión         momento    1
+644       extranjero         momento    1
+645             malo         momento    1
+646            mejor         momento    1
+647           crisis          moneda    1
+648       conciencia           moral    1
+649         duradero           moral    1
+650           empuje           moral    1
+651            gente           moral    1
+652       antepasado      movimiento    1
+653      democrático      movimiento    1
+654         gobierno           mundo    1
+655        capacidad          nación    1
+656       consumidor          nación    1
+657        doméstico          nación    1
+658          embargo          nación    1
+659          energía          nación    1
+660            forma          nación    1
+661              ley          nación    1
+662       manifiesto          nación    1
+663          apagado        nacional    1
+664            banca        nacional    1
+665      combustible        nacional    1
+666         comisión        nacional    1
+667     constitución        nacional    1
+668       corrupción        nacional    1
+669       deliberado        nacional    1
+670          empresa        nacional    1
+671           excusa        nacional    1
+672          federal        nacional    1
+673          interno        nacional    1
+674              ley        nacional    1
+675           limpio        nacional    1
+676           manera        nacional    1
+677          mercado        nacional    1
+678            causa       necesidad    1
+679     delincuencia       necesidad    1
+680          demanda       necesidad    1
+681        educativo       necesidad    1
+682          espacio       necesidad    1
+683            falta       necesidad    1
+684       importante       necesidad    1
+685    impostergable       necesidad    1
+686        impunidad       necesidad    1
+687            joven       necesidad    1
+688            justo       necesidad    1
+689          laboral       necesidad    1
+690         anhelado      necesitado    1
+691        bienestar      necesitado    1
+692       corrupción         negocio    1
+693        impunidad         negocio    1
+694              año      neoliberal    1
+695        enseñanza      neoliberal    1
+696          lección      neoliberal    1
+697            mayor      neoliberal    1
+698           modelo      neoliberal    1
+699              año   neoporfirista    1
+700       neoliberal   neoporfirista    1
+701     construcción           noble    1
+702     constructivo           noble    1
+703         economía           noble    1
+704            etapa           noble    1
+705            mismo           noble    1
+706           acción       normativa    1
+707        ejecución       normativa    1
+708      institución       normativa    1
+709             buen         noticia    1
+710          demanda         noticia    1
+711             mano         noticia    1
+712        actividad           nuevo    1
+713     construcción           nuevo    1
+714      democrático           nuevo    1
+715         economía           nuevo    1
+716         gobierno           nuevo    1
+717         libertad           nuevo    1
+718            causa        obligado    1
+719     delincuencia        obligado    1
+720          demanda        obligado    1
+721        educativo        obligado    1
+722          espacio        obligado    1
+723            falta        obligado    1
+724       importante        obligado    1
+725    impostergable        obligado    1
+726        impunidad        obligado    1
+727            joven        obligado    1
+728            justo        obligado    1
+729          laboral        obligado    1
+730        necesidad        obligado    1
+731     agropecuario            obra    1
+732             agua            obra    1
+733             buen            obra    1
+734     construcción            obra    1
+735          consumo            obra    1
+736          demanda            obra    1
+737       desarrollo            obra    1
+738   disponibilidad            obra    1
+739        doméstico            obra    1
+740          empresa            obra    1
+741            gusto            obra    1
+742       hidráulico            obra    1
+743             mano            obra    1
+744          noticia            obra    1
+745            apoyo         oficial    1
+746        Aprovecho         oficial    1
+747         efectivo         oficial    1
+748      excepcional         oficial    1
+749          austero         orgullo    1
+750         decisión         orgullo    1
+751       extranjero         orgullo    1
+752             malo         orgullo    1
+753            mejor         orgullo    1
+754          momento         orgullo    1
+755             buen        original    1
+756         gravedad        original    1
+757           médico        original    1
+758       conciencia        pacífico    1
+759         duradero        pacífico    1
+760           empuje        pacífico    1
+761            gente        pacífico    1
+762            moral        pacífico    1
+763        contenido           padre    1
+764          escuela           padre    1
+765          familia           padre    1
+766            madre           padre    1
+767    mantenimiento           padre    1
+768      alimentario            país    1
+769            apoyo            país    1
+770  autosuficiencia            país    1
+771            campo            país    1
+772          capital            país    1
+773          combate            país    1
+774      combustible            país    1
+775         conjunto            país    1
+776         decisión            país    1
+777          derecho            país    1
+778       energético            país    1
+779      estratégico            país    1
+780       extranjero            país    1
+781      ferrocarril            país    1
+782      fundamental            país    1
+783         gobierno            país    1
+784           humano            país    1
+785       importante            país    1
+786   importantísimo            país    1
+787    indispensable            país    1
+788      integración            país    1
+789          interno            país    1
+790        kilómetro            país    1
+791          lección            país    1
+792             malo            país    1
+793            mayor            país    1
+794            mejor            país    1
+795          mercado            país    1
+796        migración            país    1
+797          momento            país    1
+798            mundo            país    1
+799         nacional            país    1
+800          orgullo            país    1
+801             buen         palabra    1
+802            canto         palabra    1
+803             caso         palabra    1
+804          energía         palabra    1
+805               fe         palabra    1
+806           actual        pandemia    1
+807             buen        pandemia    1
+808    circunstancia        pandemia    1
+809           crisis        pandemia    1
+810      fundamental        pandemia    1
+811         gravedad        pandemia    1
+812        inflación        pandemia    1
+813           médico        pandemia    1
+814           moneda        pandemia    1
+815         original        pandemia    1
+816     construcción          parada    1
+817            dólar          parada    1
+818        inversión          parada    1
+819           millón          parada    1
+820        ecológico          parque    1
+821           férreo          parque    1
+822      ferrocarril          parque    1
+823       industrial          parque    1
+824    modernización          parque    1
+825         director           parte    1
+826          empresa           parte    1
+827          apagado      particular    1
+828            banca      particular    1
+829         comisión      particular    1
+830     constitución      particular    1
+831       desarrollo      particular    1
+832          empresa      particular    1
+833           excusa      particular    1
+834          federal      particular    1
+835              ley      particular    1
+836           limpio      particular    1
+837         nacional      particular    1
+838            mismo          pasado    1
+839      ferrocarril        pasajero    1
+840        kilómetro        pasajero    1
+841             país        pasajero    1
+842         director      patrimonio    1
+843          empresa      patrimonio    1
+844            parte      patrimonio    1
+845         anhelado             paz    1
+846       necesitado             paz    1
+847           acción     pensamiento    1
+848        ejecución     pensamiento    1
+849      institución     pensamiento    1
+850        normativa     pensamiento    1
+851         decisión         periodo    1
+852       distintivo         periodo    1
+853       extranjero         periodo    1
+854           inicio         periodo    1
+855             malo         periodo    1
+856            mejor         periodo    1
+857            mismo         periodo    1
+858          momento         periodo    1
+859       neoliberal         periodo    1
+860    neoporfirista         periodo    1
+861          orgullo         periodo    1
+862             país         periodo    1
+863           pasado         periodo    1
+864           adulto         persona    1
+865              año         persona    1
+866     discapacidad         persona    1
+867           humano         persona    1
+868            mayor         persona    1
+869           millón         persona    1
+870            ayuda        pescador    1
+871        bienestar        pescador    1
+872        campesino        pescador    1
+873          familia        pescador    1
+874     fertilizante        pescador    1
+875            legal            peso    1
+876           millón            peso    1
+877             buen        petróleo    1
+878            caída        petróleo    1
+879            canto        petróleo    1
+880        capacidad        petróleo    1
+881             caso        petróleo    1
+882      combustible        petróleo    1
+883        constante        petróleo    1
+884            crudo        petróleo    1
+885            doble        petróleo    1
+886          energía        petróleo    1
+887      exploración        petróleo    1
+888       extracción        petróleo    1
+889               fe        petróleo    1
+890          palabra        petróleo    1
+891    circunstancia       petrolero    1
+892         director       petrolero    1
+893         especial       petrolero    1
+894            parte       petrolero    1
+895       patrimonio       petrolero    1
+896            apoyo            plan    1
+897          combate            plan    1
+898         conjunto            plan    1
+899          derecho            plan    1
+900           humano            plan    1
+901       importante            plan    1
+902        migración            plan    1
+903             país            plan    1
+904          apagado          planta    1
+905            banca          planta    1
+906        capacidad          planta    1
+907         comisión          planta    1
+908     constitución          planta    1
+909       consumidor          planta    1
+910       desarrollo          planta    1
+911        doméstico          planta    1
+912          embargo          planta    1
+913          empresa          planta    1
+914           excusa          planta    1
+915          federal          planta    1
+916            forma          planta    1
+917           limpio          planta    1
+918       manifiesto          planta    1
+919           nación          planta    1
+920         nacional          planta    1
+921       particular          planta    1
+922         justicia       población    1
+923            gasto         pobreza    1
+924           humano         pobreza    1
+925        inversión         pobreza    1
+926       adversario        poderoso    1
+927        beneficio        poderoso    1
+928         gobierno        poderoso    1
+929            grupo        poderoso    1
+930       importante        poderoso    1
+931           acción        política    1
+932        ejecución        política    1
+933      institución        política    1
+934        normativa        política    1
+935      pensamiento        política    1
+936            causa         popular    1
+937     delincuencia         popular    1
+938          demanda         popular    1
+939        educativo         popular    1
+940          espacio         popular    1
+941            falta         popular    1
+942       importante         popular    1
+943    impostergable         popular    1
+944        impunidad         popular    1
+945            joven         popular    1
+946            justo         popular    1
+947          laboral         popular    1
+948        necesidad         popular    1
+949         obligado         popular    1
+950            nivel        posgrado    1
+951       conciencia         posible    1
+952         duradero         posible    1
+953           empuje         posible    1
+954            gente         posible    1
+955            moral         posible    1
+956         pacífico         posible    1
+957          aumento          precio    1
+958           diésel          precio    1
+959              mes          precio    1
+960         mexicano          precio    1
+961           mezcla          precio    1
+962            ayuda         Precios    1
+963        bienestar         Precios    1
+964        campesino         Precios    1
+965          familia         Precios    1
+966     fertilizante         Precios    1
+967         pescador         Precios    1
+968       antepasado       precursor    1
+969      democrático       precursor    1
+970       movimiento       precursor    1
+971            nivel      preescolar    1
+972         posgrado      preescolar    1
+973          apagado     preferencia    1
+974            banca     preferencia    1
+975         comisión     preferencia    1
+976     constitución     preferencia    1
+977       desarrollo     preferencia    1
+978          empresa     preferencia    1
+979           excusa     preferencia    1
+980          federal     preferencia    1
+981              ley     preferencia    1
+982           limpio     preferencia    1
+983         nacional     preferencia    1
+984       particular     preferencia    1
+985           planta     preferencia    1
+986         elección    presidencial    1
+987        municipal      presidenta    1
+988          apagado        pretexto    1
+989            banca        pretexto    1
+990         comisión        pretexto    1
+991     constitución        pretexto    1
+992       desarrollo        pretexto    1
+993          empresa        pretexto    1
+994           excusa        pretexto    1
+995          federal        pretexto    1
+996              ley        pretexto    1
+997           limpio        pretexto    1
+998         nacional        pretexto    1
+999       particular        pretexto    1
+1000          planta        pretexto    1
+1001     preferencia        pretexto    1
+1002           mismo         primero    1
+1003          pasado         primero    1
+1004         periodo         primero    1
+1005           apego       principio    1
+1006           ideal       principio    1
+1007    incongruente       principio    1
+1008            modo       principio    1
+1009        anhelado       prioridad    1
+1010         apagado       prioridad    1
+1011           banca       prioridad    1
+1012       bienestar       prioridad    1
+1013        comisión       prioridad    1
+1014    constitución       prioridad    1
+1015      desarrollo       prioridad    1
+1016         empresa       prioridad    1
+1017          excusa       prioridad    1
+1018         federal       prioridad    1
+1019             ley       prioridad    1
+1020          limpio       prioridad    1
+1021        nacional       prioridad    1
+1022      necesitado       prioridad    1
+1023      particular       prioridad    1
+1024             paz       prioridad    1
+1025          planta       prioridad    1
+1026     preferencia       prioridad    1
+1027        pretexto       prioridad    1
+1028     inseguridad      privilegio    1
+1029           época        problema    1
+1030      escritorio        problema    1
+1031        gobierno        problema    1
+1032   inflacionario        problema    1
+1033         ingreso        problema    1
+1034           mismo        problema    1
+1035           caída      productivo    1
+1036       capacidad      productivo    1
+1037       constante      productivo    1
+1038           doble      productivo    1
+1039     exploración      productivo    1
+1040      extracción      productivo    1
+1041        petróleo      productivo    1
+1042         empresa profesionalismo    1
+1043           gusto profesionalismo    1
+1044            obra profesionalismo    1
+1045          amplio        programa    1
+1046           anual        programa    1
+1047           bordo        programa    1
+1048      conciencia        programa    1
+1049           dólar        programa    1
+1050         dragado        programa    1
+1051        duradero        programa    1
+1052          empuje        programa    1
+1053      importante        programa    1
+1054      inundación        programa    1
+1055       inversión        programa    1
+1056           moral        programa    1
+1057            obra        programa    1
+1058        pacífico        programa    1
+1059         posible        programa    1
+1060      adversario          propio    1
+1061       beneficio          propio    1
+1062        comisión          propio    1
+1063       eléctrico          propio    1
+1064         empresa          propio    1
+1065      extranjero          propio    1
+1066         federal          propio    1
+1067        gobierno          propio    1
+1068           grupo          propio    1
+1069      importante          propio    1
+1070       industria          propio    1
+1071      influencia          propio    1
+1072        poderoso          propio    1
+1073        anhelado       propósito    1
+1074       bienestar       propósito    1
+1075      necesitado       propósito    1
+1076             paz       propósito    1
+1077       prioridad       propósito    1
+1078      antepasado    protagonista    1
+1079     democrático    protagonista    1
+1080      movimiento    protagonista    1
+1081       precursor    protagonista    1
+1082      distintivo          prueba    1
+1083          inicio          prueba    1
+1084         periodo          prueba    1
+1085         apagado         público    1
+1086           banca         público    1
+1087            buen         público    1
+1088        chatarra         público    1
+1089    constitución         público    1
+1090      desarrollo         público    1
+1091          excusa         público    1
+1092        gravedad         público    1
+1093      Imagínense         público    1
+1094  importantísimo         público    1
+1095   intermediario         público    1
+1096             ley         público    1
+1097          limpio         público    1
+1098          médico         público    1
+1099        nacional         público    1
+1100        original         público    1
+1101            país         público    1
+1102        pandemia         público    1
+1103      particular         público    1
+1104          planta         público    1
+1105     preferencia         público    1
+1106        pretexto         público    1
+1107       prioridad         público    1
+1108           apoyo          pueblo    1
+1109           causa          pueblo    1
+1110    delincuencia          pueblo    1
+1111         demanda          pueblo    1
+1112       educativo          pueblo    1
+1113         espacio          pueblo    1
+1114           falta          pueblo    1
+1115       felicidad          pueblo    1
+1116        fraterno          pueblo    1
+1117        gobierno          pueblo    1
+1118      importante          pueblo    1
+1119   impostergable          pueblo    1
+1120       impunidad          pueblo    1
+1121   indispensable          pueblo    1
+1122           joven          pueblo    1
+1123           justo          pueblo    1
+1124         laboral          pueblo    1
+1125           mundo          pueblo    1
+1126       necesidad          pueblo    1
+1127        obligado          pueblo    1
+1128            país          pueblo    1
+1129         popular          pueblo    1
+1130          férreo          puente    1
+1131     ferrocarril          puente    1
+1132      industrial          puente    1
+1133   modernización          puente    1
+1134          parque          puente    1
+1135          férreo          puerto    1
+1136     ferrocarril          puerto    1
+1137      industrial          puerto    1
+1138   modernización          puerto    1
+1139          parque          puerto    1
+1140          puente          puerto    1
+1141           apoyo           razón    1
+1142        fraterno           razón    1
+1143   indispensable           razón    1
+1144          pueblo           razón    1
+1145          amplio  reconocimiento    1
+1146         austero  reconocimiento    1
+1147           bordo  reconocimiento    1
+1148         dragado  reconocimiento    1
+1149           gente  reconocimiento    1
+1150      inundación  reconocimiento    1
+1151         orgullo  reconocimiento    1
+1152        programa  reconocimiento    1
+1153       económico         recurso    1
+1154          jornal         recurso    1
+1155         natural         recurso    1
+1156           cargo       refinería    1
+1157        director       refinería    1
+1158          efecto       refinería    1
+1159           gusto       refinería    1
+1160            obra       refinería    1
+1161           parte       refinería    1
+1162      patrimonio       refinería    1
+1163       petrolero       refinería    1
+1164 profesionalismo       refinería    1
+1165           anual   reforestación    1
+1166           dólar   reforestación    1
+1167      importante   reforestación    1
+1168       inversión   reforestación    1
+1169            país   reforestación    1
+1170        programa   reforestación    1
+1171           legal         reforma    1
+1172          millón         reforma    1
+1173            peso         reforma    1
+1174           claro           regla    1
+1175        frontera  rehabilitación    1
+1176        gobierno        relación    1
+1177           mundo        relación    1
+1178            país        relación    1
+1179          pueblo        relación    1
+1180          cumbre      relaciones    1
+1181      exteriores      relaciones    1
+1182         apagado       renovable    1
+1183           banca       renovable    1
+1184            buen       renovable    1
+1185           canto       renovable    1
+1186            caso       renovable    1
+1187        comisión       renovable    1
+1188    constitución       renovable    1
+1189      desarrollo       renovable    1
+1190         empresa       renovable    1
+1191          excusa       renovable    1
+1192              fe       renovable    1
+1193         federal       renovable    1
+1194             ley       renovable    1
+1195          limpio       renovable    1
+1196        nacional       renovable    1
+1197         palabra       renovable    1
+1198      particular       renovable    1
+1199        petróleo       renovable    1
+1200          planta       renovable    1
+1201     preferencia       renovable    1
+1202        pretexto       renovable    1
+1203       prioridad       renovable    1
+1204         público       renovable    1
+1205           legal         reparto    1
+1206          millón         reparto    1
+1207            peso         reparto    1
+1208         reforma         reparto    1
+1209           gasto          repito    1
+1210          humano          repito    1
+1211       inversión          repito    1
+1212         pobreza          repito    1
+1213        comisión         rescate    1
+1214         empresa         rescate    1
+1215         federal         rescate    1
+1216         público         rescate    1
+1217          delito        respecto    1
+1218         federal        respecto    1
+1219           fuero        respecto    1
+1220        gobierno        respecto    1
+1221     integración         respeto    1
+1222            país         respeto    1
+1223            obra     responsable    1
+1224   inflacionario       resultado    1
+1225         ingreso       resultado    1
+1226           mismo       resultado    1
+1227        problema       resultado    1
+1228      conciencia      revolución    1
+1229        duradero      revolución    1
+1230          empuje      revolución    1
+1231           gente      revolución    1
+1232           moral      revolución    1
+1233        pacífico      revolución    1
+1234         posible      revolución    1
+1235        programa      revolución    1
+1236           canal           riego    1
+1237        hectárea           riego    1
+1238          amplio             río    1
+1239           bordo             río    1
+1240         dragado             río    1
+1241           gente             río    1
+1242      inundación             río    1
+1243        programa             río    1
+1244  reconocimiento             río    1
+1245           fruto         riqueza    1
+1246        promedio         salario    1
+1247            buen           salud    1
+1248         derecho           salud    1
+1249        gobierno           salud    1
+1250        gratuito           salud    1
+1251        gravedad           salud    1
+1252          médico           salud    1
+1253        original           salud    1
+1254        pandemia           salud    1
+1255         público           salud    1
+1256       capacidad      secretaría    1
+1257      consumidor      secretaría    1
+1258       doméstico      secretaría    1
+1259         embargo      secretaría    1
+1260         energía      secretaría    1
+1261           forma      secretaría    1
+1262             ley      secretaría    1
+1263      manifiesto      secretaría    1
+1264          nación      secretaría    1
+1265          planta      secretaría    1
+1266          cumbre      secretario    1
+1267      exteriores      secretario    1
+1268      relaciones      secretario    1
+1269           causa          seguro    1
+1270    delincuencia          seguro    1
+1271         demanda          seguro    1
+1272       educativo          seguro    1
+1273         espacio          seguro    1
+1274           falta          seguro    1
+1275      importante          seguro    1
+1276   impostergable          seguro    1
+1277       impunidad          seguro    1
+1278           joven          seguro    1
+1279           justo          seguro    1
+1280         laboral          seguro    1
+1281       necesidad          seguro    1
+1282        obligado          seguro    1
+1283         popular          seguro    1
+1284        promedio          seguro    1
+1285          pueblo          seguro    1
+1286         salario          seguro    1
+1287            buen             ser    1
+1288           canto             ser    1
+1289            caso             ser    1
+1290         energía             ser    1
+1291              fe             ser    1
+1292         palabra             ser    1
+1293        petróleo             ser    1
+1294       renovable             ser    1
+1295   intermediario        servidor    1
+1296         público        servidor    1
+1297           ayuda        sindical    1
+1298       dirigente        sindical    1
+1299            buen         sistema    1
+1300           canal         sistema    1
+1301        gravedad         sistema    1
+1302        hectárea         sistema    1
+1303          médico         sistema    1
+1304        original         sistema    1
+1305        pandemia         sistema    1
+1306         público         sistema    1
+1307           riego         sistema    1
+1308           salud         sistema    1
+1309       comercial          social    1
+1310      compromiso          social    1
+1311      conciencia          social    1
+1312      desarrollo          social    1
+1313        duradero          social    1
+1314       económico          social    1
+1315          empuje          social    1
+1316           gente          social    1
+1317           junto          social    1
+1318           moral          social    1
+1319        pacífico          social    1
+1320         posible          social    1
+1321        programa          social    1
+1322        promedio          social    1
+1323      revolución          social    1
+1324         salario          social    1
+1325          seguro          social    1
+1326       contenido        sociedad    1
+1327         escuela        sociedad    1
+1328         familia        sociedad    1
+1329           madre        sociedad    1
+1330   mantenimiento        sociedad    1
+1331           padre        sociedad    1
+1332           apoyo       solidario    1
+1333        fraterno       solidario    1
+1334   indispensable       solidario    1
+1335          pueblo       solidario    1
+1336           razón       solidario    1
+1337         apagado        subsidio    1
+1338           banca        subsidio    1
+1339        comisión        subsidio    1
+1340    constitución        subsidio    1
+1341      desarrollo        subsidio    1
+1342         empresa        subsidio    1
+1343          excusa        subsidio    1
+1344         federal        subsidio    1
+1345             ley        subsidio    1
+1346          limpio        subsidio    1
+1347        nacional        subsidio    1
+1348      particular        subsidio    1
+1349          planta        subsidio    1
+1350     preferencia        subsidio    1
+1351        pretexto        subsidio    1
+1352       prioridad        subsidio    1
+1353         público        subsidio    1
+1354       renovable        subsidio    1
+1355         apagado    subutilizado    1
+1356           banca    subutilizado    1
+1357        comisión    subutilizado    1
+1358    constitución    subutilizado    1
+1359      desarrollo    subutilizado    1
+1360         empresa    subutilizado    1
+1361          excusa    subutilizado    1
+1362         federal    subutilizado    1
+1363             ley    subutilizado    1
+1364          limpio    subutilizado    1
+1365        nacional    subutilizado    1
+1366      particular    subutilizado    1
+1367          planta    subutilizado    1
+1368     preferencia    subutilizado    1
+1369        pretexto    subutilizado    1
+1370       prioridad    subutilizado    1
+1371         público    subutilizado    1
+1372       renovable    subutilizado    1
+1373        subsidio    subutilizado    1
+1374      compromiso      suficiente    1
+1375    especialista      suficiente    1
+1376         general      suficiente    1
+1377     medicamento      suficiente    1
+1378          médico      suficiente    1
+1379            buen             tal    1
+1380           canto             tal    1
+1381            caso             tal    1
+1382         energía             tal    1
+1383              fe             tal    1
+1384         palabra             tal    1
+1385        petróleo             tal    1
+1386       renovable             tal    1
+1387             ser             tal    1
+1388       capacidad          tarifa    1
+1389      consumidor          tarifa    1
+1390       doméstico          tarifa    1
+1391         embargo          tarifa    1
+1392         energía          tarifa    1
+1393           forma          tarifa    1
+1394             ley          tarifa    1
+1395      manifiesto          tarifa    1
+1396          nación          tarifa    1
+1397          planta          tarifa    1
+1398      secretaría          tarifa    1
+1399        comisión         técnico    1
+1400         empresa         técnico    1
+1401         federal         técnico    1
+1402         público         técnico    1
+1403         rescate         técnico    1
+1404    construcción      tecnología    1
+1405        economía      tecnología    1
+1406           nuevo      tecnología    1
+1407           apoyo     tecnológico    1
+1408          avance     tecnológico    1
+1409           apoyo            tema    1
+1410         combate            tema    1
+1411        conjunto            tema    1
+1412         derecho            tema    1
+1413          humano            tema    1
+1414      importante            tema    1
+1415       migración            tema    1
+1416            país            tema    1
+1417            plan            tema    1
+1418       bienestar           temor    1
+1419             paz           temor    1
+1420           apoyo        temporal    1
+1421         combate        temporal    1
+1422        conjunto        temporal    1
+1423         derecho        temporal    1
+1424          humano        temporal    1
+1425      importante        temporal    1
+1426       migración        temporal    1
+1427            país        temporal    1
+1428            plan        temporal    1
+1429            tema        temporal    1
+1430           apoyo        temprano    1
+1431          avance        temprano    1
+1432     tecnológico        temprano    1
+1433     disminución       tendencia    1
+1434          doloso       tendencia    1
+1435           época       tendencia    1
+1436      escritorio       tendencia    1
+1437        gobierno       tendencia    1
+1438       homicidio       tendencia    1
+1439          manera       tendencia    1
+1440        problema       tendencia    1
+1441            real         término    1
+1442           época      territorio    1
+1443      escritorio      territorio    1
+1444        gobierno      territorio    1
+1445        problema      territorio    1
+1446       tendencia      territorio    1
+1447           caída          tiempo    1
+1448       capacidad          tiempo    1
+1449       constante          tiempo    1
+1450    construcción          tiempo    1
+1451    constructivo          tiempo    1
+1452          crisis          tiempo    1
+1453          diésel          tiempo    1
+1454           doble          tiempo    1
+1455        economía          tiempo    1
+1456           época          tiempo    1
+1457      escritorio          tiempo    1
+1458           etapa          tiempo    1
+1459     exploración          tiempo    1
+1460      extracción          tiempo    1
+1461      extranjero          tiempo    1
+1462        gasolina          tiempo    1
+1463        gobierno          tiempo    1
+1464            gran          tiempo    1
+1465        historia          tiempo    1
+1466         infamia          tiempo    1
+1467           mismo          tiempo    1
+1468            modo          tiempo    1
+1469          moneda          tiempo    1
+1470           noble          tiempo    1
+1471        pandemia          tiempo    1
+1472        petróleo          tiempo    1
+1473        problema          tiempo    1
+1474      productivo          tiempo    1
+1475       tendencia          tiempo    1
+1476      territorio          tiempo    1
+1477         capital      trabajador    1
+1478        comisión      trabajador    1
+1479      desarrollo      trabajador    1
+1480         empresa      trabajador    1
+1481         federal      trabajador    1
+1482     fundamental      trabajador    1
+1483       industria      trabajador    1
+1484        informal      trabajador    1
+1485         interno      trabajador    1
+1486           legal      trabajador    1
+1487         mercado      trabajador    1
+1488          millón      trabajador    1
+1489            país      trabajador    1
+1490            peso      trabajador    1
+1491         público      trabajador    1
+1492         reforma      trabajador    1
+1493         reparto      trabajador    1
+1494         rescate      trabajador    1
+1495         técnico      trabajador    1
+1496          amplio         trabajo    1
+1497           bordo         trabajo    1
+1498         dragado         trabajo    1
+1499           fruto         trabajo    1
+1500           gente         trabajo    1
+1501      inundación         trabajo    1
+1502        programa         trabajo    1
+1503  reconocimiento         trabajo    1
+1504             río         trabajo    1
+1505         riqueza         trabajo    1
+1506           época  transformación    1
+1507      escritorio  transformación    1
+1508        gobierno  transformación    1
+1509        problema  transformación    1
+1510       tendencia  transformación    1
+1511      territorio  transformación    1
+1512          tiempo  transformación    1
+1513            buen           trato    1
+1514     colaborador           trato    1
+1515             año       trimestre    1
+1516         primero       trimestre    1
+1517      conciencia         triunfo    1
+1518        duradero         triunfo    1
+1519          empuje         triunfo    1
+1520           gente         triunfo    1
+1521           moral         triunfo    1
+1522        pacífico         triunfo    1
+1523         posible         triunfo    1
+1524        programa         triunfo    1
+1525      revolución         triunfo    1
+1526          social         triunfo    1
+1527            buen          unidad    1
+1528        gravedad          unidad    1
+1529          médico          unidad    1
+1530        original          unidad    1
+1531        pandemia          unidad    1
+1532         público          unidad    1
+1533           salud          unidad    1
+1534         sistema          unidad    1
+1535         derecho       universal    1
+1536        gobierno       universal    1
+1537        gratuito       universal    1
+1538           salud       universal    1
+1539           legal        utilidad    1
+1540          millón        utilidad    1
+1541            peso        utilidad    1
+1542         reforma        utilidad    1
+1543         reparto        utilidad    1
+1544      trabajador        utilidad    1
+1545      antepasado            vano    1
+1546     democrático            vano    1
+1547      movimiento            vano    1
+1548       precursor            vano    1
+1549    protagonista            vano    1
+1550        director           venta    1
+1551         empresa           venta    1
+1552           parte           venta    1
+1553      patrimonio           venta    1
+1554       petrolero           venta    1
+1555       refinería           venta    1
+1556            buen             vez    1
+1557           canto             vez    1
+1558            caso             vez    1
+1559         energía             vez    1
+1560              fe             vez    1
+1561         palabra             vez    1
+1562        petróleo             vez    1
+1563       renovable             vez    1
+1564             ser             vez    1
+1565             tal             vez    1
+1566           apoyo       violencia    1
+1567         combate       violencia    1
+1568        conjunto       violencia    1
+1569         derecho       violencia    1
+1570          humano       violencia    1
+1571      importante       violencia    1
+1572       migración       violencia    1
+1573            país       violencia    1
+1574            plan       violencia    1
+1575            tema       violencia    1
+1576        temporal       violencia    1
+1577            gran          viraje    1
+1578           apoyo            visa    1
+1579         combate            visa    1
+1580        conjunto            visa    1
+1581         derecho            visa    1
+1582          humano            visa    1
+1583      importante            visa    1
+1584       migración            visa    1
+1585            país            visa    1
+1586            plan            visa    1
+1587            tema            visa    1
+1588        temporal            visa    1
+1589       violencia            visa    1
+1590            buen             voz    1
+1591           canto             voz    1
+1592            caso             voz    1
+1593         energía             voz    1
+1594              fe             voz    1
+1595         palabra             voz    1
+1596        petróleo             voz    1
+1597       renovable             voz    1
+1598             ser             voz    1
+1599             tal             voz    1
+1600             vez             voz    1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cooc_grafo<span class="ot">&lt;-</span>igraph<span class="sc">::</span><span class="fu">graph_from_data_frame</span>(cooc[cooc<span class="sc">$</span>cooc<span class="sc">&gt;</span><span class="dv">1</span>,])</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>cooc_grafo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>IGRAPH f7f1555 DN-- 91 104 -- 
++ attr: name (v/c), cooc (e/n)
++ edges from f7f1555 (vertex names):
+ [1] inversión     -&gt;privado   inversión     -&gt;millón   
+ [3] empleo        -&gt;estado    dólar         -&gt;inversión
+ [5] extranjero    -&gt;inversión dólar         -&gt;millón   
+ [7] inversión     -&gt;público   empleo        -&gt;sureste  
+ [9] estado        -&gt;sureste   comisión      -&gt;empresa  
+[11] comisión      -&gt;federal   empresa       -&gt;federal  
+[13] importantísimo-&gt;inversión energía       -&gt;ley      
+[15] inversión     -&gt;país      año           -&gt;periodo  
++ ... omitted several edges</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(cooc_grafo, <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width =</span> cooc, <span class="at">edge_alpha =</span> cooc, <span class="at">edge_colour =</span> <span class="st">"pink"</span>)) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">col =</span> <span class="st">"darkgreen"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_graph</span>(<span class="at">base_family =</span> <span class="st">"Arial Narrow"</span>) <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cooccurrencias dentro de una oración"</span>, <span class="at">subtitle =</span> <span class="st">"Nombres y Adjetivos"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="P17_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="correlaciones" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="correlaciones"><span class="header-section-number">17.4</span> Correlaciones</h2>
+<p>Para hacer una correlación necesitamos un “Document Term Matrix”, <em>dtm</em>. En diferentes paqauetes existen formas para convertir nuestros corpus en este formato. Vamos a utilizar las versiones de <code>{udpipe}</code>, pero una búsqueta en internet nos data que también existen otros paquetes.</p>
+<p>Vamos a crear identificadores únicos a nivel de “doc” y “sentence” y seguiremos haciendo el análisis con sustantivos y adjetivos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>amlo1_udpipe<span class="sc">$</span>id <span class="ot">&lt;-</span> udpipe<span class="sc">::</span><span class="fu">unique_identifier</span>(amlo1_udpipe, <span class="at">fields =</span> <span class="fu">c</span>(<span class="st">"sentence_id"</span>, <span class="st">"doc_id"</span>))</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>dtm<span class="ot">&lt;-</span>amlo1_udpipe <span class="sc">%&gt;%</span> </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(upos <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NOUN"</span>, <span class="st">"ADJ"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Una vez que tenemos nuestro dataframe filtrado, vamos a convertilo en “document term matrix”, primero calculando las frecuencias</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>dtm <span class="ot">&lt;-</span> udpipe<span class="sc">::</span><span class="fu">document_term_frequencies</span>(dtm, <span class="at">document =</span> <span class="st">"id"</span>, <span class="at">term =</span> <span class="st">"lemma"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>dtm <span class="ot">&lt;-</span> udpipe<span class="sc">::</span><span class="fu">document_term_matrix</span>(dtm)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>dtm <span class="ot">&lt;-</span> udpipe<span class="sc">::</span><span class="fu">dtm_remove_lowfreq</span>(dtm, <span class="at">minfreq =</span> <span class="dv">5</span>)<span class="co"># que aparezcan al cinco veces</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>termcorrelations <span class="ot">&lt;-</span> udpipe<span class="sc">::</span><span class="fu">dtm_cor</span>(dtm)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>termcorrelations <span class="co"># es una matriz muy grande. </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                        año       apoyo    bienestar        buen    comisión
+año             1.000000000 -0.07045812 -0.077575797 -0.07045812 -0.07757580
+apoyo          -0.070458122  1.00000000  0.137164100 -0.05050505 -0.05560707
+bienestar      -0.077575797  0.13716410  1.000000000 -0.05560707 -0.06122449
+buen           -0.070458122 -0.05050505 -0.055607067  1.00000000 -0.05560707
+comisión       -0.077575797 -0.05560707 -0.061224490 -0.05560707  1.00000000
+construcción   -0.005577740 -0.07329992 -0.080704669 -0.07329992 -0.08070467
+desarrollo     -0.077575797 -0.05560707 -0.061224490 -0.05560707  0.11564626
+dólar           0.353575760 -0.04779276 -0.052620783 -0.04779276 -0.05262078
+empleo         -0.054033562 -0.03873177 -0.042644451 -0.03873177 -0.04264445
+empresa        -0.019198051 -0.06487491 -0.071428571 -0.06487491  0.44444444
+energía        -0.058695688 -0.04207363 -0.046323901  0.05516320  0.48897451
+estado         -0.059122937 -0.04237988 -0.046661095 -0.04237988  0.11509737
+extranjero     -0.068698717 -0.04924389 -0.054218507 -0.04924389  0.15462315
+federal        -0.084222245 -0.06037130 -0.066470009 -0.06037130  0.92108442
+gasolina       -0.070458122 -0.05050505 -0.055607067 -0.05050505 -0.05560707
+gobierno       -0.024018422  0.05952036 -0.089363320 -0.08116413  0.03971703
+importante     -0.067225498  0.07710060  0.061898446 -0.04818787 -0.05305581
+inversión      -0.018326127 -0.04816659 -0.053032371 -0.04816659 -0.05303237
+manera         -0.070458122 -0.05050505  0.137164100 -0.05050505 -0.05560707
+materia        -0.059122937 -0.04237988 -0.046661095 -0.04237988  0.11509737
+millón          0.344609113 -0.08286836  0.075232748 -0.08286836 -0.09123972
+mundo          -0.077575797  0.13716410 -0.061224490 -0.05560707 -0.06122449
+nacional       -0.070458122 -0.05050505 -0.055607067 -0.05050505  0.13716410
+nuevo          -0.077575797 -0.05560707 -0.061224490 -0.05560707 -0.06122449
+obra           -0.022032414 -0.07445292 -0.081974149  0.18365054 -0.08197415
+país            0.022688212  0.14311551  0.008206928 -0.08944719 -0.09848314
+petróleo       -0.077575797 -0.05560707 -0.061224490  0.13716410 -0.06122449
+planta         -0.046861763 -0.03359096 -0.036984312 -0.03359096  0.47586482
+política       -0.080283951  0.09207728 -0.063361823 -0.05754830 -0.06336182
+programa       -0.080283951  0.09207728  0.348490028 -0.05754830 -0.06336182
+público        -0.005047209 -0.06632793 -0.073028376  0.07163417  0.18013666
+pueblo         -0.090505096  0.27247463  0.238095238 -0.06487491 -0.07142857
+refinería       0.173338924 -0.06508385 -0.071658616 -0.06508385 -0.07165862
+social         -0.070458122 -0.05050505 -0.055607067 -0.05050505 -0.05560707
+tiempo         -0.103867095 -0.07445292 -0.081974149 -0.07445292 -0.08197415
+trabajador     -0.018137454  0.04494666 -0.067482499 -0.06129090  0.02999222
+trabajo        -0.086544512  0.08133599  0.063243327  0.08133599 -0.06830279
+transformación  0.062771781  0.15959596 -0.055607067 -0.05050505 -0.05560707
+               construcción  desarrollo       dólar       empleo      empresa
+año            -0.005577740 -0.07757580  0.35357576 -0.054033562 -0.019198051
+apoyo          -0.073299916 -0.05560707 -0.04779276 -0.038731770 -0.064874912
+bienestar      -0.080704669 -0.06122449 -0.05262078 -0.042644451 -0.071428571
+buen           -0.073299916 -0.05560707 -0.04779276 -0.038731770 -0.064874912
+comisión       -0.080704669  0.11564626 -0.05262078 -0.042644451  0.444444444
+construcción    1.000000000  0.05918342  0.05086654  0.041222795  0.069047328
+desarrollo      0.059183424  1.00000000 -0.05262078  0.080550630  0.238095238
+dólar           0.050866542 -0.05262078  1.00000000 -0.036651745 -0.061390913
+empleo          0.041222795  0.08055063 -0.03665175  1.000000000 -0.049751860
+empresa         0.069047328  0.23809524 -0.06139091 -0.049751860  1.000000000
+energía         0.009498699  0.39975811 -0.03981413 -0.032265803  0.570470261
+estado         -0.061507548  0.27685583 -0.04010394  0.643513219  0.228639367
+extranjero      0.011117485  0.05020232  0.13289439 -0.037764602  0.241305825
+federal        -0.087619188  0.09812239 -0.05712916 -0.046298092  0.402512835
+gasolina       -0.073299916  0.13716410  0.11788881  0.095538366 -0.064874912
+gobierno       -0.015706214  0.03971703 -0.07680534 -0.062243879  0.121633408
+importante     -0.069936910 -0.05305581  0.05320003 -0.036954754  0.005158204
+inversión       0.041943608 -0.05303237  0.19751281 -0.036938427 -0.061871100
+manera         -0.073299916 -0.05560707 -0.04779276 -0.038731770 -0.064874912
+materia        -0.061507548 -0.04666110 -0.04010394 -0.032500668 -0.054437945
+millón         -0.054438013 -0.09123972  0.56543543 -0.063550838 -0.057891867
+mundo          -0.080704669 -0.06122449  0.09939481 -0.042644451  0.031746032
+nacional       -0.073299916  0.52270643 -0.04779276  0.095538366  0.272474630
+nuevo           0.059183424 -0.06122449 -0.05262078 -0.042644451  0.031746032
+obra            0.266539063  0.03643296 -0.07045455 -0.057097129  0.042505114
+país           -0.045436349  0.11489700 -0.08464358  0.005716339  0.009574750
+petróleo       -0.080704669 -0.06122449  0.09939481 -0.042644451 -0.071428571
+planta         -0.048751843  0.34765254 -0.03178701 -0.025760536  0.704756619
+política       -0.083522051 -0.06336182 -0.05445776 -0.044133159 -0.073922127
+programa       -0.083522051 -0.06336182  0.18152588 -0.044133159 -0.073922127
+público         0.003850571  0.05355414 -0.06276590 -0.050866165  0.210159438
+pueblo         -0.094155447 -0.07142857 -0.06139091 -0.049751860 -0.083333333
+refinería      -0.094458686 -0.07165862 -0.06158863 -0.049912091  0.083601718
+social         -0.073299916  0.13716410 -0.04779276 -0.038731770 -0.064874912
+tiempo         -0.014407517 -0.08197415 -0.07045455  0.025376502 -0.095636507
+trabajador     -0.011860510  0.12746694 -0.05799937  0.020890363  0.091851179
+trabajo        -0.090035121 -0.06830279 -0.05870439  0.227301218 -0.079686592
+transformación -0.073299916 -0.05560707 -0.04779276 -0.038731770 -0.064874912
+                    energía      estado   extranjero     federal    gasolina
+año            -0.058695688 -0.05912294 -0.068698717 -0.08422224 -0.07045812
+apoyo          -0.042073626 -0.04237988 -0.049243892 -0.06037130 -0.05050505
+bienestar      -0.046323901 -0.04666110 -0.054218507 -0.06647001 -0.05560707
+buen            0.055163198 -0.04237988 -0.049243892 -0.06037130 -0.05050505
+comisión        0.488974510  0.11509737  0.154623150  0.92108442 -0.05560707
+construcción    0.009498699 -0.06150755  0.011117485 -0.08761919 -0.07329992
+desarrollo      0.399758108  0.27685583  0.050202321  0.09812239  0.13716410
+dólar          -0.039814132 -0.04010394  0.132894389 -0.05712916  0.11788881
+empleo         -0.032265803  0.64351322 -0.037764602 -0.04629809  0.09553837
+empresa         0.570470261  0.22863937  0.241305825  0.40251283 -0.06487491
+energía         1.000000000  0.29106921  0.169663059  0.44784528 -0.04207363
+estado          0.291069215  1.00000000  0.054177231  0.09987034 -0.04237988
+extranjero      0.169663059  0.05417723  1.000000000  0.13548012  0.06456421
+federal         0.447845280  0.09987034  0.135480120  1.00000000 -0.06037130
+gasolina       -0.042073626 -0.04237988  0.064564214 -0.06037130  1.00000000
+gobierno        0.192826273  0.04994482 -0.002931014  0.14321954 -0.08116413
+importante      0.133810949 -0.04043549 -0.046984579 -0.05760146 -0.04818787
+inversión      -0.040125550 -0.04041763  0.746202938 -0.05757602 -0.04816659
+manera         -0.042073626 -0.04237988 -0.049243892 -0.06037130 -0.05050505
+materia         0.127882162 -0.03556188 -0.041321617  0.09987034  0.31022074
+millón         -0.069034133 -0.06953664  0.017482837 -0.09905684 -0.08286836
+mundo          -0.046323901 -0.04666110  0.259043979 -0.06647001 -0.05560707
+nacional        0.346873672  0.31022074  0.405988534  0.11901771  0.15959596
+nuevo          -0.046323901 -0.04666110 -0.054218507 -0.06647001 -0.05560707
+obra           -0.002297170 -0.06247506 -0.002688658 -0.08899743 -0.07445292
+país           -0.074514680 -0.07505708  0.353699648 -0.10692086  0.25939686
+petróleo        0.042892501  0.11509737  0.050202321 -0.06647001  0.32993527
+planta          0.877429027  0.32358560  0.194329475  0.43709420 -0.03359096
+política        0.090555332 -0.04829002 -0.056111263 -0.06879046 -0.05754830
+programa       -0.047941058 -0.04829002 -0.056111263 -0.06879046 -0.05754830
+público         0.200145893  0.06010978  0.234255132  0.15630514 -0.06632793
+pueblo         -0.054044551 -0.05443794 -0.063254925 -0.07754834 -0.06487491
+refinería      -0.054218608  0.03276796 -0.063458645 -0.07779810 -0.06508385
+social         -0.042073626 -0.04237988  0.292180428 -0.06037130 -0.05050505
+tiempo         -0.002297170  0.04581504 -0.002688658 -0.08899743  0.05459881
+trabajador     -0.051058859 -0.05143052 -0.059760406  0.01744385 -0.06129090
+trabajo        -0.051679513  0.18855728 -0.060486833 -0.07415476 -0.06203593
+transformación  0.055163198 -0.04237988 -0.049243892 -0.06037130 -0.05050505
+                   gobierno   importante   inversión      manera     materia
+año            -0.024018422 -0.067225498 -0.01832613 -0.07045812 -0.05912294
+apoyo           0.059520359  0.077100600 -0.04816659 -0.05050505 -0.04237988
+bienestar      -0.089363320  0.061898446 -0.05303237  0.13716410 -0.04666110
+buen           -0.081164126 -0.048187875 -0.04816659 -0.05050505 -0.04237988
+comisión        0.039717031 -0.053055811 -0.05303237 -0.05560707  0.11509737
+construcción   -0.015706214 -0.069936910  0.04194361 -0.07329992 -0.06150755
+desarrollo      0.039717031 -0.053055811 -0.05303237 -0.05560707 -0.04666110
+dólar          -0.076805342  0.053200030  0.19751281 -0.04779276 -0.04010394
+empleo         -0.062243879 -0.036954754 -0.03693843 -0.03873177 -0.03250067
+empresa         0.121633408  0.005158204 -0.06187110 -0.06487491 -0.05443794
+energía         0.192826273  0.133810949 -0.04012555 -0.04207363  0.12788216
+estado          0.049944823 -0.040435490 -0.04041763 -0.04237988 -0.03556188
+extranjero     -0.002931014 -0.046984579  0.74620294 -0.04924389 -0.04132162
+federal         0.143219536 -0.057601464 -0.05757602 -0.06037130  0.09987034
+gasolina       -0.081164126 -0.048187875 -0.04816659 -0.05050505  0.31022074
+gobierno        1.000000000  0.006453359 -0.02580203 -0.08116413 -0.06810658
+importante      0.006453359  1.000000000  0.00000000 -0.04818787 -0.04043549
+inversión      -0.025802032  0.000000000  1.00000000 -0.04816659 -0.04041763
+manera         -0.081164126 -0.048187875 -0.04816659  1.00000000 -0.04237988
+materia        -0.068106577 -0.040435490 -0.04041763 -0.04237988  1.00000000
+millón         -0.133173572  0.083227740  0.12062691  0.09856973 -0.06953664
+mundo           0.039717031  0.061898446  0.37122660 -0.05560707 -0.04666110
+nacional        0.059520359 -0.048187875  0.33716610  0.15959596 -0.04237988
+nuevo           0.168797383  0.061898446 -0.05303237 -0.05560707 -0.04666110
+obra           -0.033235984  0.005919751 -0.02366854 -0.07445292 -0.06247506
+país           -0.065883621 -0.016001878  0.34122257 -0.08944719  0.12009132
+petróleo        0.039717031 -0.053055811 -0.05303237 -0.05560707  0.11509737
+planta          0.226725809 -0.032049800 -0.03203564 -0.03359096  0.08907060
+política       -0.092482974  0.480444804 -0.05488372 -0.05754830 -0.04829002
+programa       -0.092482974  0.212768413  0.05488372  0.09207728 -0.04829002
+público         0.078167674 -0.063284802  0.29098148 -0.06632793 -0.05565721
+pueblo          0.121633408  0.038686529  0.00000000 -0.06487491 -0.05443794
+refinería      -0.034864327  0.000000000 -0.06207036 -0.06508385 -0.05461327
+social          0.059520359  0.077100600  0.33716610 -0.05050505 -0.04237988
+tiempo          0.053177574  0.159833282 -0.07100563 -0.07445292  0.04581504
+trabajador     -0.098497516 -0.058478866 -0.05845303 -0.06129090 -0.05143052
+trabajo        -0.099694818  0.026306540 -0.05916357 -0.06203593 -0.05205569
+transformación  0.200204843  0.327677549 -0.04816659 -0.05050505 -0.04237988
+                     millón       mundo    nacional       nuevo         obra
+año             0.344609113 -0.07757580 -0.07045812 -0.07757580 -0.022032414
+apoyo          -0.082868360  0.13716410 -0.05050505 -0.05560707 -0.074452920
+bienestar       0.075232748 -0.06122449 -0.05560707 -0.06122449 -0.081974149
+buen           -0.082868360 -0.05560707 -0.05050505 -0.05560707  0.183650535
+comisión       -0.091239716 -0.06122449  0.13716410 -0.06122449 -0.081974149
+construcción   -0.054438013 -0.08070467 -0.07329992  0.05918342  0.266539063
+desarrollo     -0.091239716 -0.06122449  0.52270643 -0.06122449  0.036432955
+dólar           0.565435434  0.09939481 -0.04779276 -0.05262078 -0.070454550
+empleo         -0.063550838 -0.04264445  0.09553837 -0.04264445 -0.057097129
+empresa        -0.057891867  0.03174603  0.27247463  0.03174603  0.042505114
+energía        -0.069034133 -0.04632390  0.34687367 -0.04632390 -0.002297170
+estado         -0.069536637 -0.04666110  0.31022074 -0.04666110 -0.062475058
+extranjero      0.017482837  0.25904398  0.40598853 -0.05421851 -0.002688658
+federal        -0.099056845 -0.06647001  0.11901771 -0.06647001 -0.088997433
+gasolina       -0.082868360 -0.05560707  0.15959596 -0.05560707 -0.074452920
+gobierno       -0.133173572  0.03971703  0.05952036  0.16879738 -0.033235984
+importante      0.083227740  0.06189845 -0.04818787  0.06189845  0.005919751
+inversión       0.120626907  0.37122660  0.33716610 -0.05303237 -0.023668543
+manera          0.098569733 -0.05560707  0.15959596 -0.05560707 -0.074452920
+materia        -0.069536637 -0.04666110 -0.04237988 -0.04666110 -0.062475058
+millón          1.000000000  0.15846898 -0.08286836 -0.09123972 -0.122161869
+mundo           0.158468981  1.00000000  0.13716410 -0.06122449 -0.081974149
+nacional       -0.082868360  0.13716410  1.00000000 -0.05560707 -0.074452920
+nuevo          -0.091239716 -0.06122449 -0.05560707  1.00000000  0.036432955
+obra           -0.122161869 -0.08197415 -0.07445292  0.03643296  1.000000000
+país           -0.096555508  0.43496721  0.25939686 -0.09848314 -0.060435911
+petróleo       -0.091239716 -0.06122449 -0.05560707 -0.06122449 -0.081974149
+planta         -0.055115823  0.09122797  0.38562418 -0.03698431 -0.049518706
+política       -0.094424875  0.07392213 -0.05754830  0.07392213 -0.084835848
+programa        0.422427070  0.21120608 -0.05754830 -0.06336182  0.098975156
+público        -0.108830442  0.05355414  0.20959627 -0.07302838 -0.013037134
+pueblo         -0.106446336  0.23809524 -0.06487491  0.08333333  0.007969709
+refinería      -0.106789159 -0.07165862 -0.06508385 -0.07165862  0.031981505
+social          0.007850687  0.13716410  0.15959596  0.13716410 -0.074452920
+tiempo         -0.122161869 -0.08197415 -0.07445292 -0.08197415 -0.030487805
+trabajador     -0.008821553 -0.06748250 -0.06129090 -0.06748250 -0.090353067
+trabajo        -0.039881906 -0.06830279 -0.06203593  0.19478945  0.348870033
+transformación -0.082868360 -0.05560707 -0.05050505 -0.05560707 -0.074452920
+                       país    petróleo      planta     política     programa
+año             0.022688212 -0.07757580 -0.04686176 -0.080283951 -0.080283951
+apoyo           0.143115507 -0.05560707 -0.03359096  0.092077277  0.092077277
+bienestar       0.008206928 -0.06122449 -0.03698431 -0.063361823  0.348490028
+buen           -0.089447192  0.13716410 -0.03359096 -0.057548298 -0.057548298
+comisión       -0.098483141 -0.06122449  0.47586482 -0.063361823 -0.063361823
+construcción   -0.045436349 -0.08070467 -0.04875184 -0.083522051 -0.083522051
+desarrollo      0.114896998 -0.06122449  0.34765254 -0.063361823 -0.063361823
+dólar          -0.084643579  0.09939481 -0.03178701 -0.054457763  0.181525875
+empleo          0.005716339 -0.04264445 -0.02576054 -0.044133159 -0.044133159
+empresa         0.009574750 -0.07142857  0.70475662 -0.073922127 -0.073922127
+energía        -0.074514680  0.04289250  0.87742903  0.090555332 -0.047941058
+estado         -0.075057077  0.11509737  0.32358560 -0.048290024 -0.048290024
+extranjero      0.353699648  0.05020232  0.19432947 -0.056111263 -0.056111263
+federal        -0.106920863 -0.06647001  0.43709420 -0.068790463 -0.068790463
+gasolina        0.259396856  0.32993527 -0.03359096 -0.057548298 -0.057548298
+gobierno       -0.065883621  0.03971703  0.22672581 -0.092482974 -0.092482974
+importante     -0.016001878 -0.05305581 -0.03204980  0.480444804  0.212768413
+inversión       0.341222574 -0.05303237 -0.03203564 -0.054883720  0.054883720
+manera         -0.089447192 -0.05560707 -0.03359096 -0.057548298  0.092077277
+materia         0.120091323  0.11509737  0.08907060 -0.048290024 -0.048290024
+millón         -0.096555508 -0.09123972 -0.05511582 -0.094424875  0.422427070
+mundo           0.434967206 -0.06122449  0.09122797  0.073922127  0.211206077
+nacional        0.259396856 -0.05560707  0.38562418 -0.057548298 -0.057548298
+nuevo          -0.098483141 -0.06122449 -0.03698431  0.073922127 -0.063361823
+obra           -0.060435911 -0.08197415 -0.04951871 -0.084835848  0.098975156
+país            1.000000000 -0.09848314 -0.05949141 -0.019110219 -0.019110219
+petróleo       -0.098483141  1.00000000 -0.03698431 -0.063361823 -0.063361823
+planta         -0.059491410 -0.03698431  1.00000000 -0.038275427 -0.038275427
+política       -0.019110219 -0.06336182 -0.03827543  1.000000000 -0.065573770
+programa       -0.019110219 -0.06336182 -0.03827543 -0.065573770  1.000000000
+público         0.035241113 -0.07302838  0.23116139 -0.075577781 -0.075577781
+pueblo          0.071810624 -0.07142857 -0.04314836 -0.073922127 -0.073922127
+refinería      -0.057633519  0.11943103 -0.04328733  0.000000000 -0.074160202
+social          0.143115507 -0.05560707 -0.03359096 -0.057548298  0.092077277
+tiempo         -0.131860170  0.27324716 -0.04951871  0.374691663  0.007069654
+trabajador      0.067843445 -0.06748250 -0.04076463  0.005819858 -0.069838298
+trabajo        -0.030519167 -0.06830279 -0.04126015 -0.070687229  0.133520321
+transformación -0.089447192 -0.05560707 -0.03359096  0.391328426 -0.057548298
+                    público       pueblo    refinería       social       tiempo
+año            -0.005047209 -0.090505096  0.173338924 -0.070458122 -0.103867095
+apoyo          -0.066327933  0.272474630 -0.065083849 -0.050505051 -0.074452920
+bienestar      -0.073028376  0.238095238 -0.071658616 -0.055607067 -0.081974149
+buen            0.071634167 -0.064874912 -0.065083849 -0.050505051 -0.074452920
+comisión        0.180136661 -0.071428571 -0.071658616 -0.055607067 -0.081974149
+construcción    0.003850571 -0.094155447 -0.094458686 -0.073299916 -0.014407517
+desarrollo      0.053554142 -0.071428571 -0.071658616  0.137164100 -0.081974149
+dólar          -0.062765902 -0.061390913 -0.061588630 -0.047792761 -0.070454550
+empleo         -0.050866165 -0.049751860 -0.049912091 -0.038731770  0.025376502
+empresa         0.210159438 -0.083333333  0.083601718 -0.064874912 -0.095636507
+energía         0.200145893 -0.054044551 -0.054218608 -0.042073626 -0.002297170
+estado          0.060109782 -0.054437945  0.032767961 -0.042379882  0.045815043
+extranjero      0.234255132 -0.063254925 -0.063458645  0.292180428 -0.002688658
+federal         0.156305138 -0.077548344 -0.077798098 -0.060371304 -0.088997433
+gasolina       -0.066327933 -0.064874912 -0.065083849 -0.050505051  0.054598808
+gobierno        0.078167674  0.121633408 -0.034864327  0.059520359  0.053177574
+importante     -0.063284802  0.038686529  0.000000000  0.077100600  0.159833282
+inversión       0.290981478  0.000000000 -0.062070363  0.337166101 -0.071005630
+manera         -0.066327933 -0.064874912 -0.065083849 -0.050505051 -0.074452920
+materia        -0.055657206 -0.054437945 -0.054613268 -0.042379882  0.045815043
+millón         -0.108830442 -0.106446336 -0.106789159  0.007850687 -0.122161869
+mundo           0.053554142  0.238095238 -0.071658616  0.137164100 -0.081974149
+nacional        0.209596267 -0.064874912 -0.065083849  0.159595960 -0.074452920
+nuevo          -0.073028376  0.083333333 -0.071658616  0.137164100 -0.081974149
+obra           -0.013037134  0.007969709  0.031981505 -0.074452920 -0.030487805
+país            0.035241113  0.071810624 -0.057633519  0.143115507 -0.131860170
+petróleo       -0.073028376 -0.071428571  0.119431026 -0.055607067  0.273247163
+planta          0.231161394 -0.043148364 -0.043287329 -0.033590956 -0.049518706
+política       -0.075577781 -0.073922127  0.000000000 -0.057548298  0.374691663
+programa       -0.075577781 -0.073922127 -0.074160202  0.092077277  0.007069654
+público         1.000000000  0.025559932 -0.085474168  0.071634167 -0.097778503
+pueblo          0.025559932  1.000000000 -0.083601718 -0.064874912 -0.095636507
+refinería      -0.085474168 -0.083601718  1.000000000 -0.065083849  0.095944516
+social          0.071634167 -0.064874912 -0.065083849  1.000000000 -0.074452920
+tiempo         -0.097778503 -0.095636507  0.095944516 -0.074452920  1.000000000
+trabajador     -0.010732388 -0.078729582  0.078983140  0.044946657 -0.025098074
+trabajo        -0.081471354  0.150519118 -0.008882581 -0.062035928 -0.003387088
+transformación -0.066327933  0.103799859  0.039050310 -0.050505051  0.183650535
+                 trabajador      trabajo transformación
+año            -0.018137454 -0.086544512     0.06277178
+apoyo           0.044946657  0.081335994     0.15959596
+bienestar      -0.067482499  0.063243327    -0.05560707
+buen           -0.061290897  0.081335994    -0.05050505
+comisión        0.029992222 -0.068302793    -0.05560707
+construcción   -0.011860510 -0.090035121    -0.07329992
+desarrollo      0.127466943 -0.068302793    -0.05560707
+dólar          -0.057999371 -0.058704392    -0.04779276
+empleo          0.020890363  0.227301218    -0.03873177
+empresa         0.091851179 -0.079686592    -0.06487491
+energía        -0.051058859 -0.051679513     0.05516320
+estado         -0.051430520  0.188557282    -0.04237988
+extranjero     -0.059760406 -0.060486833    -0.04924389
+federal         0.017443854 -0.074154759    -0.06037130
+gasolina       -0.061290897 -0.062035928    -0.05050505
+gobierno       -0.098497516 -0.099694818     0.20020484
+importante     -0.058478866  0.026306540     0.32767755
+inversión      -0.058453030 -0.059163565    -0.04816659
+manera         -0.061290897 -0.062035928    -0.05050505
+materia        -0.051430520 -0.052055691    -0.04237988
+millón         -0.008821553 -0.039881906    -0.08286836
+mundo          -0.067482499 -0.068302793    -0.05560707
+nacional       -0.061290897 -0.062035928    -0.05050505
+nuevo          -0.067482499  0.194789447    -0.05560707
+obra           -0.090353067  0.348870033    -0.07445292
+país            0.067843445 -0.030519167    -0.08944719
+petróleo       -0.067482499 -0.068302793    -0.05560707
+planta         -0.040764632 -0.041260153    -0.03359096
+política        0.005819858 -0.070687229     0.39132843
+programa       -0.069838298  0.133520321    -0.05754830
+público        -0.010732388 -0.081471354    -0.06632793
+pueblo         -0.078729582  0.150519118     0.10379986
+refinería       0.078983140 -0.008882581     0.03905031
+social          0.044946657 -0.062035928    -0.05050505
+tiempo         -0.025098074 -0.003387088     0.18365054
+trabajador      1.000000000  0.142203688    -0.06129090
+trabajo         0.142203688  1.000000000    -0.06203593
+transformación -0.061290897 -0.062035928     1.00000000</code></pre>
+</div>
+</div>
+<p>Vamos a ordenar esto. Porque quizás queremos solo los pares de términos y su correlación, parecido a lo que teníamos con las cooocurrencias anteriores</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as_cooccurrence</span>(termcorrelations)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>y <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          term1 term2        cooc
+1           año   año  1.00000000
+2         apoyo   año -0.07045812
+3     bienestar   año -0.07757580
+4          buen   año -0.07045812
+5      comisión   año -0.07757580
+6  construcción   año -0.00557774
+7    desarrollo   año -0.07757580
+8         dólar   año  0.35357576
+9        empleo   año -0.05403356
+10      empresa   año -0.01919805</code></pre>
+</div>
+</div>
+<p>Como vemos, se repite acción en el segundo término, y habrán pares iguales, como están en orden alfabético, podemos hacer:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a> y <span class="sc">%&lt;&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term1 <span class="sc">&lt;</span> term2) <span class="sc">%&gt;%</span> <span class="co"># se queda con los pares que aparezcan primero alfabéticamente, para que no se dupliquen</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">abs</span>(cooc) <span class="sc">&gt;</span> <span class="fl">0.2</span>) <span class="co"># las correlaciones que en su valor absoluto superen el 0.2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Vamos a ordenar, y revisemos los primeros</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>y <span class="sc">%&lt;&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">arrange</span>(<span class="sc">-</span>(<span class="fu">abs</span>(cooc)))</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>y <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        term1          term2      cooc
+1    comisión        federal 0.9210844
+2     energía         planta 0.8774290
+3  extranjero      inversión 0.7462029
+4     empresa         planta 0.7047566
+5      empleo         estado 0.6435132
+6     empresa        energía 0.5704703
+7       dólar         millón 0.5654354
+8  desarrollo       nacional 0.5227064
+9    comisión        energía 0.4889745
+10 importante       política 0.4804448
+11   comisión         planta 0.4758648
+12    energía        federal 0.4478453
+13   comisión        empresa 0.4444444
+14    federal         planta 0.4370942
+15      mundo           país 0.4349672
+16     millón       programa 0.4224271
+17 extranjero       nacional 0.4059885
+18    empresa        federal 0.4025128
+19 desarrollo        energía 0.3997581
+20   política transformación 0.3913284
+21   nacional         planta 0.3856242
+22   política         tiempo 0.3746917
+23  inversión          mundo 0.3712266
+24 extranjero           país 0.3536996
+25        año          dólar 0.3535758</code></pre>
+</div>
+</div>
+</section>
+<section id="modelos" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="modelos"><span class="header-section-number">17.5</span> Modelos</h2>
+<p>El algoritmo RAKE, que es el acrónimo de <em>R</em>apid <em>A</em>utomatic <em>K</em>eyword <em>E</em>xtraction. Este algoritmo busca palabras clave buscando una secuencia contigua de palabras que no contengan palabras irrelevantes. Es decir, al calcular una puntuación para cada palabra que forma parte de cualquier palabra clave candidata, esto se hace entre las palabras de las palabras clave candidatas, el algoritmo observa cuántas veces aparece cada palabra y cuántas veces se produce con otras palabras, cada palabra obtiene un puntaje que es la razón del grado de la palabra (cuántas veces se produce con otras palabras) a la frecuencia de la palabra. Se calcula un puntaje RAKE para la palabra clave candidata completa sumando los puntajes de cada una de las palabras que definen la palabra clave.</p>
+<p>Este es un ejemplo de cómo poder utilizar el modelo entrenado en español:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>rake<span class="ot">&lt;-</span><span class="fu">keywords_rake</span>(<span class="at">x =</span>amlo1_udpipe,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">term =</span> <span class="st">"lemma"</span>,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">group =</span> <span class="st">"doc_id"</span>, </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">relevant =</span> amlo1_udpipe<span class="sc">$</span>upos <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"NOUN"</span>, <span class="st">"ADJ"</span>),</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ngram_max =</span> <span class="dv">2</span>,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">n_min =</span> <span class="dv">2</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>rake <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  keyword ngram freq      rake
+1        comisión federal     2    5 2.3095238
+2     desarrollo nacional     2    3 2.2333333
+3            adulto mayor     2    2 2.0000000
+4          medio ambiente     2    2 2.0000000
+5         mercado interno     2    3 2.0000000
+6           materia primo     2    2 2.0000000
+7  circunstancia especial     2    2 1.7500000
+8       inversión público     2    3 1.6692308
+9           barril diario     2    2 1.5000000
+10             vía férreo     2    2 1.5000000
+11 problema inflacionario     2    2 1.5000000
+12      primero trimestre     2    2 1.5000000
+13         energía limpio     2    2 1.4444444
+14   inversión extranjero     2    4 1.4358974
+15        empresa público     2    2 1.4000000
+16              inversión     1    4 0.7692308
+17              industria     1    2 0.7500000
+18             extranjero     1    3 0.6666667
+19               política     1    5 0.6250000
+20                 barril     1    2 0.5000000
+21                empresa     1    6 0.5000000
+22                  mismo     1    2 0.5000000
+23                periodo     1    2 0.5000000
+24                primero     1    2 0.5000000
+25               problema     1    2 0.5000000</code></pre>
+</div>
+</div>
+</section>
+<section id="sujeto-verbo-y-objeto-svo" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="sujeto-verbo-y-objeto-svo"><span class="header-section-number">17.6</span> Sujeto, Verbo y Objeto (SVO)</h2>
+<p>Utilizaremos el paquete en desarrollo argentino <code>{ACEP}</code> <a href="https://github.com/agusnieto77/ACEP/" class="uri">https://github.com/agusnieto77/ACEP/</a> Esta basado en <code>{udpipe}</code> y tokeniza también nuestros textos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>texto_svo <span class="ot">&lt;-</span> ACEP<span class="sc">::</span><span class="fu">acep_svo</span>(amlo1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>texto_svo<span class="sc">$</span>acep_list_svo <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 7
+   doc_id parrafo_id oracion_id eventos                      sujeto verbo objeto
+    &lt;int&gt;      &lt;int&gt;      &lt;int&gt; &lt;chr&gt;                        &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; 
+ 1      7          1          1 NA -&gt; NA -&gt; NA               NA     NA    NA    
+ 2      8          1          2 refinería -&gt; construyó -&gt; NA refin… cons… NA    
+ 3      8          1          3 crudo -&gt; apostó -&gt; petróleo  crudo  apos… petró…
+ 4      8          1          4 gobernantes -&gt; buscaban -&gt; … gober… busc… indus…
+ 5      8          1          6 NA -&gt; NA -&gt; Constitución     NA     NA    Const…
+ 6      9          1          2 objetivo -&gt; dejar -&gt; crudo   objet… dejar crudo 
+ 7      9          1          3 cual capacidad -&gt; NA -&gt; ref… cual … NA    refin…
+ 8      9          1          4 año -&gt; pasamos -&gt; barriles   año    pasa… barri…
+ 9      9          1          5 NA -&gt; NA -&gt; NA               NA     NA    NA    
+10      9          1          6 NA -&gt; NA -&gt; tendencia        NA     NA    tende…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>texto_svo<span class="sc">$</span>acep_pro_svo <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 11
+   doc_id parrafo…¹ oraci…² oracion eventos sujeto predi…³ verbo lemma…⁴ conju…⁵
+    &lt;int&gt;     &lt;int&gt;   &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;  
+ 1      7         1       1 Nos da… NA -&gt; … ""     conmem… ""    ""      NA     
+ 2      8         1       2 En los… refine… "neop… constr… "con… "const… pasado 
+ 3      8         1       3 Durant… crudo … ""     apostó… "apo… "apost… pasado 
+ 4      8         1       4 De man… gobern… "corr… buscab… "bus… "busca… NA     
+ 5      8         1       6 que de… NA -&gt; … ""     constr… ""    ""      pasado 
+ 6      9         1       2 En mat… objeti… "obje… dejar … "dej… "dejar" NA     
+ 7      9         1       3 Por es… cual c… ""     invert… ""    ""      NA     
+ 8      9         1       4 es dec… año -&gt;… ""     pasamo… "pas… "pasam… presen…
+ 9      9         1       5 a ello… NA -&gt; … ""     explic… ""    ""      pasado 
+10      9         1       6 Uno de… NA -&gt; … ""     hay te… ""    ""      presen…
+# … with 1 more variable: sust_pred &lt;chr&gt;, and abbreviated variable names
+#   ¹​parrafo_id, ²​oracion_id, ³​predicado, ⁴​lemma_verb, ⁵​conjugaciones</code></pre>
+</div>
+</div>
+<p>Este paquete tiene algunos “atajos”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>amlo1_udpipe <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(upos<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"NOUN"</span>,<span class="st">"ADJ"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    ACEP<span class="sc">::</span><span class="fu">acep_token_plot</span>(lemma,</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">u =</span> <span class="dv">25</span>,</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">frec =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="P17_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>amlo1_udpipe <span class="sc">%&gt;%</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(upos<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">"NOUN"</span>,<span class="st">"ADJ"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    ACEP<span class="sc">::</span><span class="fu">acep_token_table</span>(lemma,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">u =</span> <span class="dv">25</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          token frec       prop
+1        millón   19 0.07661290
+2          país   16 0.06451613
+3     inversión   13 0.05241935
+4     refinería   13 0.05241935
+5       empresa   12 0.04838710
+6      gobierno   12 0.04838710
+7          obra   12 0.04838710
+8        tiempo   12 0.04838710
+9    trabajador   12 0.04838710
+10          año   11 0.04435484
+11 construcción   10 0.04032258
+12      público   10 0.04032258
+13      energía    9 0.03629032
+14   extranjero    9 0.03629032
+15      trabajo    9 0.03629032
+16   importante    8 0.03225806
+17     política    8 0.03225806
+18     programa    8 0.03225806
+19       pueblo    8 0.03225806
+20      federal    7 0.02822581
+21    bienestar    6 0.02419355
+22     comisión    6 0.02419355
+23   desarrollo    6 0.02419355
+24        dólar    6 0.02419355
+25       empleo    6 0.02419355</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./P16.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Análisis de texto (II)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
