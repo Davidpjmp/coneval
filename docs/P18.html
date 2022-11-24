@@ -274,6 +274,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#paso-3---puntaje-de-los-pares" id="toc-paso-3---puntaje-de-los-pares" class="nav-link" data-scroll-target="#paso-3---puntaje-de-los-pares"><span class="toc-section-number">18.3.3</span>  Paso 3 - puntaje de los pares —–</a></li>
   <li><a href="#paso-4---seleccionar-pares" id="toc-paso-4---seleccionar-pares" class="nav-link" data-scroll-target="#paso-4---seleccionar-pares"><span class="toc-section-number">18.3.4</span>  Paso 4 - seleccionar pares</a></li>
   <li><a href="#paso-5-enlazar-pares" id="toc-paso-5-enlazar-pares" class="nav-link" data-scroll-target="#paso-5-enlazar-pares"><span class="toc-section-number">18.3.5</span>  Paso 5: enlazar pares</a></li>
+  <li><a href="#otra-opción-stringdist" id="toc-otra-opción-stringdist" class="nav-link" data-scroll-target="#otra-opción-stringdist"><span class="toc-section-number">18.3.6</span>  Otra opción <code>{stringdist}</code></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -409,9 +410,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  [5] &lt;a href="https://lopezobrador.org.mx/semblanza/"&gt;Biografía&lt;/a&gt;
  [6] &lt;a href="https://lopezobrador.org.mx/conferencia-en-vivo/"&gt;Conferencia e ...
  [7] &lt;a href="https://lopezobrador.org.mx/tercer-informe-de-gobierno/" target ...
- [8] &lt;a href="https://lopezobrador.org.mx/2022/11/23/presidente-recibe-visita ...
- [9] &lt;a href="https://lopezobrador.org.mx/2022/11/23/ceremonia-de-bienvenida- ...
-[10] &lt;a href="https://lopezobrador.org.mx/2022/11/23/presidente-conmemora-dia ...
+ [8] &lt;a href="https://lopezobrador.org.mx/2022/11/24/reforma-a-leyes-secundar ...
+ [9] &lt;a href="https://lopezobrador.org.mx/2022/11/24/procuramos-tranquilidad- ...
+[10] &lt;a href="https://lopezobrador.org.mx/2022/11/23/presidente-destaca-relac ...
 [11] &lt;a class="logo" href="https://lopezobrador.org.mx/"&gt;AMLO&lt;/a&gt;
 [12] &lt;a href="https://coronavirus.gob.mx/"&gt;Coronavirus COVID-19&lt;/a&gt;
 [13] &lt;a href="https://lopezobrador.org.mx/secciones/comunicados/"&gt;Sala de Pre ...
@@ -1259,6 +1260,62 @@ Matching probability: 0.9990169.</code></pre>
 Empty data.table (0 rows and 2 cols): ID_INDICADOR22,dupe_count</code></pre>
 </div>
 </div>
+</section>
+<section id="otra-opción-stringdist" class="level3" data-number="18.3.6">
+<h3 data-number="18.3.6" class="anchored" data-anchor-id="otra-opción-stringdist"><span class="header-section-number">18.3.6</span> Otra opción <code>{stringdist}</code></h3>
+<p>Una dependencia de <code>{reclin2}</code> es el paquete <code>{stringdist}</code>. Como su nombre lo indica sirve para calcular distancias entre cadenas (<em>strings</em>)</p>
+<p>Más sobre este paquete acá:</p>
+<ul>
+<li><p><a href="https://github.com/markvanderloo/stringdist" class="uri">https://github.com/markvanderloo/stringdist</a></p></li>
+<li><p><a href="https://journal.r-project.org/archive/2014-1/loo.pdf" class="uri">https://journal.r-project.org/archive/2014-1/loo.pdf</a></p></li>
+</ul>
+<p>Utilizaremos el comando <code>amatch()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>stringdist<span class="sc">::</span><span class="fu">amatch</span>(<span class="at">x =</span> SIMPS_2021[<span class="dv">1</span>,]<span class="sc">$</span>NOMBRE, </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">table =</span> SIMPS_2022<span class="sc">$</span>NOMBRE,</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">maxDist=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
+</div>
+</div>
+<p>Veamos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>SIMPS_2021[<span class="dv">1</span>,]<span class="sc">$</span>NOMBRE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Porcentaje de Obras de Infraestructura autorizadas respecto a las obras establecidas en el Plan Nacional de Infraestructura 2014-2018"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>SIMPS_2022[<span class="dv">6</span>,]<span class="sc">$</span>NOMBRE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Porcentaje de Obras de Infraestructura autorizadas respecto a las obras establecidas en el Plan Nacional de Infraestructura 2014-2018"</code></pre>
+</div>
+</div>
+<p>Podemos guardar esto en un vector. haremos un ejemplo para los primeros 10 casos nada más:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>get<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>get[i]<span class="ot">&lt;-</span>stringdist<span class="sc">::</span><span class="fu">amatch</span>(<span class="at">x =</span> SIMPS_2021[i,]<span class="sc">$</span>NOMBRE, </span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">table =</span> SIMPS_2022<span class="sc">$</span>NOMBRE,</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">maxDist=</span><span class="dv">1</span>)</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Una vez tenemos este vector, podríamos pegarlo a los originales 10 renglones iniciales:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>SIMPS_2021_ej<span class="ot">&lt;-</span><span class="fu">bind_cols</span>(SIMPS_2021[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,], <span class="fu">as_tibble</span>(get))</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(SIMPS_2021_ej)[<span class="dv">24</span>]<span class="ot">&lt;-</span><span class="st">"get"</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>SIMPS_2022<span class="sc">$</span>get<span class="ot">&lt;-</span><span class="fu">rownames</span>(SIMPS_2022)</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>SIMPS_2022_2021_ej<span class="ot">&lt;-</span><span class="fu">merge</span>(SIMPS_2021_ej, SIMPS_2022[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,],</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">by=</span><span class="st">"get"</span>, </span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">all.x =</span> T,</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">suffixes =</span> <span class="fu">c</span>(<span class="dv">21</span>,<span class="dv">22</span>))</span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>writexl<span class="sc">::</span><span class="fu">write_xlsx</span>(SIMPS_2022_2021_ej,</span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">path=</span><span class="st">"SIMPS_2022_2021_ej.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En el código de la clase está la versión para toda la base de datos.</p>
 
 
 </section>
