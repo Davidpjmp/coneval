@@ -1,0 +1,342 @@
+
+# Introducción a Rmarkdown
+
+Es un procesador de texto que ofrece además la posibilidad de incluir trozos de código desde R (u otros formatos). El principal beneficio de esta herramienta es que permite trabajar en un sólo documento tanto la redacción del contenido narrativo de reportes de investigación, como también la construcción y presentación formal de resultados de análisis estadísticos.  <https://bookdown.org/gboccardo/manual-ED-UCH/>
+
+Aquí el *cheatsheet*: <https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf>
+
+El paquete `{knitr}` integra en un sólo archivo markdown el texto ingresado en formato RMarkdown y los resultados de la ejecución de los códigos construidos mediante R.
+
+## Elementos del Rmarkdown
+
+El encabezado, ese lo modificamos desde que abrimos el archivo y se escribe automáticamente en el código.
+
+El texto, es lo que escribimos.
+
+El código, insertamos los `chunks`. Aprovechemos para instalar los paquetes de hoy.
+
+```{r}
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, readxl, haven, janitor, plotly, sjlabelled, kableExtra, summarytools, reshape2, osmdata, ggmap, rgdal, tibble, sf)
+```
+
+echo = FALSE significa que no se desplegará la sintaxis en el reporte, pero sí se ejecutará la operación y mostrarán los resultados.
+
+results = 'asis indica que el resultado se exportará directamente al nuevo archivo, sin que sea configurado por RMarkdown. Esto es útil con funciones que formatean de manera inmediata los resultados al formato deseado.
+
+message = FALSE indica que no se mostrarán los mensajes de información en el informe final.
+
+Cuando le hacemos click en la opción "knit" un documento se va a generar e incluye el contenido, así como los resultados de los códigos que incluyamos.
+
+El primer título se pone con un signo de numeral
+# Título 1
+## Subtítulo 1
+### Subtítulo 1.1
+
+También hay varias opciones para resaltar el texto.
+**negrita**
+
+*cursiva*
+  
+_subrayado_
+
+Podemos también hacer listas
++ Elemento 1
++ Elemento 2
+    1. Sub elemento 1.
+    2. Sub elemento 2.
+
+## Tablitas
+Hay varias opciones para hacer tablitas en Rmarkdown.
+
+Una de ellas es con summarytools, para hacer tablas de frecuencias.
+
+Primero vamos a abrir la base de datos de concentrado2020.
+
+```{r}
+concentrado2020 <- haven::read_dta("datos/concentrado2020.dta")
+```
+
+Convertimos nuestra variable de sexo_jefe.
+
+```{r}
+concentrado2020 <- concentrado2020 %>% 
+  mutate(sexo_factor = factor(concentrado2020$sexo_jefe, 
+                              labels = c("Hombre", "Mujer")))
+
+```
+
+Hacemos la tabla con summary tools.
+```{r}
+freq(concentrado2020$sexo_factor, 
+     style = "simple", 
+     justify = "center")
+```
+
+Le quitamos los NAs.
+```{r}
+freq(concentrado2020$sexo_factor, 
+     style = "simple", 
+     justify = "center", 
+     report.nas=F)
+```
+
+Podemos hacer los estadísticos descriptivos.
+
+```{r}
+descr(concentrado2020$edad_jefe, 
+      style = "simple", 
+      justify = "center")
+```
+
+También podemos utilizar el paquete kableExtra. 
+
+Primero hacemos una tabla de frecuencias y la guardamos en 
+formato data.table. 
+
+```{r}
+tabla <- concentrado2020 %>% 
+  tabyl(sexo_factor) %>% 
+  adorn_pct_formatting(digits=1)
+
+tabla <- tabla %>% 
+  rename(Sexo=sexo_factor) %>% 
+  rename(Frecuencia=n) %>% 
+  rename(Porcentaje=percent)
+
+```
+
+
+Opción más básica
+
+```{r}
+kbl(tabla)
+```
+
+
+O le podemos cambiar el tema.
+```{r}
+tabla %>%
+  kbl() %>%
+  kable_styling()
+```
+
+
+Otras opciones son: kable_paper, kable_classic, kable_classic_2, kable_minimal, kable_material y kable_material_dark. 
+
+```{r}
+tabla %>%
+  kbl() %>%
+  kable_paper("hover", full_width = F)
+```
+
+
+Podemos cambiar el tipo de letra y el tema a clásico.
+Además agregarle el título.
+
+```{r}
+tabla %>%
+  kbl(caption = "Número de hombres y mujeres jefas de hogar en México 2020") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+
+
+Para agregar una fila sombreada y otra no.
+
+```{r}
+kbl(tabla) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+
+Podemos hacerla más pequeña y justificarla a la izquierda o derecha.
+Además podemos cambiar el tamaño de la letra.
+
+```{r}
+kbl(tabla) %>%
+  kable_styling(bootstrap_options = "striped", full_width = F, position = "left", font_size=9)
+```
+
+
+Podemos especificar detalles en las columnas o filas con 
+column_spec() y row_spec().
+
+```{r}
+kbl(tabla) %>%
+  kable_paper("striped", full_width = F) %>%
+  column_spec(2, bold = T) %>%
+  row_spec(1, bold = T, color = "white", background = "#D7261E")
+```
+
+
+Para más detalles, pueden ver la información del paquete:
+<https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html>
+
+<https://bookdown.org/yihui/rmarkdown-cookbook/kable.html>
+
+<https://rpubs.com/STEMResearch/frequency-tabulations>
+
+
+
+## Gráficos
+Para los gráficos podemos utilizar el paquete plotly que vimos.
+
+Abrimos la base de datos
+
+```{r}
+carencias_2020_estatal <- read_excel("datos/carencias_2020_estatal.xlsx")
+```
+
+La convertimos de formato wide a formato long.
+
+```{r}
+base_modif <- carencias_2020_estatal %>% 
+  select(-region) 
+
+base_modif <- melt(base_modif, id.vars=c("edo")) 
+```
+
+Hacemos un gráfico de barras escogiendo el estado.
+```{r}
+grafico <- base_modif %>% 
+  filter(edo=="Campeche") %>% 
+  ggplot(aes(x=variable, y=value))+
+  geom_col(fill = "#440154")+
+  coord_flip()+
+  theme_minimal()+
+  labs(
+    title="Carencias Sociales, Campeche 2020",
+    x="", 
+    y="Porcentaje"
+  )
+
+```
+
+Ahora lo hacemos interactivo.
+
+```{r}
+interactivo<-ggplotly(grafico)
+interactivo
+```
+
+## Mapas
+
+Podemos hacer uno de los mapas que hicimos.
+
+```{r}
+cdmx_bb<-osmdata::getbb("Mexico City")
+cdmx_map <- ggmap::get_map(cdmx_bb, maptype = "roadmap")
+cdmx_hospitals <- cdmx_bb %>%
+  opq() %>%
+  add_osm_feature(key = "amenity", value = "hospital") %>%
+  osmdata_sf()
+```
+
+
+
+```{r}
+
+grafico <- ggmap(cdmx_map) +
+  geom_sf(
+    data = cdmx_hospitals$osm_polygons,
+    inherit.aes = FALSE,
+    colour = "#08519c",
+    fill = "#08306b",
+    alpha = .5,
+    size = 1
+  ) +
+  labs(
+    title = "Hospitales en CDMX",
+    x = "Latitud",
+    y = "Longitud"
+  )
+
+ggplotly(grafico)
+```
+
+
+Haremos otro mapa.
+
+La función readOGR del paquete rgdal, extrae automáticamente la información utilizada por otros paquetes SIG de código abierto como QGIS y permite a R manejar una gama más amplia de formatos de datos espaciales. Esta función lee datos OGR y datos vectoriales, pero solamente permite manejar capas con características geométricas (no mezcla puntos, líneas o polígonos en una sola capa) y a su vez establecerá un sistema de referencia espacial si la capa tiene dichos metadatos.
+
+
+Para leer un archivo shapefile, se establecen los siguientes argumentos, como dsn, en donde se indica el directorio que contiene los shapes y layer que es el nombre explícito de la capa a trabajar y dichas capas deben de ir sin la extensión .shp.
+
+
+A continuación se lee el archivo .shp que contiene de manera integrada la división de el área geoestadística estatal agee.
+
+
+```{r}
+require(rgdal)
+
+shape_estados <- readOGR(dsn ="conjunto_de_datos", 
+                          layer = "00ent",
+                           encoding = "UTF-8",
+                            use_iconv = TRUE)
+```
+
+
+¿Qué hay?
+
+```{r}
+class(shape_estados)
+shape_estados$CVE_ENT
+```
+
+
+Mapa vacío
+
+```{r}
+ggplot() +  
+  geom_polygon(data=shape_estados, aes(x=long, y=lat, group=group), fill="white", color="black") 
+```
+
+Vamos a utilizar la base de datos de carencias otra vez.
+
+
+```{r}
+shape_estados_tbl <- as_tibble(st_as_sf(shape_estados))
+carencias_2020_estatal <- carencias_2020_estatal %>% 
+  rename(CVE_ENT=region)
+
+
+```
+
+
+Juntamos la variable que nos interesa con los shapes.
+
+```{r}
+base_modif <- carencias_2020_estatal %>% 
+  select(CVE_ENT, rezago_educativo) %>% 
+  inner_join(shape_estados_tbl, by="CVE_ENT")
+```
+
+
+```{r}
+
+p <- ggplot(data = base_modif) +  
+      geom_sf(mapping = aes(geometry = geometry, 
+      fill = rezago_educativo))  + 
+       theme_minimal()+
+scale_fill_gradientn(colours = wesanderson::wes_palette("Zissou1", 25, type = "continuous")) +
+    theme(plot.title = element_text(size=22),legend.key.size = unit(0.5, "cm"),
+        legend.position = c(0.8, 0.7)) + 
+  labs(title = "Rezago educativo a nivel estatal",
+             fill = "Porcentaje",
+             caption = "Fuente: CONEVAL, 2020")
+
+p
+
+
+
+```
+
+
+https://rpubs.com/dvillasanao/Mapas_desagregacion_geografica_Mexico
+
+
+Ahora interactivo.
+```{r}
+ggplotly(p)
+```
+
